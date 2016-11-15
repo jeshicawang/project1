@@ -1,12 +1,25 @@
+#features {
+  /* border: 1px solid red; */
+  text-align: center;
+  white-space: nowrap;
+}
+
+div.feature {
+  /* border: 1px solid black; */
+  display: inline-block;
+  white-space: normal;
+  padding: 5px;
+  width: 30%;
+}
+
+h1 {
+  text-align: center;
+}
+
 h2 {
   text-align: center;
 }
 
-#features {
-  width: 95%;
-}
-
-div.feature {
-  display: inline-block;
-  width: 30%;
+p {
+  text-align: left;
 }
