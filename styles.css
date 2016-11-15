@@ -1,0 +1,12 @@
+h2 {
+  text-align: center;
+}
+
+#features {
+  width: 95%;
+}
+
+div.feature {
+  display: inline-block;
+  width: 30%;
+}
