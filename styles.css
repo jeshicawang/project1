@@ -6,11 +6,26 @@
 div.feature {
   display: inline-block;
   width: 25%;
-  background-color: #cdeaf4;
+  background-color: #DCF1F7;
   white-space: normal;
   padding: 10px;
   margin-left: 5px;
   margin-right: 5px;
+}
+
+#copyright {
+  position: fixed;
+  float: bottom;
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin-bottom: 0px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  background-color: white;
 }
 
 h1 {
