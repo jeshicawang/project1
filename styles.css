@@ -7,7 +7,6 @@
 div.feature {
   display: inline-block;
   width: 25%;
-  background-color: #F7FAFF;
   white-space: normal;
   padding: 10px;
   margin-left: 5px;
@@ -15,6 +14,7 @@ div.feature {
 }
 
 #slogan-background {
+  display: table;
   background-size: cover;
   margin: auto;
   height: 350px;
@@ -26,11 +26,13 @@ div.feature {
 }
 
 #slogan {
+  display: table-cell;
+  vertical-align: middle;
   color: white;
-  font-size: 50px;
+  font-size: 48px;
   text-align: center;
-  line-height: 350px;
   margin: 0px;
+  font-family: Georgia, 'Times New Roman', Times, serif;
 }
 
 #copyright {
@@ -44,17 +46,24 @@ div.feature {
   padding-top: 10px;
   padding-bottom: 10px;
   background-color: white;
+  font-family: Georgia, 'Times New Roman', Times, serif;
 }
 
 h1 {
   text-align: center;
+  font-size: 48px;
+  font-family: Georgia, 'Times New Roman', Times, serif;
 }
 
-h2 {
+h3 {
+  font-weight: normal;
+  font-family: "Courier New", Courier, monospace;
+  text-transform: uppercase;
   text-align: center;
   margin-top: 5px;
 }
 
 p {
+  font-family: "Courier New", Courier, monospace;
   text-align: left;
 }
