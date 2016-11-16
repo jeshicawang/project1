@@ -1,3 +1,11 @@
+#header {
+  height: 100px;
+  background-image: url(images/logo.png);
+  background-position: center;
+  background-repeat: no-repeat;
+  margin-bottom: 10px;
+}
+
 #features {
   text-align: center;
   white-space: nowrap;
@@ -30,9 +38,9 @@ div.feature {
   vertical-align: middle;
   color: white;
   font-size: 48px;
+  font-weight: bold;
   text-align: center;
   margin: 0px;
-  font-family: Georgia, 'Times New Roman', Times, serif;
 }
 
 #copyright {
@@ -46,24 +54,18 @@ div.feature {
   padding-top: 10px;
   padding-bottom: 10px;
   background-color: white;
-  font-family: Georgia, 'Times New Roman', Times, serif;
-}
-
-h1 {
-  text-align: center;
-  font-size: 48px;
-  font-family: Georgia, 'Times New Roman', Times, serif;
 }
 
 h3 {
-  font-weight: normal;
-  font-family: "Courier New", Courier, monospace;
+  color: #14171A;
+  font-family: 'Helvetica Neue';
   text-transform: uppercase;
   text-align: center;
   margin-top: 5px;
 }
 
 p {
-  font-family: "Courier New", Courier, monospace;
+  color: #14171A;
+  font-family: 'Helvetica Neue';
   text-align: left;
 }
