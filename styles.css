@@ -1,24 +1,42 @@
 #features {
   text-align: center;
   white-space: nowrap;
+  margin-bottom: 30px;
 }
 
 div.feature {
   display: inline-block;
   width: 25%;
-  background-color: #DCF1F7;
+  background-color: #F7FAFF;
   white-space: normal;
   padding: 10px;
   margin-left: 5px;
   margin-right: 5px;
 }
 
+#slogan-background {
+  background-size: cover;
+  margin: auto;
+  height: 350px;
+  width: 75%;
+  background-image: url(images/people.jpg);
+  background-position: center;
+  padding-left: 40px;
+  padding-right: 40px;
+}
+
+#slogan {
+  color: white;
+  font-size: 50px;
+  text-align: center;
+  line-height: 350px;
+  margin: 0px;
+}
+
 #copyright {
   position: fixed;
   float: bottom;
   text-align: center;
-  margin-left: auto;
-  margin-right: auto;
   left: 0;
   right: 0;
   bottom: 0;
