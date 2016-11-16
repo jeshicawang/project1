@@ -1,3 +1,11 @@
+#header {
+  height: 100px;
+  background-image: url(images/logo.png);
+  background-position: center;
+  background-repeat: no-repeat;
+  margin-bottom: 10px;
+}
+
 #features {
   text-align: center;
   white-space: nowrap;
@@ -7,7 +15,6 @@
 div.feature {
   display: inline-block;
   width: 25%;
-  background-color: #F7FAFF;
   white-space: normal;
   padding: 10px;
   margin-left: 5px;
@@ -15,6 +22,7 @@ div.feature {
 }
 
 #slogan-background {
+  display: table;
   background-size: cover;
   margin: auto;
   height: 350px;
@@ -26,10 +34,12 @@ div.feature {
 }
 
 #slogan {
+  display: table-cell;
+  vertical-align: middle;
   color: white;
-  font-size: 50px;
+  font-size: 48px;
+  font-weight: bold;
   text-align: center;
-  line-height: 350px;
   margin: 0px;
 }
 
@@ -46,15 +56,16 @@ div.feature {
   background-color: white;
 }
 
-h1 {
-  text-align: center;
-}
-
-h2 {
+h3 {
+  color: #14171A;
+  font-family: 'Helvetica Neue';
+  text-transform: uppercase;
   text-align: center;
   margin-top: 5px;
 }
 
 p {
+  color: #14171A;
+  font-family: 'Helvetica Neue';
   text-align: left;
 }
