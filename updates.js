@@ -23,12 +23,21 @@ function newElement(tagName, className, text) {
   return newElement;
 }
 
-var i;
-var containerPointer = document.getElementById('updates');
-for (i = 0; i < user.updates.length; i++) {
-  containerPointer.appendChild(newElement('div', 'update', null));
-  childPointer = containerPointer.lastChild;
-  childPointer.appendChild(newElement('h4', 'username', '@' + user.username))
-  childPointer.appendChild(newElement('p', 'timestamp', user.updates[i].timestamp))
-  childPointer.appendChild(newElement('p', 'post', user.updates[i].post))
+function displayProfile() {
+
 }
+
+function displayUpdates() {
+  var i;
+  var containerPointer = document.getElementById('updates');
+  for (i = 0; i < user.updates.length; i++) {
+    containerPointer.appendChild(newElement('div', 'update', null));
+    childPointer = containerPointer.lastChild;
+    childPointer.appendChild(newElement('h4', 'username', '@' + user.username))
+    childPointer.appendChild(newElement('p', 'timestamp', user.updates[i].timestamp))
+    childPointer.appendChild(newElement('p', 'post', user.updates[i].post))
+  }
+}
+
+displayProfile();
+displayUpdates();
