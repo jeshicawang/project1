@@ -10,6 +10,28 @@ body {
   padding: 25px;
 }
 
+#new-update {
+  margin: auto;
+  margin-bottom: 15px;
+  width: 652px;
+  height: 32px;
+}
+
+textarea {
+  display: inline-block;
+  float: left;
+  width: 556px;
+  height: 26px;
+}
+
+button {
+  display: inline-block;
+  float: right;
+  overflow: hidden;
+  width: 75px;
+  height: 32px;
+}
+
 #profile {
   height: 150px;
 }
