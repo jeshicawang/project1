@@ -22,6 +22,10 @@ body {
   background-position: center;
 }
 
+#profile #username {
+  margin-top: 0;
+}
+
 #profile #description {
   display: inline-block;
   float: right;
@@ -41,15 +45,11 @@ body {
   text-align: left;
 }
 
-.username {
-  margin-top: 0;
-}
-
 .update .username {
   display: inline-block;
   float: left;
   width: 50%;
-  margin-bottom: 0;
+  margin: 0;
 }
 
 .update .timestamp {

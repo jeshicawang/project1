@@ -26,7 +26,7 @@ function newElement(tagName, className, text) {
 function displayProfile() {
   var pointer = document.getElementById('photo');
   pointer.style.backgroundImage = 'url(' + user.profilePicture + ')';
-  pointer = document.getElementById('name');
+  pointer = document.getElementById('username');
   pointer.appendChild(document.createTextNode('@' + user.username));
   pointer = document.getElementById('about-me');
   pointer.appendChild(document.createTextNode(user.aboutMe));
