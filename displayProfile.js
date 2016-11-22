@@ -23,7 +23,7 @@ function newElement(tagName, className, text) {
   return newElement;
 }
 
-function displayProfile() {
+function displayUserInfo() {
   var pointer = document.getElementById('photo');
   pointer.style.backgroundImage = 'url(' + user.profilePicture + ')';
   pointer = document.getElementById('username');
@@ -44,5 +44,5 @@ function displayUpdates() {
   }
 }
 
-displayProfile();
+displayUserInfo();
 displayUpdates();
