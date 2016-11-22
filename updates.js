@@ -2,12 +2,14 @@ var user = {
   username: 'jwang',
   profilePicture: 'images/profile-picture.jpg',
   aboutMe: 'Female. 20. Coffee lover. Dancer. Future software developer;)',
-  updates: [newUpdate('9am', 'Starting my weekday by going to coding class!'),
-            newUpdate('11:30am', 'Off to my lunch break!'),
+  updates: [newUpdate('5:00pm', 'Going home for the day! :D'),
+            newUpdate('4:30pm', 'Class just ended.'),
             newUpdate('12:15pm', '...and back to class!'),
-            newUpdate('4:30', 'Class just ended.'),
-            newUpdate('5pm', 'Going home for the day! Maybe I\'ll go dancing?'),]
+            newUpdate('11:30am', 'Off to my lunch break!'),
+            newUpdate('9:00am', 'Starting my weekday by going to coding class!')]
 }
+
+var childPointer;
 
 function newUpdate(timestamp, post) {
   return { timestamp: timestamp, post: post };
@@ -23,7 +25,6 @@ function newElement(tagName, className, text) {
 
 var i;
 var containerPointer = document.getElementById('updates');
-var childPointer;
 for (i = 0; i < user.updates.length; i++) {
   containerPointer.appendChild(newElement('div', 'update', null));
   childPointer = containerPointer.lastChild;
