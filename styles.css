@@ -9,10 +9,6 @@ body {
   padding: 25px;
 }
 
-p {
-  margin: 0;
-}
-
 #profile {
   height: 150px;
 }
@@ -22,7 +18,6 @@ p {
   float: left;
   width: 150px;
   height: 150px;
-  background-image: url(images/profile-picture.jpg);
   background-size: cover;
   background-position: center;
 }
@@ -51,7 +46,6 @@ p {
 }
 
 .update .username {
-  position: relative;
   display: inline-block;
   float: left;
   width: 50%;
@@ -59,9 +53,21 @@ p {
 }
 
 .update .timestamp {
-  position: relative;
   display: inline-block;
   float: right;
   width: 50%;
   text-align: right;
+}
+
+.update .post {
+  display: inline-block;
+  margin-top: 5px;
+}
+
+h3 {
+  margin-bottom: 15px;
+}
+
+p {
+  margin: 0;
 }

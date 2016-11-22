@@ -6,7 +6,7 @@ var user = {
             newUpdate('4:30pm', 'Class just ended.'),
             newUpdate('12:15pm', '...and back to class!'),
             newUpdate('11:30am', 'Off to my lunch break!'),
-            newUpdate('9:00am', 'Starting my weekday by going to coding class!')]
+            newUpdate('9:00am', 'Starting my weekday by going to coding class! Starting my weekday by going to coding class! Starting my weekday by going to coding class!')]
 }
 
 var childPointer;
@@ -24,7 +24,12 @@ function newElement(tagName, className, text) {
 }
 
 function displayProfile() {
-
+  var pointer = document.getElementById('photo');
+  pointer.style.backgroundImage = 'url(' + user.profilePicture + ')';
+  pointer = document.getElementById('name');
+  pointer.appendChild(document.createTextNode('@' + user.username));
+  pointer = document.getElementById('about-me');
+  pointer.appendChild(document.createTextNode(user.aboutMe));
 }
 
 function displayUpdates() {
