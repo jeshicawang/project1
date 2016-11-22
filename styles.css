@@ -1,5 +1,6 @@
 body {
   text-align: center;
+  font-family: 'Open Sans', sans-serif;
 }
 
 .container {
@@ -61,6 +62,7 @@ body {
 
 .update .post {
   display: inline-block;
+  width: 100%;
   margin-top: 5px;
 }
 

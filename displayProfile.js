@@ -9,7 +9,8 @@ var user = {
             newUpdate('9:00am', 'Starting my weekday by going to coding class! Starting my weekday by going to coding class! Starting my weekday by going to coding class!')]
 }
 
-var childPointer;
+var containerPointer = document.getElementById('updates');
+var pointer;
 
 function newUpdate(timestamp, post) {
   return { timestamp: timestamp, post: post };
@@ -24,7 +25,7 @@ function newElement(tagName, className, text) {
 }
 
 function displayUserInfo() {
-  var pointer = document.getElementById('photo');
+  pointer = document.getElementById('photo');
   pointer.style.backgroundImage = 'url(' + user.profilePicture + ')';
   pointer = document.getElementById('username');
   pointer.appendChild(document.createTextNode('@' + user.username));
@@ -32,17 +33,32 @@ function displayUserInfo() {
   pointer.appendChild(document.createTextNode(user.aboutMe));
 }
 
-function displayUpdates() {
+function displayExistingUpdates() {
   var i;
-  var containerPointer = document.getElementById('updates');
   for (i = 0; i < user.updates.length; i++) {
     containerPointer.appendChild(newElement('div', 'update', null));
-    childPointer = containerPointer.lastChild;
-    childPointer.appendChild(newElement('h4', 'username', '@' + user.username))
-    childPointer.appendChild(newElement('p', 'timestamp', user.updates[i].timestamp))
-    childPointer.appendChild(newElement('p', 'post', user.updates[i].post))
+    displayPost(containerPointer.lastChild, i);
   }
 }
 
+function displayPost(pointer, index) {
+  pointer.appendChild(newElement('h4', 'username', '@' + user.username));
+  pointer.appendChild(newElement('p', 'timestamp', user.updates[index].timestamp));
+  pointer.appendChild(newElement('p', 'post', user.updates[index].post));
+}
+
+function addUpdate() {
+  var post = document.getElementById('post-text').value;
+  user.updates.unshift(newUpdate('*insert time here*', post));
+  containerPointer.insertBefore(newElement('div', 'update', null), containerPointer.firstChild);
+  displayPost(containerPointer.firstChild, 0);
+}
+
+function enablePosting() {
+  pointer = document.getElementById('post-button');
+  pointer.addEventListener('click', addUpdate, false);
+}
+
 displayUserInfo();
-displayUpdates();
+displayExistingUpdates();
+enablePosting();
