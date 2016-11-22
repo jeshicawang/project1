@@ -18,16 +18,14 @@ body {
 }
 
 textarea {
-  display: inline-block;
   float: left;
   width: 556px;
   height: 26px;
+  padding: 2px;
 }
 
 button {
-  display: inline-block;
   float: right;
-  overflow: hidden;
   width: 75px;
   height: 32px;
 }
