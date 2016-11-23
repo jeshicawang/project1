@@ -11,9 +11,6 @@ var user = {
             newUpdate(newMoment('9:00AM 11/22/16'), 'Starting my weekday by going to coding class!')]
 }
 
-
-var pointer;
-
 function newMoment(timestamp) {
   return moment(timestamp, 'h:mmA M/D/YY')  ;
 }
@@ -27,7 +24,7 @@ function newUpdate(timestamp, post) {
 }
 
 function displayUserInfo() {
-  pointer = document.getElementById('photo');
+  var pointer = document.getElementById('photo');
   pointer.style.backgroundImage = 'url(' + user.profilePicture + ')';
   pointer = document.getElementById('username');
   pointer.appendChild(document.createTextNode('@' + user.username));
@@ -36,10 +33,10 @@ function displayUserInfo() {
 }
 
 function displayExistingUpdates() {
-  var updatesPointer = document.getElementById('updates');
+  var updatesContainer = document.getElementById('updates');
   for (var i = 0; i < user.updates.length; i++) {
     var children = createChildElements(i);
-    updatesPointer.appendChild(createElement('div', { class: 'update' }, children));
+    updatesContainer.appendChild(createElement('div', { class: 'update' }, children));
   }
 }
 
@@ -63,16 +60,16 @@ function createElement(tag, attributes, children) {
 }
 
 function enablePosting() {
-  pointer = document.getElementById('post-button');
-  pointer.addEventListener('click', addUpdate, false);
+  var postButton = document.getElementById('post-button');
+  postButton.addEventListener('click', addUpdate, false);
 }
 
 function addUpdate() {
-  var updatesPointer = document.getElementById('updates');
+  var updatesContainer = document.getElementById('updates');
   var post = document.getElementById('post-text').value;
   user.updates.unshift(newUpdate(moment(), post));
   var children = createChildElements(0);
-  updatesPointer.insertBefore(createElement('div', { class: 'update'}, children), updatesPointer.firstChild);
+  updatesContainer.insertBefore(createElement('div', { class: 'update'}, children), updatesContainer.firstChild);
 }
 
 displayUserInfo();
