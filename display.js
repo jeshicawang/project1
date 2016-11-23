@@ -2,50 +2,31 @@
 
 var user = {
   username: 'jeshicawang',
-  profilePicture: 'images/profile-picture.jpg',
+  profilePic: 'images/profile-picture.jpg',
   aboutMe: 'Female. 20. Coffee lover. Argentine Tango Dancer. Future software developer;)',
-  updates: [newUpdate(newMoment('5:00PM 11/22/16'), 'I\'m going home for the day!'),
-            newUpdate(newMoment('4:30PM 11/22/16'), 'Class just ended.'),
-            newUpdate(newMoment('12:15PM 11/22/16'), '...and lunch is over, so back to class.'),
-            newUpdate(newMoment('11:30AM 11/22/16'), 'Off to my lunch break! Maybe I\'ll go acrross the street?'),
-            newUpdate(newMoment('9:00AM 11/22/16'), 'Starting my weekday by going to coding class!')]
-}
+  updates: [ { timestamp: newMoment('5:00PM 11/22/16'), post: 'I\'m going home for the day!' },
+             { timestamp: newMoment('4:30PM 11/22/16'), post: 'Class just ended.' },
+             { timestamp: newMoment('12:15PM 11/22/16'), post: '...and lunch is over, so back to class.' },
+             { timestamp: newMoment('11:30AM 11/22/16'), post: 'Off to my lunch break! Maybe I\'ll go acrross the street?' },
+             { timestamp: newMoment('9:00AM 11/22/16'), post: 'Starting my weekday by going to coding class!' } ]
+};
 
 function newMoment(timestamp) {
-  return moment(timestamp, 'h:mmA M/D/YY')  ;
+  return moment(timestamp, 'h:mmA M/D/YY');
 }
 
 function printMoment(timestamp) {
   return timestamp.format('h:mmA M/D/YY');
 }
 
-function newUpdate(timestamp, post) {
-  return { timestamp: timestamp, post: post };
+function node(text) {
+  return document.createTextNode(text);
 }
 
-function displayUserInfo() {
-  var profileContainer = document.getElementById('profile');
-  profileContainer.appendChild(createElement('div', { id: 'photo' }, null));
-  var profilePic = document.getElementById('photo');
-  profilePic.style.backgroundImage = 'url(' + user.profilePicture + ')';
-  var username = createElement('h3', { id: 'username' }, document.createTextNode('@' + user.username));
-  var aboutMe = createElement('p', { id: 'about-me' }, document.createTextNode(user.aboutMe));
-  var children = [username, aboutMe];
-  profileContainer.appendChild(createElement('div', { id: 'description' }, children));
-}
-
-function displayExistingUpdates() {
-  var updatesContainer = document.getElementById('updates');
-  for (var i = 0; i < user.updates.length; i++) {
-    var children = createChildElements(i);
-    updatesContainer.appendChild(createElement('div', { class: 'update' }, children));
-  }
-}
-
-function createChildElements(index) {
-  return [createElement('h4', { class: 'username' }, document.createTextNode('@' + user.username)),
-          createElement('p', { class: 'timestamp' }, document.createTextNode(printMoment(user.updates[index].timestamp))),
-          createElement('p', { class: 'post' }, document.createTextNode(user.updates[index].post))];
+function getChildren(index) {
+  return [createElement('h4', { class: 'username' }, node('@' + user.username)),
+          createElement('p', { class: 'timestamp' }, node(printMoment(user.updates[index].timestamp))),
+          createElement('p', { class: 'post' }, node(user.updates[index].post))];
 }
 
 function createElement(tag, attributes, children) {
@@ -53,7 +34,7 @@ function createElement(tag, attributes, children) {
   for (var key in attributes) {
     newElement.setAttribute(key, attributes[key]);
   }
-  if (children !== null) {
+  if (children) {
     if (!(children instanceof Array))
       children = [children];
     for (var i = 0; i < children.length; i++) {
@@ -61,6 +42,23 @@ function createElement(tag, attributes, children) {
     }
   }
   return newElement;
+}
+
+function displayUserInfo() {
+  var profileContainer = document.getElementById('profile');
+  profileContainer.appendChild(createElement('div', { id: 'photo' }, null));
+  var profilePic = document.getElementById('photo');
+  profilePic.style.backgroundImage = 'url(' + user.profilePic + ')';
+  var children = [createElement('h3', { id: 'username' }, node('@' + user.username)),
+                  createElement('p', { id: 'about-me' }, node(user.aboutMe))];
+  profileContainer.appendChild(createElement('div', { id: 'description' }, children));
+}
+
+function displayExistingUpdates() {
+  var updatesContainer = document.getElementById('updates');
+  for (var i = 0; i < user.updates.length; i++) {
+    updatesContainer.appendChild(createElement('div', { class: 'update' }, getChildren(i)));
+  }
 }
 
 function enablePosting() {
@@ -71,9 +69,8 @@ function enablePosting() {
 function addUpdate() {
   var updatesContainer = document.getElementById('updates');
   var post = document.getElementById('post-text').value;
-  user.updates.unshift(newUpdate(moment(), post));
-  var children = createChildElements(0);
-  updatesContainer.insertBefore(createElement('div', { class: 'update'}, children), updatesContainer.firstChild);
+  user.updates.unshift({ timestamp: moment(), post: post });
+  updatesContainer.insertBefore(createElement('div', { class: 'update'}, getChildren(0)), updatesContainer.firstChild);
 }
 
 displayUserInfo();
