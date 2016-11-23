@@ -22,6 +22,7 @@ textarea {
   width: 556px;
   height: 26px;
   padding: 2px;
+  resize: none;
 }
 
 button {
