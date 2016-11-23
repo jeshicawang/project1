@@ -1,7 +1,7 @@
 var user = {
-  username: 'jwang',
+  username: 'jeshicawang',
   profilePicture: 'images/profile-picture.jpg',
-  aboutMe: 'Female. 20. Coffee lover. Dancer. Future software developer;)',
+  aboutMe: 'Female. 20. Coffee lover. Argentine Tango Dancer. Future software developer;)',
   updates: [newUpdate('5:00pm', 'Going home for the day! :D'),
             newUpdate('4:30pm', 'Class just ended.'),
             newUpdate('12:15pm', '...and back to class!'),
