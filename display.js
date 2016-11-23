@@ -24,12 +24,14 @@ function newUpdate(timestamp, post) {
 }
 
 function displayUserInfo() {
-  var pointer = document.getElementById('photo');
-  pointer.style.backgroundImage = 'url(' + user.profilePicture + ')';
-  pointer = document.getElementById('username');
-  pointer.appendChild(document.createTextNode('@' + user.username));
-  pointer = document.getElementById('about-me');
-  pointer.appendChild(document.createTextNode(user.aboutMe));
+  var profileContainer = document.getElementById('profile');
+  profileContainer.appendChild(createElement('div', { id: 'photo' }, null));
+  var profilePic = document.getElementById('photo');
+  profilePic.style.backgroundImage = 'url(' + user.profilePicture + ')';
+  var username = createElement('h3', { id: 'username' }, document.createTextNode('@' + user.username));
+  var aboutMe = createElement('p', { id: 'about-me' }, document.createTextNode(user.aboutMe));
+  var children = [username, aboutMe];
+  profileContainer.appendChild(createElement('div', { id: 'description' }, children));
 }
 
 function displayExistingUpdates() {
@@ -51,10 +53,12 @@ function createElement(tag, attributes, children) {
   for (var key in attributes) {
     newElement.setAttribute(key, attributes[key]);
   }
-  if (!(children instanceof Array))
-    children = [children];
-  for (var i = 0; i < children.length; i++) {
-    newElement.appendChild(children[i]);
+  if (children !== null) {
+    if (!(children instanceof Array))
+      children = [children];
+    for (var i = 0; i < children.length; i++) {
+      newElement.appendChild(children[i]);
+    }
   }
   return newElement;
 }
