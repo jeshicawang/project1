@@ -1,3 +1,5 @@
+/* global moment */
+
 var user = {
   username: 'jeshicawang',
   profilePicture: 'images/profile-picture.jpg',
@@ -9,7 +11,7 @@ var user = {
             newUpdate(newMoment('9:00AM 11/22/16'), 'Starting my weekday by going to coding class!')]
 }
 
-var containerPointer = document.getElementById('updates');
+
 var pointer;
 
 function newMoment(timestamp) {
@@ -24,14 +26,6 @@ function newUpdate(timestamp, post) {
   return { timestamp: timestamp, post: post };
 }
 
-function newElement(tagName, className, text) {
-  var newElement = document.createElement(tagName);
-  newElement.className = className;
-  if (text !== null)
-    newElement.appendChild(document.createTextNode(text));
-  return newElement;
-}
-
 function displayUserInfo() {
   pointer = document.getElementById('photo');
   pointer.style.backgroundImage = 'url(' + user.profilePicture + ')';
@@ -42,29 +36,43 @@ function displayUserInfo() {
 }
 
 function displayExistingUpdates() {
-  var i;
-  for (i = 0; i < user.updates.length; i++) {
-    containerPointer.appendChild(newElement('div', 'update', null));
-    displayPost(containerPointer.lastChild, i);
+  var updatesPointer = document.getElementById('updates');
+  for (var i = 0; i < user.updates.length; i++) {
+    var children = createChildElements(i);
+    updatesPointer.appendChild(createElement('div', { class: 'update' }, children));
   }
 }
 
-function displayPost(pointer, index) {
-  pointer.appendChild(newElement('h4', 'username', '@' + user.username));
-  pointer.appendChild(newElement('p', 'timestamp', printMoment(user.updates[index].timestamp)));
-  pointer.appendChild(newElement('p', 'post', user.updates[index].post));
+function createChildElements(index) {
+  return [createElement('h4', { class: 'username' }, document.createTextNode('@' + user.username)),
+          createElement('p', { class: 'timestamp' }, document.createTextNode(printMoment(user.updates[index].timestamp))),
+          createElement('p', { class: 'post' }, document.createTextNode(user.updates[index].post))];
 }
 
-function addUpdate() {
-  var post = document.getElementById('post-text').value;
-  user.updates.unshift(newUpdate(moment(), post));
-  containerPointer.insertBefore(newElement('div', 'update', null), containerPointer.firstChild);
-  displayPost(containerPointer.firstChild, 0);
+function createElement(tag, attributes, children) {
+  var newElement = document.createElement(tag);
+  for (var key in attributes) {
+    newElement.setAttribute(key, attributes[key]);
+  }
+  if (!(children instanceof Array))
+    children = [children];
+  for (var i = 0; i < children.length; i++) {
+    newElement.appendChild(children[i]);
+  }
+  return newElement;
 }
 
 function enablePosting() {
   pointer = document.getElementById('post-button');
   pointer.addEventListener('click', addUpdate, false);
+}
+
+function addUpdate() {
+  var updatesPointer = document.getElementById('updates');
+  var post = document.getElementById('post-text').value;
+  user.updates.unshift(newUpdate(moment(), post));
+  var children = createChildElements(0);
+  updatesPointer.insertBefore(createElement('div', { class: 'update'}, children), updatesPointer.firstChild);
 }
 
 displayUserInfo();
