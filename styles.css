@@ -1,5 +1,6 @@
 body {
   text-align: center;
+  font-family: 'Open Sans', sans-serif;
 }
 
 .container {
@@ -7,6 +8,27 @@ body {
   width: 600px;
   border: 1px solid #000;
   padding: 25px;
+}
+
+#new-update {
+  margin: auto;
+  margin-bottom: 15px;
+  width: 652px;
+  height: 32px;
+}
+
+textarea {
+  float: left;
+  width: 556px;
+  height: 26px;
+  padding: 2px;
+  resize: none;
+}
+
+button {
+  float: right;
+  width: 75px;
+  height: 32px;
 }
 
 #profile {
@@ -61,6 +83,7 @@ body {
 
 .update .post {
   display: inline-block;
+  width: 100%;
   margin-top: 5px;
 }
 
