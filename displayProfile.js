@@ -1,12 +1,12 @@
 var user = {
-  username: 'jwang',
+  username: 'jeshicawang',
   profilePicture: 'images/profile-picture.jpg',
-  aboutMe: 'Female. 20. Coffee lover. Dancer. Future software developer;)',
-  updates: [newUpdate('5:00pm', 'Going home for the day! :D'),
+  aboutMe: 'Female. 20. Coffee lover. Argentine Tango Dancer. Future software developer;)',
+  updates: [newUpdate('5:00pm', 'I\'m going home for the day!'),
             newUpdate('4:30pm', 'Class just ended.'),
-            newUpdate('12:15pm', '...and back to class!'),
-            newUpdate('11:30am', 'Off to my lunch break!'),
-            newUpdate('9:00am', 'Starting my weekday by going to coding class! Starting my weekday by going to coding class! Starting my weekday by going to coding class!')]
+            newUpdate('12:15pm', '...and lunch is over, so back to class.'),
+            newUpdate('11:30am', 'Off to my lunch break! Maybe I\'ll go acrross the street?'),
+            newUpdate('9:00am', 'Starting my weekday by going to coding class!')]
 }
 
 var containerPointer = document.getElementById('updates');
