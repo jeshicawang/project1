@@ -7,15 +7,20 @@
 	   <link rel="stylesheet" href="styles.css">
   </head>
   <body>
-    <h1>chatter</h1>
-    <div class="wrapper">
-      <div class="container" id="profile"></div>
+    <div id="header" class="shadow">
+      <h1>chatter</h1>
     </div>
-    <div id="new-update">
-      <textarea id="post-text">Type a new update...</textarea>
-      <button id="post-button">Post</button>
+    <div id="content">
+      <div id="profile" class="container left"></div>
+      <div class="container center">
+        <div id="new-update" class="shadow">
+          <textarea id="post-text" contenteditable="true">Type a new update...</textarea>
+          <button id="post-button">Post</button>
+        </div>
+        <div id="updates" class="shadow"></div>
+      </div>
+      <div class="container right"></div>
     </div>
-    <div class="container" id="updates"></div>
     <script src="moment.min.js"></script>
     <script src="display.js"></script>
   </body>

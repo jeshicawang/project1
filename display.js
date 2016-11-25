@@ -49,7 +49,7 @@ function displayUserInfo() {
   profileContainer.appendChild(createElement('div', { id: 'photo' }, null));
   var profilePic = document.getElementById('photo');
   profilePic.style.backgroundImage = 'url(' + user.profilePic + ')';
-  var children = [createElement('h3', { id: 'username' }, node('@' + user.username)),
+  var children = [createElement('h2', { id: 'username' }, node('@' + user.username)),
                   createElement('p', { id: 'about-me' }, node(user.aboutMe))];
   profileContainer.appendChild(createElement('div', { id: 'description' }, children));
 }
