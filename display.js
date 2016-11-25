@@ -13,6 +13,7 @@ var users = [ { username: 'jwang',
 ];
 
 var primaryUser = users[0];
+var currentlyViewing = primaryUser.username;
 
 var updates = [ { user: 'jwang', timestamp: newMoment('5:00PM 11/22/16'), post: 'I\'m going home for the day!' },
                 { user: 'jwang', timestamp: newMoment('4:30PM 11/22/16'), post: 'Class just ended.' },
@@ -58,7 +59,7 @@ function createElement(tag, attributes, children) {
   return newElement;
 }
 
-function displayUserInfo(user) {
+function displayProfile(user) {
   var profileContainer = document.getElementById('profile');
   profileContainer.appendChild(createElement('div', { class: 'photo shadow' }, null));
   var profilePic = document.querySelector('.photo');
@@ -67,20 +68,22 @@ function displayUserInfo(user) {
                   createElement('p', { id: 'username' }, node('@' + user.username)),
                   createElement('p', { id: 'about-me' }, node(user.aboutMe))];
   profileContainer.appendChild(createElement('div', { id: 'description' }, children));
-}
-
-function displayExistingUpdates(user) {
   var updatesContainer = document.getElementById('updates');
   for (var i = 0; i < updates.length; i++) {
     if (updates[i].user === user.username)
       updatesContainer.appendChild(createElement('div', { class: 'update' }, getUpdateElements(user, i)));
   }
+  currentlyViewing = user.username;
 }
 
-function empty(id) {
-  var container = document.getElementById(id);
-  while (container.firstChild)
-    container.removeChild(container.firstChild);
+function empty(ids) {
+  if (! (ids instanceof Array))
+    ids = [ids]
+  for (var i = 0; i < ids.length; i++) {
+    var container = document.getElementById(ids[i]);
+    while (container.firstChild)
+      container.removeChild(container.firstChild);
+  }
 }
 
 var userInput = false;
@@ -110,7 +113,8 @@ function addUpdate() {
     var post = document.getElementById('post-text');
     if (post.value.trim()) {
       updates.unshift({ timestamp: moment(), post: post.value });
-      updatesContainer.insertBefore(createElement('div', { class: 'update'}, getUpdateElements(primaryUser, 0)), updatesContainer.firstChild);
+      if (currentlyViewing === primaryUser.username)
+        updatesContainer.insertBefore(createElement('div', { class: 'update'}, getUpdateElements(primaryUser, 0)), updatesContainer.firstChild);
       post.value = 'Type a new update...';
       post.style.color = '#b2b2b2';
       userInput = false;
@@ -118,8 +122,7 @@ function addUpdate() {
   }
 }
 
-displayUserInfo(primaryUser);
-displayExistingUpdates(primaryUser);
+displayProfile(primaryUser);
 enableEventListeners();
-empty('profile');
-empty('updates');
+empty(['profile', 'updates']);
+displayProfile(users[1]);
