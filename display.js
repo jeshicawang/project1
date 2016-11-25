@@ -1,17 +1,27 @@
 /* global moment */
 
-var user = {
-  username: 'jwang',
-  firstName: 'Jessica',
-  lastName: 'Wang',
-  profilePic: 'images/profile-picture.jpg',
-  aboutMe: 'Female. 20. Coffee lover. Argentine Tango Dancer. Future software developer;)',
-  updates: [ { timestamp: newMoment('5:00PM 11/22/16'), post: 'I\'m going home for the day!' },
-             { timestamp: newMoment('4:30PM 11/22/16'), post: 'Class just ended.' },
-             { timestamp: newMoment('12:15PM 11/22/16'), post: '...and lunch is over, so back to class.' },
-             { timestamp: newMoment('11:30AM 11/22/16'), post: 'Off to my lunch break! Maybe I\'ll go acrross the street?' },
-             { timestamp: newMoment('9:00AM 11/22/16'), post: 'Starting my weekday by going to coding class!' } ]
-};
+var users = [ { username: 'jwang',
+                firstName: 'Jessica',
+                lastName: 'Wang',
+                profilePic: 'images/profile-picture.jpg',
+                aboutMe: 'Female. 20. Coffee lover. Argentine Tango Dancer. Future software developer;)' },
+              { username: 'biagi',
+                firstName: 'Rodolfo',
+                lastName: 'Biagi',
+                profilePic: 'images/biagi.jpg',
+                aboutMe: 'An Argentine Tango musician who started his musical career by playing background music for silent movies, and this was where he was first discovered by a tango band leader.' },
+];
+
+var primaryUser = users[1];
+
+var updates = [ { user: 'jwang', timestamp: newMoment('5:00PM 11/22/16'), post: 'I\'m going home for the day!' },
+                { user: 'jwang', timestamp: newMoment('4:30PM 11/22/16'), post: 'Class just ended.' },
+                { user: 'jwang', timestamp: newMoment('12:15PM 11/22/16'), post: '...and lunch is over, so back to class.' },
+                { user: 'biagi', timestamp: newMoment('5:00PM 11/22/16'), post: 'Todo es amor, la brisa y tú, jugando en el rumor, y el ruiseñor, cantando en una flor, buscando amor, amor.' },
+                { user: 'biagi', timestamp: newMoment('5:00PM 11/22/16'), post: 'La soledad, que me envuelve el corazón, va encendiendo en mi alma, el fuego de tu amor lejano. En las brumas de tu olvido, viaja mi ilusión, gritando tu nombre en vano.' },
+                { user: 'biagi', timestamp: newMoment('5:00PM 11/22/16'), post: 'Soñemos, que los dos estamos libres. Soñemos, en la gloria de este amor. Soñemos, que ya nada nos separa, y que somos cual dos almas, que nacieron para amar.' },
+                { user: 'jwang', timestamp: newMoment('11:30AM 11/22/16'), post: 'Off to my lunch break! Maybe I\'ll go acrross the street?' },
+                { user: 'jwang', timestamp: newMoment('9:00AM 11/22/16'), post: 'Starting my weekday by going to coding class!' } ];
 
 function newMoment(timestamp) {
   return moment(timestamp, 'h:mmA M/D/YY');
@@ -25,12 +35,12 @@ function node(text) {
   return document.createTextNode(text);
 }
 
-function getChildren(index) {
+function getUpdateElements(user, index) {
   return [createElement('img', { class: 'photo', src: user.profilePic }, null),
           createElement('h4', { class: 'name' }, node(user.firstName + ' ' + user.lastName)),
           createElement('p', { class: 'username' }, node('@' + user.username)),
-          createElement('p', { class: 'timestamp' }, node(printMoment(user.updates[index].timestamp))),
-          createElement('p', { class: 'post' }, node(user.updates[index].post))];
+          createElement('p', { class: 'timestamp' }, node(printMoment(updates[index].timestamp))),
+          createElement('p', { class: 'post' }, node(updates[index].post))];
 }
 
 function createElement(tag, attributes, children) {
@@ -48,7 +58,7 @@ function createElement(tag, attributes, children) {
   return newElement;
 }
 
-function displayUserInfo() {
+function displayUserInfo(user) {
   var profileContainer = document.getElementById('profile');
   profileContainer.appendChild(createElement('div', { class: 'photo shadow' }, null));
   var profilePic = document.querySelector('.photo');
@@ -59,10 +69,11 @@ function displayUserInfo() {
   profileContainer.appendChild(createElement('div', { id: 'description' }, children));
 }
 
-function displayExistingUpdates() {
+function displayExistingUpdates(user) {
   var updatesContainer = document.getElementById('updates');
-  for (var i = 0; i < user.updates.length; i++) {
-    updatesContainer.appendChild(createElement('div', { class: 'update' }, getChildren(i)));
+  for (var i = 0; i < updates.length; i++) {
+    if (updates[i].user === user.username)
+      updatesContainer.appendChild(createElement('div', { class: 'update' }, getUpdateElements(user, i)));
   }
 }
 
@@ -92,8 +103,8 @@ function addUpdate() {
     var updatesContainer = document.getElementById('updates');
     var post = document.getElementById('post-text');
     if (post.value.trim()) {
-      user.updates.unshift({ timestamp: moment(), post: post.value });
-      updatesContainer.insertBefore(createElement('div', { class: 'update'}, getChildren(0)), updatesContainer.firstChild);
+      updates.unshift({ timestamp: moment(), post: post.value });
+      updatesContainer.insertBefore(createElement('div', { class: 'update'}, getUpdateElements(primaryUser, 0)), updatesContainer.firstChild);
       post.value = 'Type a new update...';
       post.style.color = '#b2b2b2';
       userInput = false;
@@ -101,6 +112,6 @@ function addUpdate() {
   }
 }
 
-displayUserInfo();
-displayExistingUpdates();
+displayUserInfo(primaryUser);
+displayExistingUpdates(primaryUser);
 enableEventListeners();
