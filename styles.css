@@ -59,6 +59,7 @@ h1 {
 #search #search-button:hover,
 #search #search-button:focus {
   color: #81a9ca;
+  background-color: #f1f1f1;
   border-color: #f1f1f1;
 }
 
