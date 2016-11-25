@@ -24,7 +24,8 @@ function node(text) {
 }
 
 function getChildren(index) {
-  return [createElement('h4', { class: 'username' }, node('@' + user.username)),
+  return [createElement('img', { class: 'photo', src: user.profilePic }, null),
+          createElement('h4', { class: 'username' }, node('@' + user.username)),
           createElement('p', { class: 'timestamp' }, node(printMoment(user.updates[index].timestamp))),
           createElement('p', { class: 'post' }, node(user.updates[index].post))];
 }
@@ -46,8 +47,8 @@ function createElement(tag, attributes, children) {
 
 function displayUserInfo() {
   var profileContainer = document.getElementById('profile');
-  profileContainer.appendChild(createElement('div', { id: 'photo' }, null));
-  var profilePic = document.getElementById('photo');
+  profileContainer.appendChild(createElement('div', { class: 'photo shadow' }, null));
+  var profilePic = document.querySelector('.photo');
   profilePic.style.backgroundImage = 'url(' + user.profilePic + ')';
   var children = [createElement('h2', { id: 'username' }, node('@' + user.username)),
                   createElement('p', { id: 'about-me' }, node(user.aboutMe))];

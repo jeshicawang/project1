@@ -49,13 +49,17 @@ body {
   color: #fff;
 }
 
-#profile #photo {
+#profile .photo {
   margin: auto;
   width: 100px;
   height: 100px;
   background-size: cover;
   background-position: center;
   border: 2px solid #fff;
+}
+
+.photo {
+  border-radius: 50%;
 }
 
 #profile #description {
@@ -109,26 +113,35 @@ button:focus {
 
 #updates {
   margin-top: 20px;
-  padding: 15px;
   background-color: #fff;
 }
 
 .update {
-  margin-bottom: 25px;
+  position: relative;
+  padding: 20px;
   text-align: left;
+  border-bottom: 1px solid #f1f1f1;
+}
+
+.update .photo {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  width: 40px;
+  height: 40px;
 }
 
 .update .username {
   display: inline-block;
   float: left;
-  width: 50%;
-  margin: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+  margin-left: 55px;
 }
 
 .update .timestamp {
   display: inline-block;
   float: right;
-  width: 50%;
   text-align: right;
   font-weight: 300;
   color: #d6d6d6;
@@ -136,8 +149,11 @@ button:focus {
 
 .update .post {
   display: inline-block;
+  box-sizing: border-box;
   width: 100%;
   margin-top: 5px;
+  padding-left: 55px;
+  padding-right: 15px;
   font-weight: 300;
 }
 
