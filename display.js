@@ -14,6 +14,7 @@ var users = [ { username: 'jwang',
 
 var primaryUser = users[0];
 var currentlyViewing = primaryUser.username;
+var userInput = false;
 
 var updates = [ { user: 'jwang', timestamp: newMoment('5:00PM 11/22/16'), post: 'I\'m going home for the day!' },
                 { user: 'jwang', timestamp: newMoment('4:30PM 11/22/16'), post: 'Class just ended.' },
@@ -86,16 +87,15 @@ function empty(ids) {
   }
 }
 
-var userInput = false;
-
 function enableEventListeners() {
-  document.getElementById('post-text').addEventListener('click', modifyTextbox, false);
-  document.getElementById('post-text').addEventListener('blur', modifyTextbox, false);
+  document.getElementById('post-input').addEventListener('click', modifyTextbox, false);
+  document.getElementById('post-input').addEventListener('blur', modifyTextbox, false);
   document.getElementById('post-button').addEventListener('click', addUpdate, false);
+  document.getElementById('search-button').addEventListener('click', switchUser, false);
 }
 
 function modifyTextbox() {
-  var textbox = document.getElementById('post-text');
+  var textbox = document.getElementById('post-input');
   if (!userInput) {
     textbox.value = '';
     textbox.style.color = '#000';
@@ -110,9 +110,9 @@ function modifyTextbox() {
 function addUpdate() {
   if (userInput) {
     var updatesContainer = document.getElementById('updates');
-    var post = document.getElementById('post-text');
+    var post = document.getElementById('post-input');
     if (post.value.trim()) {
-      updates.unshift({ timestamp: moment(), post: post.value });
+      updates.unshift({ user: primaryUser.username, timestamp: moment(), post: post.value });
       if (currentlyViewing === primaryUser.username)
         updatesContainer.insertBefore(createElement('div', { class: 'update'}, getUpdateElements(primaryUser, 0)), updatesContainer.firstChild);
       post.value = 'Type a new update...';
@@ -122,7 +122,14 @@ function addUpdate() {
   }
 }
 
+function switchUser() {
+  empty(['profile', 'updates']);
+  var username = document.getElementById('search-input').value;
+  for (var i = 0; i < users.length; i++) {
+    if (users[i].username === username)
+      displayProfile(users[i]);
+  }
+}
+
 displayProfile(primaryUser);
 enableEventListeners();
-empty(['profile', 'updates']);
-displayProfile(users[1]);
