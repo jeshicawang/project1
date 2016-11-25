@@ -61,18 +61,41 @@ function displayExistingUpdates() {
   }
 }
 
-function enablePosting() {
-  var postButton = document.getElementById('post-button');
-  postButton.addEventListener('click', addUpdate, false);
+var userInput = false;
+
+function enableEventListeners() {
+  document.getElementById('post-text').addEventListener('click', modifyTextbox, false);
+  document.getElementById('post-text').addEventListener('blur', modifyTextbox, false);
+  document.getElementById('post-button').addEventListener('click', addUpdate, false);
+}
+
+function modifyTextbox() {
+  var textbox = document.getElementById('post-text');
+  if (!userInput) {
+    textbox.value = '';
+    textbox.style.color = '#000';
+    userInput = true;
+  } else if (!textbox.value.trim()) {
+    textbox.value = 'Type a new update...';
+    textbox.style.color = '#b2b2b2';
+    userInput = false;
+  }
 }
 
 function addUpdate() {
-  var updatesContainer = document.getElementById('updates');
-  var post = document.getElementById('post-text').value;
-  user.updates.unshift({ timestamp: moment(), post: post });
-  updatesContainer.insertBefore(createElement('div', { class: 'update'}, getChildren(0)), updatesContainer.firstChild);
+  if (userInput) {
+    var updatesContainer = document.getElementById('updates');
+    var post = document.getElementById('post-text');
+    if (post.value.trim()) {
+      user.updates.unshift({ timestamp: moment(), post: post.value });
+      updatesContainer.insertBefore(createElement('div', { class: 'update'}, getChildren(0)), updatesContainer.firstChild);
+      post.value = 'Type a new update...';
+      post.style.color = '#b2b2b2';
+      userInput = false;
+    }
+  }
 }
 
 displayUserInfo();
 displayExistingUpdates();
-enablePosting();
+enableEventListeners();
