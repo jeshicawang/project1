@@ -5,7 +5,7 @@ var users = [ { username: 'jwang',
                 lastName: 'Wang',
                 profilePic: 'images/profile-picture.jpg',
                 aboutMe: 'Female. 20. Coffee lover. Argentine Tango Dancer. Future software developer;)' },
-              { username: 'biagiduval',
+              { username: 'biagi',
                 firstName: 'Rodolfo',
                 lastName: 'Biagi',
                 profilePic: 'images/biagi.jpg',
@@ -14,14 +14,15 @@ var users = [ { username: 'jwang',
 
 var primaryUser = users[0];
 var currentlyViewing = primaryUser.username;
-var userInput = false;
+var postUserInput = false;
+var searchUserInput = false;
 
 var updates = [ { user: 'jwang', timestamp: newMoment('5:00PM 11/22/16'), post: 'I\'m going home for the day!' },
                 { user: 'jwang', timestamp: newMoment('4:30PM 11/22/16'), post: 'Class just ended.' },
                 { user: 'jwang', timestamp: newMoment('12:15PM 11/22/16'), post: '...and lunch is over, so back to class.' },
-                { user: 'biagiduval', timestamp: newMoment('5:00PM 11/22/16'), post: 'Todo es amor, la brisa y tú, jugando en el rumor, y el ruiseñor, cantando en una flor, buscando amor, amor.' },
-                { user: 'biagiduval', timestamp: newMoment('5:00PM 11/22/16'), post: 'La soledad, que me envuelve el corazón, va encendiendo en mi alma, el fuego de tu amor lejano. En las brumas de tu olvido, viaja mi ilusión, gritando tu nombre en vano.' },
-                { user: 'biagiduval', timestamp: newMoment('5:00PM 11/22/16'), post: 'Soñemos, que los dos estamos libres. Soñemos, en la gloria de este amor. Soñemos, que ya nada nos separa, y que somos cual dos almas, que nacieron para amar.' },
+                { user: 'biagi', timestamp: newMoment('5:00PM 11/22/16'), post: 'Todo es amor, la brisa y tú, jugando en el rumor, y el ruiseñor, cantando en una flor, buscando amor, amor.' },
+                { user: 'biagi', timestamp: newMoment('5:00PM 11/22/16'), post: 'La soledad, que me envuelve el corazón, va encendiendo en mi alma, el fuego de tu amor lejano. En las brumas de tu olvido, viaja mi ilusión, gritando tu nombre en vano.' },
+                { user: 'biagi', timestamp: newMoment('5:00PM 11/22/16'), post: 'Soñemos, que los dos estamos libres. Soñemos, en la gloria de este amor. Soñemos, que ya nada nos separa, y que somos cual dos almas, que nacieron para amar.' },
                 { user: 'jwang', timestamp: newMoment('11:30AM 11/22/16'), post: 'Off to my lunch break! Maybe I\'ll go acrross the street?' },
                 { user: 'jwang', timestamp: newMoment('9:00AM 11/22/16'), post: 'Starting my weekday by going to coding class!' } ];
 
@@ -88,27 +89,42 @@ function empty(ids) {
 }
 
 function enableEventListeners() {
-  document.getElementById('post-input').addEventListener('click', modifyTextbox, false);
-  document.getElementById('post-input').addEventListener('blur', modifyTextbox, false);
+  document.getElementById('post-input').addEventListener('focus', modifyPostTextbox, false);
+  document.getElementById('post-input').addEventListener('blur', modifyPostTextbox, false);
   document.getElementById('post-button').addEventListener('click', addUpdate, false);
-  document.getElementById('search-button').addEventListener('click', switchUser, false);
+  document.getElementById('search-input').addEventListener('focus', modifySearchTextbox, false);
+  document.getElementById('search-input').addEventListener('blur', modifySearchTextbox, false);
+  document.getElementById('search-button').addEventListener('click', checkSearchInput, false);
 }
 
-function modifyTextbox() {
+function modifyPostTextbox() {
   var textbox = document.getElementById('post-input');
-  if (!userInput) {
+  if (!postUserInput) {
     textbox.value = '';
     textbox.style.color = '#000';
-    userInput = true;
+    postUserInput = true;
   } else if (!textbox.value.trim()) {
     textbox.value = 'Type a new update...';
     textbox.style.color = '#b2b2b2';
-    userInput = false;
+    postUserInput = false;
+  }
+}
+
+function modifySearchTextbox() {
+  var textbox = document.getElementById('search-input');
+  if (!searchUserInput) {
+    textbox.value = '';
+    textbox.style.color = '#000';
+    searchUserInput = true;
+  } else if (!textbox.value.trim()) {
+    textbox.value = 'Search';
+    textbox.style.color = '#b2b2b2';
+    searchUserInput = false;
   }
 }
 
 function addUpdate() {
-  if (userInput) {
+  if (postUserInput) {
     var updatesContainer = document.getElementById('updates');
     var post = document.getElementById('post-input');
     if (post.value.trim()) {
@@ -117,18 +133,23 @@ function addUpdate() {
         updatesContainer.insertBefore(createElement('div', { class: 'update'}, getUpdateElements(primaryUser, 0)), updatesContainer.firstChild);
       post.value = 'Type a new update...';
       post.style.color = '#b2b2b2';
-      userInput = false;
+      postUserInput = false;
     }
   }
 }
 
-function switchUser() {
+function checkSearchInput() {
+  var input = document.getElementById('search-input').value;
+  if (input.trim)
+    for (var i = 0; i < users.length; i++) {
+      if (users[i].username === input)
+        switchUser(users[i]);
+    }
+}
+
+function switchUser(user) {
   empty(['profile', 'updates']);
-  var username = document.getElementById('search-input').value;
-  for (var i = 0; i < users.length; i++) {
-    if (users[i].username === username)
-      displayProfile(users[i]);
-  }
+  displayProfile(user);
 }
 
 displayProfile(primaryUser);
