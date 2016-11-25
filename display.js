@@ -5,21 +5,21 @@ var users = [ { username: 'jwang',
                 lastName: 'Wang',
                 profilePic: 'images/profile-picture.jpg',
                 aboutMe: 'Female. 20. Coffee lover. Argentine Tango Dancer. Future software developer;)' },
-              { username: 'biagi',
+              { username: 'biagiduval',
                 firstName: 'Rodolfo',
                 lastName: 'Biagi',
                 profilePic: 'images/biagi.jpg',
                 aboutMe: 'An Argentine Tango musician who started his musical career by playing background music for silent movies, and this was where he was first discovered by a tango band leader.' },
 ];
 
-var primaryUser = users[1];
+var primaryUser = users[0];
 
 var updates = [ { user: 'jwang', timestamp: newMoment('5:00PM 11/22/16'), post: 'I\'m going home for the day!' },
                 { user: 'jwang', timestamp: newMoment('4:30PM 11/22/16'), post: 'Class just ended.' },
                 { user: 'jwang', timestamp: newMoment('12:15PM 11/22/16'), post: '...and lunch is over, so back to class.' },
-                { user: 'biagi', timestamp: newMoment('5:00PM 11/22/16'), post: 'Todo es amor, la brisa y tú, jugando en el rumor, y el ruiseñor, cantando en una flor, buscando amor, amor.' },
-                { user: 'biagi', timestamp: newMoment('5:00PM 11/22/16'), post: 'La soledad, que me envuelve el corazón, va encendiendo en mi alma, el fuego de tu amor lejano. En las brumas de tu olvido, viaja mi ilusión, gritando tu nombre en vano.' },
-                { user: 'biagi', timestamp: newMoment('5:00PM 11/22/16'), post: 'Soñemos, que los dos estamos libres. Soñemos, en la gloria de este amor. Soñemos, que ya nada nos separa, y que somos cual dos almas, que nacieron para amar.' },
+                { user: 'biagiduval', timestamp: newMoment('5:00PM 11/22/16'), post: 'Todo es amor, la brisa y tú, jugando en el rumor, y el ruiseñor, cantando en una flor, buscando amor, amor.' },
+                { user: 'biagiduval', timestamp: newMoment('5:00PM 11/22/16'), post: 'La soledad, que me envuelve el corazón, va encendiendo en mi alma, el fuego de tu amor lejano. En las brumas de tu olvido, viaja mi ilusión, gritando tu nombre en vano.' },
+                { user: 'biagiduval', timestamp: newMoment('5:00PM 11/22/16'), post: 'Soñemos, que los dos estamos libres. Soñemos, en la gloria de este amor. Soñemos, que ya nada nos separa, y que somos cual dos almas, que nacieron para amar.' },
                 { user: 'jwang', timestamp: newMoment('11:30AM 11/22/16'), post: 'Off to my lunch break! Maybe I\'ll go acrross the street?' },
                 { user: 'jwang', timestamp: newMoment('9:00AM 11/22/16'), post: 'Starting my weekday by going to coding class!' } ];
 
@@ -77,6 +77,12 @@ function displayExistingUpdates(user) {
   }
 }
 
+function empty(id) {
+  var container = document.getElementById(id);
+  while (container.firstChild)
+    container.removeChild(container.firstChild);
+}
+
 var userInput = false;
 
 function enableEventListeners() {
@@ -115,3 +121,5 @@ function addUpdate() {
 displayUserInfo(primaryUser);
 displayExistingUpdates(primaryUser);
 enableEventListeners();
+empty('profile');
+empty('updates');
