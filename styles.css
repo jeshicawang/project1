@@ -32,6 +32,18 @@ h1 {
   color: #81a9ca;
 }
 
+.navigation {
+  float: left;
+  height: 34px;
+  width: 34px;
+  border-radius: 50%;
+}
+
+.lnr {
+  font-size: 20px;
+  font-weight: bold;
+}
+
 #search #search-input {
   float: right;
   width: 200px;
@@ -43,7 +55,7 @@ h1 {
   border-right: 0;
 }
 
-#search #search-button {
+#search-button {
   display: table;
   float: right;
   height: 28px;
@@ -56,19 +68,19 @@ h1 {
   padding-right: 10px;
 }
 
-#search #search-button:hover,
-#search #search-button:focus {
-  color: #81a9ca;
-  background-color: #f1f1f1;
-  border-color: #f1f1f1;
+#search-button:hover,
+#search-button:focus,
+#profile-button:hover,
+#profile-button:focus {
+  color: #fff;
+  background-color: #81a9ca;
+  border-color: #81a9ca;
 }
 
 .lnr-magnifier {
   display: table-cell;
   vertical-align: middle;
   float: right;
-  font-size: 20px;
-  font-weight: bold;
   box-sizing: content-box;
 }
 
