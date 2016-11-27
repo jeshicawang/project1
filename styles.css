@@ -81,6 +81,7 @@ p {
 
 .navigation {
   display: table;
+  position: relative;
   float: left;
   margin-left: 20px;
   height: 34px;
@@ -93,6 +94,37 @@ p {
   display: table-cell;
   font-size: 20px;
   font-weight: bold;
+}
+
+.tooltip .tooltip-text {
+  visibility: hidden;
+  position: absolute;
+  width: auto;
+  background-color: #353535;
+  color: #fff;
+  font-size: 12px;
+  text-align: center;
+  white-space: nowrap;
+  padding: 3px 6px;
+  z-index: 100;
+  top: 100%;
+  left: 50%;
+  transform: translate(-50%,7px);
+}
+
+.tooltip .tooltip-text::after {
+  content: " ";
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  margin-left: -3px;
+  border-width: 3px;
+  border-style: solid;
+  border-color: transparent transparent #353535;
+}
+
+.tooltip:hover .tooltip-text {
+  visibility: visible;
 }
 
 #search #search-input {
