@@ -67,6 +67,10 @@ p {
   background-color: #fff;
 }
 
+.shadow {
+  box-shadow: 0 0 2px #d6d6d6;
+}
+
 #navigation,
 #search {
   display: table-cell;
@@ -111,10 +115,6 @@ p {
   padding: 0;
   padding-left: 10px;
   padding-right: 10px;
-}
-
-.shadow {
-  box-shadow: 0 0 2px #d6d6d6;
 }
 
 #content {
