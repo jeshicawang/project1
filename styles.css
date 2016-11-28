@@ -63,6 +63,10 @@ body {
   border-radius: 50%;
 }
 
+#profile #username {
+  margin-bottom: 15px;
+}
+
 #profile #description {
   font-weight: 300;
 }
@@ -132,12 +136,22 @@ button:focus {
   height: 40px;
 }
 
-.update .username {
+.update .name {
   display: inline-block;
   float: left;
   margin-top: 0;
   margin-bottom: 0;
   margin-left: 55px;
+}
+
+.update .username {
+  display: inline-block;
+  float: left;
+  margin-left: 5px;
+  margin-top: 0;
+  margin-bottom: 0;
+  font-weight: 300;
+  color: #b2b2b2;
 }
 
 .update .timestamp {
@@ -166,7 +180,8 @@ h1 {
 }
 
 h2 {
-  margin: 15px;
+  margin-top: 15px;
+  margin-bottom: 0;
   font-size: 18px;
 }
 

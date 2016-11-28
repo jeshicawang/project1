@@ -1,7 +1,9 @@
 /* global moment */
 
 var user = {
-  username: 'jeshicawang',
+  username: 'jwang',
+  firstName: 'Jessica',
+  lastName: 'Wang',
   profilePic: 'images/profile-picture.jpg',
   aboutMe: 'Female. 20. Coffee lover. Argentine Tango Dancer. Future software developer;)',
   updates: [ { timestamp: newMoment('5:00PM 11/22/16'), post: 'I\'m going home for the day!' },
@@ -25,7 +27,8 @@ function node(text) {
 
 function getChildren(index) {
   return [createElement('img', { class: 'photo', src: user.profilePic }, null),
-          createElement('h4', { class: 'username' }, node('@' + user.username)),
+          createElement('h4', { class: 'name' }, node(user.firstName + ' ' + user.lastName)),
+          createElement('p', { class: 'username' }, node('@' + user.username)),
           createElement('p', { class: 'timestamp' }, node(printMoment(user.updates[index].timestamp))),
           createElement('p', { class: 'post' }, node(user.updates[index].post))];
 }
@@ -50,7 +53,8 @@ function displayUserInfo() {
   profileContainer.appendChild(createElement('div', { class: 'photo shadow' }, null));
   var profilePic = document.querySelector('.photo');
   profilePic.style.backgroundImage = 'url(' + user.profilePic + ')';
-  var children = [createElement('h2', { id: 'username' }, node('@' + user.username)),
+  var children = [createElement('h2', { id: 'name' }, node(user.firstName + ' ' + user.lastName)),
+                  createElement('p', { id: 'username' }, node('@' + user.username)),
                   createElement('p', { id: 'about-me' }, node(user.aboutMe))];
   profileContainer.appendChild(createElement('div', { id: 'description' }, children));
 }
