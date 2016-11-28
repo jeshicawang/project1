@@ -149,6 +149,7 @@ function follow(id) {
     users[id].followers.unshift(primaryUser.id);
     followButton.data = 'Following';
   }
+  refreshStats(currentlyViewing);
 }
 
 function remove(ids) {
