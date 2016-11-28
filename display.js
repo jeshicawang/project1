@@ -81,14 +81,14 @@ function createElement(tag, attributes, children) {
 }
 
 function userInfo(user) {
-  var userInfo = createElement('div', { id: 'user-info' }, null);
-  userInfo.appendChild(createElement('div', { class: 'photo' }, null));
-  var profilePic = userInfo.lastChild;
+  var userInfo = createElement('div', { id: 'user-info' },
+                    [createElement('div', { class: 'photo' }, null),
+                     createElement('div', { id: 'description' },
+                        [createElement('h2', { id: 'name' }, node(user.firstName + ' ' + user.lastName)),
+                         createElement('p', { id: 'username' }, node('@' + user.username)),
+                         createElement('p', { id: 'about-me' }, node(user.aboutMe))])]);
+  var profilePic = userInfo.firstChild;
   profilePic.style.backgroundImage = 'url(' + user.profilePic + ')';
-  var children = [createElement('h2', { id: 'name' }, node(user.firstName + ' ' + user.lastName)),
-                  createElement('p', { id: 'username' }, node('@' + user.username)),
-                  createElement('p', { id: 'about-me' }, node(user.aboutMe))];
-  userInfo.appendChild(createElement('div', { id: 'description' }, children));
   if (user !== primaryUser) {
     var following = false;
     if (primaryUser.following.indexOf(user.id) > -1)
@@ -100,12 +100,12 @@ function userInfo(user) {
 }
 
 function userUpdates(user) {
-  var userUpdates = createElement('div', { id: 'updates', class: 'shadow' }, null);
+  var updatesToDisplay = []
   updates.forEach(function (update, index) {
     if (update.userId === user.id)
-      userUpdates.appendChild(createElement('div', { class: 'update' }, getUpdateElements(user, index)));
+      updatesToDisplay.push(createElement('div', { class: 'update' }, getUpdateElements(user, index)));
   });
-  return userUpdates;
+  return createElement('div', { id: 'updates', class: 'shadow' }, updatesToDisplay);
 }
 
 function stats(user) {
@@ -128,12 +128,12 @@ function refreshStats() {
 }
 
 function allUpdates() {
-  var allUpdates = createElement('div', { id: 'updates', class: 'shadow' }, null);
+  var updatesToDisplay = [];
   updates.forEach(function (update, index) {
     if(primaryUser.following.indexOf(update.userId) > -1)
-      allUpdates.appendChild(createElement('div', { class: 'update' }, getUpdateElements(users[update.userId], index)));
+      updatesToDisplay.push(createElement('div', { class: 'update' }, getUpdateElements(users[update.userId], index)));
   });
-  return allUpdates;
+  return createElement('div', { id: 'updates', class: 'shadow' }, updatesToDisplay);
 }
 
 function follow(id) {
