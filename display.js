@@ -24,7 +24,8 @@ function node(text) {
 }
 
 function getChildren(index) {
-  return [createElement('h4', { class: 'username' }, node('@' + user.username)),
+  return [createElement('img', { class: 'photo', src: user.profilePic }, null),
+          createElement('h4', { class: 'username' }, node('@' + user.username)),
           createElement('p', { class: 'timestamp' }, node(printMoment(user.updates[index].timestamp))),
           createElement('p', { class: 'post' }, node(user.updates[index].post))];
 }
@@ -46,10 +47,10 @@ function createElement(tag, attributes, children) {
 
 function displayUserInfo() {
   var profileContainer = document.getElementById('profile');
-  profileContainer.appendChild(createElement('div', { id: 'photo' }, null));
-  var profilePic = document.getElementById('photo');
+  profileContainer.appendChild(createElement('div', { class: 'photo shadow' }, null));
+  var profilePic = document.querySelector('.photo');
   profilePic.style.backgroundImage = 'url(' + user.profilePic + ')';
-  var children = [createElement('h3', { id: 'username' }, node('@' + user.username)),
+  var children = [createElement('h2', { id: 'username' }, node('@' + user.username)),
                   createElement('p', { id: 'about-me' }, node(user.aboutMe))];
   profileContainer.appendChild(createElement('div', { id: 'description' }, children));
 }
@@ -61,18 +62,41 @@ function displayExistingUpdates() {
   }
 }
 
-function enablePosting() {
-  var postButton = document.getElementById('post-button');
-  postButton.addEventListener('click', addUpdate, false);
+var userInput = false;
+
+function enableEventListeners() {
+  document.getElementById('post-text').addEventListener('click', modifyTextbox, false);
+  document.getElementById('post-text').addEventListener('blur', modifyTextbox, false);
+  document.getElementById('post-button').addEventListener('click', addUpdate, false);
+}
+
+function modifyTextbox() {
+  var textbox = document.getElementById('post-text');
+  if (!userInput) {
+    textbox.value = '';
+    textbox.style.color = '#000';
+    userInput = true;
+  } else if (!textbox.value.trim()) {
+    textbox.value = 'Type a new update...';
+    textbox.style.color = '#b2b2b2';
+    userInput = false;
+  }
 }
 
 function addUpdate() {
-  var updatesContainer = document.getElementById('updates');
-  var post = document.getElementById('post-text').value;
-  user.updates.unshift({ timestamp: moment(), post: post });
-  updatesContainer.insertBefore(createElement('div', { class: 'update'}, getChildren(0)), updatesContainer.firstChild);
+  if (userInput) {
+    var updatesContainer = document.getElementById('updates');
+    var post = document.getElementById('post-text');
+    if (post.value.trim()) {
+      user.updates.unshift({ timestamp: moment(), post: post.value });
+      updatesContainer.insertBefore(createElement('div', { class: 'update'}, getChildren(0)), updatesContainer.firstChild);
+      post.value = 'Type a new update...';
+      post.style.color = '#b2b2b2';
+      userInput = false;
+    }
+  }
 }
 
 displayUserInfo();
 displayExistingUpdates();
-enablePosting();
+enableEventListeners();
