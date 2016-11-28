@@ -7,7 +7,8 @@ var users = [ { id: 0,
                 profilePic: 'images/jwang.jpg',
                 aboutMe: 'Female. 20. Coffee lover. Argentine Tango Dancer. Future software developer;)',
                 following: [],
-                followers: [] },
+                followers: [],
+                updatesCount: 5 },
               { id: 1,
                 username: 'biagi',
                 firstName: 'Rodolfo',
@@ -15,7 +16,8 @@ var users = [ { id: 0,
                 profilePic: 'images/biagi.jpg',
                 aboutMe: 'An Argentine Tango musician who started his musical career by playing background music for silent movies, and this was where he was first discovered by a tango band leader.',
                 following: [],
-                followers: [] },
+                followers: [],
+                updatesCount: 3 },
               { id: 2,
                 username: 'varela',
                 firstName: 'Hector',
@@ -23,11 +25,12 @@ var users = [ { id: 0,
                 profilePic: 'images/varela.jpg',
                 aboutMe: 'Héctor Varela was a musician criticized by the innovative players, but loved by the fans of dancing and popular tango.',
                 following: [],
-                followers: [] },
+                followers: [],
+                updatesCount: 2 },
 ];
 
 var primaryUser = users[0];
-var currentlyViewing = primaryUser.username;
+var currentlyViewing = primaryUser;
 var postUserInput = false;
 var searchUserInput = false;
 
@@ -109,13 +112,19 @@ function stats(user) {
   return createElement('div', { id: 'stats', class: 'shadow' },
             [createElement('span', { id: 'posts', class: 'stat' },
                 [createElement('p', { class: 'label' }, node('posts')),
-                 createElement('p', { class: 'count' }, node('###'))]),
+                 createElement('p', { class: 'count' }, node(user.updatesCount))]),
              createElement('span', { id: 'following', class: 'stat' },
                 [createElement('p', { class: 'label' }, node('following')),
                 createElement('p', { class: 'count' }, node(user.following.length))]),
              createElement('span', { id: 'followers', class: 'stat' },
                 [createElement('p', { class: 'label' }, node('followers')),
                 createElement('p', { class: 'count' }, node(user.followers.length))])]);
+}
+
+function refreshStats() {
+  remove('stats');
+  var centerContainer = document.getElementById('center');
+  centerContainer.insertBefore(stats(currentlyViewing), centerContainer.firstChild);
 }
 
 function allUpdates() {
@@ -158,7 +167,7 @@ function displayProfile(user) {
   var centerContainer = document.getElementById('center');
   centerContainer.insertBefore(stats(user), centerContainer.firstChild);
   centerContainer.appendChild(userUpdates(user));
-  currentlyViewing = user.username;
+  currentlyViewing = user;
 }
 
 function addEventListeners() {
@@ -202,7 +211,9 @@ function addUpdate() {
     var post = document.getElementById('post-input');
     if (post.value.trim()) {
       updates.unshift({ userId: primaryUser.id, timestamp: moment(), post: post.value });
-      if (currentlyViewing === primaryUser.username)
+      primaryUser.updatesCount++;
+      refreshStats(currentlyViewing);
+      if (currentlyViewing === primaryUser)
         updatesContainer.insertBefore(createElement('div', { class: 'update'}, getUpdateElements(primaryUser, 0)), updatesContainer.firstChild);
       post.value = 'Type a new update...';
       post.style.color = '#b2b2b2';
