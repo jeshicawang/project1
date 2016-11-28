@@ -3,6 +3,7 @@ body {
   text-align: center;
   font-family: 'Source Sans Pro', sans-serif;
   font-size: 14px;
+  font-weight: 300;
 }
 
 button {
@@ -19,8 +20,8 @@ button:hover,
 button:focus {
   outline: none;
   color: #fff;
-  background-color: #81a9ca;
-  border-color: #81a9ca;
+  background-color: #6d94b6;
+  border-color: #6d94b6;
 }
 
 textarea {
@@ -152,11 +153,10 @@ p {
 
 #profile .photo {
   margin: auto;
-  width: 100px;
-  height: 100px;
+  width: 125px;
+  height: 125px;
   background-size: cover;
   background-position: center;
-  border: 2px solid #fff;
 }
 
 .photo {
@@ -167,8 +167,15 @@ p {
   margin-bottom: 15px;
 }
 
-#profile #description {
-  font-weight: 300;
+#profile #about-me {
+  margin-bottom: 15px;
+}
+
+#profile #follow {
+  width: 70%;
+  border: 0;
+  color: #fff;
+  background-color: #6d94b6;
 }
 
 #new-update {
