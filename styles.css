@@ -167,25 +167,22 @@ p {
   padding: 20px;
 }
 
-.left {
+#left {
   width: 23%;
-}
-
-.right {
-  width: 23%;
-}
-
-.center {
-  width: 54%;
-  background-color: #f2eee8;
-}
-
-#profile {
   background-color: #81a9ca;
   color: #fff;
 }
 
-#profile .photo {
+#right {
+  width: 23%;
+}
+
+#center {
+  width: 54%;
+  background-color: #f2eee8;
+}
+
+#user-info .photo {
   margin: auto;
   width: 125px;
   height: 125px;
@@ -197,15 +194,15 @@ p {
   border-radius: 50%;
 }
 
-#profile #username {
+#user-info #username {
   margin-bottom: 15px;
 }
 
-#profile #about-me {
+#user-info #about-me {
   margin-bottom: 15px;
 }
 
-#profile #follow {
+#user-info #follow {
   width: 70%;
   border: 0;
   color: #fff;
