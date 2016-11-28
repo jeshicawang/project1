@@ -222,6 +222,10 @@ p {
   padding: 10px 10px 6px;
 }
 
+#stats .stat:hover {
+  border-bottom: 4px solid #d0e9ff;
+}
+
 #stats #posts {
   border-bottom: 4px solid #81a9ca;
 }
