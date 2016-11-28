@@ -4,17 +4,23 @@
 	   <meta charset="UTF-8">
      <title>chatter</title>
      <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400|Scope+One">
+     <link rel="stylesheet" href="https://cdn.linearicons.com/free/1.0.0/icon-font.min.css">
 	   <link rel="stylesheet" href="styles.css">
   </head>
   <body>
     <div id="header" class="shadow">
+      <div id="navigation"></div>
       <h1>chatter</h1>
+      <div id="search">
+        <button id="search-button"><span class="lnr lnr-magnifier"></span></button>
+        <textarea id="search-input">Search</textarea>
+      </div>
     </div>
     <div id="content">
       <div id="profile" class="container left"></div>
       <div class="container center">
         <div id="new-update" class="shadow">
-          <textarea id="post-text">Type a new update...</textarea>
+          <textarea id="post-input">Type a new update...</textarea>
           <button id="post-button">Post</button>
         </div>
         <div id="updates" class="shadow"></div>
