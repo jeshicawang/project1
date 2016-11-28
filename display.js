@@ -6,21 +6,24 @@ var users = [ { id: 0,
                 lastName: 'Wang',
                 profilePic: 'images/jwang.jpg',
                 aboutMe: 'Female. 20. Coffee lover. Argentine Tango Dancer. Future software developer;)',
-                following: [] },
+                following: [],
+                followers: [] },
               { id: 1,
                 username: 'biagi',
                 firstName: 'Rodolfo',
                 lastName: 'Biagi',
                 profilePic: 'images/biagi.jpg',
                 aboutMe: 'An Argentine Tango musician who started his musical career by playing background music for silent movies, and this was where he was first discovered by a tango band leader.',
-                following: [] },
+                following: [],
+                followers: [] },
               { id: 2,
                 username: 'varela',
                 firstName: 'Hector',
                 lastName: 'Varela',
                 profilePic: 'images/varela.jpg',
                 aboutMe: 'Héctor Varela was a musician criticized by the innovative players, but loved by the fans of dancing and popular tango.',
-                following: [] },
+                following: [],
+                followers: [] },
 ];
 
 var primaryUser = users[0];
@@ -105,9 +108,12 @@ function follow(id) {
   if (followButton.data === 'Following') {
     var index = primaryUser.following.indexOf(id);
     primaryUser.following.splice(index, 1);
+    index = users[id].followers.indexOf(primaryUser.id);
+    users[id].followers.splice(index, 1);
     followButton.data = 'Follow';
   } else {
     primaryUser.following.unshift(id);
+    users[id].followers.unshift(primaryUser.id);
     followButton.data = 'Following';
   }
 }

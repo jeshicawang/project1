@@ -1,6 +1,7 @@
 body {
   margin: 0;
   text-align: center;
+  color: #353535;
   font-family: 'Source Sans Pro', sans-serif;
   font-size: 14px;
   font-weight: 300;
@@ -64,7 +65,7 @@ p {
   top: 0;
   width: 100%;
   box-sizing: border-box;
-  padding: 2px 10px;
+  padding: 2px 20px;
   background-color: #fff;
 }
 
@@ -83,7 +84,7 @@ p {
   display: table;
   position: relative;
   float: left;
-  margin-left: 20px;
+  margin-right: 20px;
   height: 34px;
   width: 34px;
   border-radius: 50%;
@@ -129,7 +130,7 @@ p {
 
 #search #search-input {
   float: right;
-  width: 200px;
+  width: 50%;
   height: 30px;
   padding: 4px 4px 4px 10px;
   border-radius: 50px 0 0 50px;
