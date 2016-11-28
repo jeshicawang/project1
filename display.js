@@ -89,6 +89,7 @@ function empty(ids) {
 }
 
 function enableEventListeners() {
+  document.getElementById('profile-button').addEventListener('click', function() { switchUser(primaryUser) }, false);
   document.getElementById('post-input').addEventListener('focus', modifyPostTextbox, false);
   document.getElementById('post-input').addEventListener('blur', modifyPostTextbox, false);
   document.getElementById('post-button').addEventListener('click', addUpdate, false);
