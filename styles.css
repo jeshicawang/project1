@@ -209,8 +209,35 @@ p {
   background-color: #6d94b6;
 }
 
+#stats {
+  display: table;
+  width: 100%;
+  background-color: #fff;
+  margin-bottom: 20px;
+}
+
+#stats .stat {
+  display: table-cell;
+  width: 33%;
+  padding: 10px 10px 6px;
+}
+
+#stats #posts {
+  border-bottom: 4px solid #81a9ca;
+}
+
+#stats .label {
+  color: #b2b2b2;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+#stats .count {
+  font-weight: bold;
+}
+
 #new-update {
-  margin: auto;
   background-color: #fff;
   padding: 15px;
   text-align: right;

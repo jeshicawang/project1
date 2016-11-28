@@ -105,6 +105,19 @@ function userUpdates(user) {
   return userUpdates;
 }
 
+function stats(user) {
+  return createElement('div', { id: 'stats', class: 'shadow' },
+            [createElement('span', { id: 'posts', class: 'stat' },
+                [createElement('p', { class: 'label' }, node('posts')),
+                 createElement('p', { class: 'count' }, node('###'))]),
+             createElement('span', { id: 'following', class: 'stat' },
+                [createElement('p', { class: 'label' }, node('following')),
+                createElement('p', { class: 'count' }, node(user.following.length))]),
+             createElement('span', { id: 'followers', class: 'stat' },
+                [createElement('p', { class: 'label' }, node('followers')),
+                createElement('p', { class: 'count' }, node(user.followers.length))])]);
+}
+
 function allUpdates() {
   var allUpdates = createElement('div', { id: 'updates', class: 'shadow' }, null);
   updates.forEach(function (update, index) {
@@ -143,6 +156,7 @@ function displayProfile(user) {
   var leftContainer = document.getElementById('left');
   leftContainer.appendChild(userInfo(user));
   var centerContainer = document.getElementById('center');
+  centerContainer.insertBefore(stats(user), centerContainer.firstChild);
   centerContainer.appendChild(userUpdates(user));
   currentlyViewing = user.username;
 }
@@ -159,13 +173,13 @@ function addEventListeners() {
 }
 
 function goHome() {
-  remove(['user-info', 'updates']);
+  remove(['user-info', 'stats', 'updates']);
   var centerContainer = document.getElementById('center');
   centerContainer.appendChild(allUpdates());
 }
 
 function switchUser(user) {
-  remove(['user-info', 'updates']);
+  remove(['user-info', 'stats', 'updates']);
   displayProfile(user);
 }
 
