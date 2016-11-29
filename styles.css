@@ -184,8 +184,8 @@ p {
 
 #user-info .photo {
   margin: auto;
-  width: 125px;
-  height: 125px;
+  width: 126px;
+  height: 126px;
   background-size: cover;
   background-position: center;
 }
@@ -222,6 +222,37 @@ p {
   float: left;
   width: 30px;
   height: inherit;
+}
+
+input {
+  width: .1px;
+  height: .1px;
+  opacity: 0;
+  overflow: hidden;
+  position: absolute;
+  z-index: -1;
+}
+
+label {
+  position: absolute;
+  display: inline-block;
+  transform: translate(-50%,-100%);
+  box-sizing: border-box;
+  width: 126px;
+  height: 126px;
+  background-color: rgba(0,0,0,.2);
+  border-radius: 50%;
+  padding-top: 43px;
+  padding-bottom: 43px;
+}
+
+label:hover {
+  background-color: rgba(0,0,0,.5);
+}
+
+label span {
+  margin: auto;
+  font-size: 40px;
 }
 
 #editor {

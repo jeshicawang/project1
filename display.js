@@ -135,6 +135,7 @@ function editProfile() {
   var userInfo = document.getElementById('user-info');
   userInfo.appendChild(createElement('input', { id: 'image-upload', type: 'file' }, null));
   userInfo.lastChild.addEventListener('change', changeProfilePic, false);
+  userInfo.appendChild(createElement('label', { for: 'image-upload' }, createElement('span', { class: 'lnr lnr-camera' }, null)));
   userInfo.appendChild(editor(primaryUser));
   userInfo.appendChild(createElement('p', { id: "error-msg" }, ' '));
   userInfo.appendChild(createElement('button', { id: 'save' }, 'Save'));
@@ -146,6 +147,7 @@ function editProfile() {
 function changeProfilePic() {
   var img = document.getElementById('image-upload').files[0];
   primaryUser.profilePic = 'images/' + img.name;
+  document.getElementsByClassName('photo')[0].style.backgroundImage = 'url(\'images/' + img.name + '\')';
 }
 
 function editor(user) {
