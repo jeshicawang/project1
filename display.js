@@ -142,17 +142,20 @@ function editor(user) {
   return createElement('div', { id: 'editor', class: 'shadow' },
             [createElement('div', { id: 'name', class: 'field' },
                 [createElement('div', {  }, createElement('span', { class: 'lnr lnr-laptop' }, null)),
-                 createElement('textarea', {  }, user.displayName)]),
+                 createElement('textarea', { id: 'name-text' }, user.displayName)]),
              createElement('div', { id: 'username', class: 'field' },
                 [createElement('div', {  }, createElement('span', { class: 'lnr lnr-user' }, null)),
-                 createElement('textarea', {  }, user.username)]),
+                 createElement('textarea', { id: 'username-text' }, user.username)]),
              createElement('div', { id: 'bio', class: 'field' },
                 [createElement('div', {  }, createElement('span', { class: 'lnr lnr-bubble' }, null)),
-                 createElement('textarea', {  }, user.bio)])]);
+                 createElement('textarea', { id: 'bio-text' }, user.bio)])]);
 }
 
 function saveProfile() {
-
+  primaryUser.displayName = document.getElementById('name-text').value;
+  primaryUser.username = document.getElementById('username-text').value;
+  primaryUser.bio = document.getElementById('bio-text').value;
+  switchUser(primaryUser);
 }
 
 function follow(id) {
