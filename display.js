@@ -49,15 +49,11 @@ function newMoment(timestamp) {
   return moment(timestamp, 'h:mmA M/D/YY');
 }
 
-function printMoment(timestamp) {
-  return timestamp.format('h:mmA M/D/YY');
-}
-
 function getUpdateElements(user, index) {
   return [createElement('img', { class: 'photo', src: user.profilePic }, null),
           createElement('h4', { class: 'name' }, user.firstName + ' ' + user.lastName),
           createElement('p', { class: 'username' }, '@' + user.username),
-          createElement('p', { class: 'timestamp' }, printMoment(updates[index].timestamp)),
+          createElement('p', { class: 'timestamp' }, updates[index].timestamp.format('h:mmA M/D/YY')),
           createElement('p', { class: 'post' }, updates[index].post)];
 }
 
