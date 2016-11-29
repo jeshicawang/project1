@@ -53,16 +53,12 @@ function printMoment(timestamp) {
   return timestamp.format('h:mmA M/D/YY');
 }
 
-function node(text) {
-  return document.createTextNode(text);
-}
-
 function getUpdateElements(user, index) {
   return [createElement('img', { class: 'photo', src: user.profilePic }, null),
-          createElement('h4', { class: 'name' }, node(user.firstName + ' ' + user.lastName)),
-          createElement('p', { class: 'username' }, node('@' + user.username)),
-          createElement('p', { class: 'timestamp' }, node(printMoment(updates[index].timestamp))),
-          createElement('p', { class: 'post' }, node(updates[index].post))];
+          createElement('h4', { class: 'name' }, user.firstName + ' ' + user.lastName),
+          createElement('p', { class: 'username' }, '@' + user.username),
+          createElement('p', { class: 'timestamp' }, printMoment(updates[index].timestamp)),
+          createElement('p', { class: 'post' }, updates[index].post)];
 }
 
 function createElement(tag, attributes, children) {
@@ -72,6 +68,10 @@ function createElement(tag, attributes, children) {
   }
   if (!children)
     return newElement;
+  if (!(children instanceof Element) && !(children instanceof Array)) {
+    newElement.appendChild(document.createTextNode(children));
+    return newElement;
+  }
   if (!(children instanceof Array))
     children = [children];
   children.forEach(function(child) {
@@ -84,15 +84,15 @@ function userInfo(user) {
   var userInfo = createElement('div', { id: 'user-info' },
                     [createElement('div', { class: 'photo' }, null),
                      createElement('div', { id: 'description' },
-                        [createElement('h2', { id: 'name' }, node(user.firstName + ' ' + user.lastName)),
-                         createElement('p', { id: 'username' }, node('@' + user.username)),
-                         createElement('p', { id: 'about-me' }, node(user.aboutMe))])]);
+                        [createElement('h2', { id: 'name' }, user.firstName + ' ' + user.lastName),
+                         createElement('p', { id: 'username' }, '@' + user.username),
+                         createElement('p', { id: 'about-me' }, user.aboutMe)])]);
   var profilePic = userInfo.firstChild;
   profilePic.style.backgroundImage = 'url(' + user.profilePic + ')';
   if (user === primaryUser)
     return userInfo;
   var following = (primaryUser.following.indexOf(user.id) > -1);
-  userInfo.appendChild(createElement('button', { id: 'follow' }, node(following ? 'Following' : 'Follow')));
+  userInfo.appendChild(createElement('button', { id: 'follow' }, following ? 'Following' : 'Follow'));
   userInfo.lastChild.addEventListener('click', function() { follow(user.id) }, false);
   return userInfo;
 }
@@ -109,14 +109,14 @@ function userUpdates(user) {
 function stats(user) {
   return createElement('div', { id: 'stats', class: 'shadow' },
             [createElement('span', { id: 'posts', class: 'stat' },
-                [createElement('p', { class: 'label' }, node('posts')),
-                 createElement('p', { class: 'count' }, node(user.updatesCount))]),
+                [createElement('p', { class: 'label' }, 'posts'),
+                 createElement('p', { class: 'count' }, user.updatesCount)]),
              createElement('span', { id: 'following', class: 'stat' },
-                [createElement('p', { class: 'label' }, node('following')),
-                createElement('p', { class: 'count' }, node(user.following.length))]),
+                [createElement('p', { class: 'label' }, 'following'),
+                createElement('p', { class: 'count' }, user.following.length)]),
              createElement('span', { id: 'followers', class: 'stat' },
-                [createElement('p', { class: 'label' }, node('followers')),
-                createElement('p', { class: 'count' }, node(user.followers.length))])]);
+                [createElement('p', { class: 'label' }, 'followers'),
+                createElement('p', { class: 'count' }, user.followers.length)])]);
 }
 
 function refreshStats() {
