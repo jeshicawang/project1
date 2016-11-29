@@ -133,12 +133,19 @@ function allUpdates() {
 function editProfile() {
   remove(['description', 'edit-profile']);
   var userInfo = document.getElementById('user-info');
+  userInfo.appendChild(createElement('input', { id: 'image-upload', type: 'file' }, null));
+  userInfo.lastChild.addEventListener('change', changeProfilePic, false);
   userInfo.appendChild(editor(primaryUser));
   userInfo.appendChild(createElement('p', { id: "error-msg" }, ' '));
   userInfo.appendChild(createElement('button', { id: 'save' }, 'Save'));
   var username = document.getElementById('username-text');
   username.addEventListener('keyup', function() { checkUsername(username.value) }, false);
-  userInfo.lastChild.addEventListener('click', function() { saveProfile() }, false);
+  userInfo.lastChild.addEventListener('click', saveProfile, false);
+}
+
+function changeProfilePic() {
+  var img = document.getElementById('image-upload').files[0];
+  primaryUser.profilePic = 'images/' + img.name;
 }
 
 function editor(user) {
