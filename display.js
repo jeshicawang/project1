@@ -165,17 +165,6 @@ function displayProfile(user) {
   currentlyViewing = user;
 }
 
-function addEventListeners() {
-  document.getElementById('home-button').addEventListener('click', goHome, false);
-  document.getElementById('profile-button').addEventListener('click', function() { switchUser(primaryUser) }, false);
-  document.getElementById('post-input').addEventListener('focus', modifyPostTextbox, false);
-  document.getElementById('post-input').addEventListener('blur', modifyPostTextbox, false);
-  document.getElementById('post-button').addEventListener('click', addUpdate, false);
-  document.getElementById('search-input').addEventListener('focus', modifySearchTextbox, false);
-  document.getElementById('search-input').addEventListener('blur', modifySearchTextbox, false);
-  document.getElementById('search-button').addEventListener('click', checkSearchInput, false);
-}
-
 function goHome() {
   remove(['user-info', 'stats', 'updates']);
   var centerContainer = document.getElementById('center');
@@ -243,4 +232,12 @@ function checkSearchInput() {
 }
 
 displayProfile(primaryUser);
-addEventListeners();
+
+document.getElementById('home-button').addEventListener('click', goHome, false);
+document.getElementById('profile-button').addEventListener('click', function() { switchUser(primaryUser) }, false);
+document.getElementById('post-input').addEventListener('focus', modifyPostTextbox, false);
+document.getElementById('post-input').addEventListener('blur', modifyPostTextbox, false);
+document.getElementById('post-button').addEventListener('click', addUpdate, false);
+document.getElementById('search-input').addEventListener('focus', modifySearchTextbox, false);
+document.getElementById('search-input').addEventListener('blur', modifySearchTextbox, false);
+document.getElementById('search-button').addEventListener('click', checkSearchInput, false);
