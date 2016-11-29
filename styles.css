@@ -91,7 +91,7 @@ p {
   padding: 6px;
 }
 
-.lnr {
+#header .lnr {
   display: table-cell;
   font-size: 20px;
   font-weight: bold;
@@ -202,11 +202,79 @@ p {
   margin-bottom: 15px;
 }
 
-#user-info #follow {
+#user-info #follow,
+#user-info #edit-profile,
+#user-info #save {
   width: 70%;
   border: 0;
   color: #fff;
   background-color: #6d94b6;
+}
+
+#editor {
+  display: table;
+  height: 90px;
+}
+
+.field {
+  display: table-row;
+  height: 30px;
+}
+
+.field div {
+  display: table;
+  position: absolute;
+  float: left;
+  width: 30px;
+  height: inherit;
+}
+
+#editor {
+  background-color: #fff;
+  padding: 5px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+#editor .lnr {
+  display: table-cell;
+  vertical-align: middle;
+  color: #353535;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+#bio .lnr {
+  transform: translateY(-30px);
+}
+
+#bio.field {
+  height: 90px;
+}
+
+#editor textarea {
+  float: right;
+  margin-left: 30px;
+  height: inherit;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  border-left: 0;
+  border-right: 0;
+}
+
+#name textarea {
+  border-top: 0;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+#username textarea {
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+#bio textarea {
+  border-bottom: 0;
 }
 
 #stats {
