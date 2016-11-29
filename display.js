@@ -134,6 +134,7 @@ function editProfile() {
   remove(['description', 'edit-profile']);
   var userInfo = document.getElementById('user-info');
   userInfo.appendChild(editor(primaryUser));
+  userInfo.appendChild(createElement('p', { id: "error-msg" }, ' '));
   userInfo.appendChild(createElement('button', { id: 'save' }, 'Save'));
   var username = document.getElementById('username-text');
   username.addEventListener('keyup', function() { checkUsername(username.value) }, false);
@@ -157,32 +158,35 @@ function editor(user) {
 
 function checkUsername(value) {
   var taken = false;
-  var validCharacters = /^[a-z0-9_.]*$/;
+  var validCharacters = /^[a-z0-9_]*$/;
   if (value === primaryUser.username || !value.length) {
-    document.getElementById('cross').style.visibility = "hidden";
-    document.getElementById('check').style.visibility = "hidden";
+    document.getElementById('error-msg').textContent = ' ';
+    document.getElementById('cross').style.visibility = 'hidden';
+    document.getElementById('check').style.visibility = 'hidden';
     return;
   }
-  if (value.length < 4 || value.length > 24) {
-    document.getElementById('cross').style.visibility = "visible";
+  if (value.length < 4 || value.length > 24 || !validCharacters.test(value)) {
+    document.getElementById('error-msg').textContent = 'Please enter a valid username.';
+    document.getElementById('cross').style.visibility = 'visible';
     return
-  }
-  if (!validCharacters.test(value)) {
-    document.getElementById('cross').style.visibility = "visible";
-    return;
   }
   users.forEach(function (user) {
     if (value === user.username) {
+      document.getElementById('error-msg').textContent = 'This username is taken.';
       taken = true;
-      document.getElementById('cross').style.visibility = "visible";
+      document.getElementById('cross').style.visibility = 'visible';
+      return;
     }
   });
   if (taken) return;
-  document.getElementById('cross').style.visibility = "hidden";
-  document.getElementById('check').style.visibility = "visible";
+  document.getElementById('error-msg').textContent = ' ';
+  document.getElementById('cross').style.visibility = 'hidden';
+  document.getElementById('check').style.visibility = 'visible';
 }
 
 function saveProfile() {
+  if (document.getElementById('cross').style.visibility === 'visible' || !document.getElementById('username-text').value)
+    return;
   primaryUser.displayName = document.getElementById('name-text').value;
   primaryUser.username = document.getElementById('username-text').value;
   primaryUser.bio = document.getElementById('bio-text').value;

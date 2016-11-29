@@ -231,8 +231,7 @@ p {
   height: 90px;
   background-color: #fff;
   padding: 5px;
-  margin-top: 20px;
-  margin-bottom: 20px;
+  margin-top: 30px;
 }
 
 #editor .lnr {
@@ -261,6 +260,11 @@ p {
 
 #bio.field {
   height: 90px;
+}
+
+#user-info #error-msg {
+  height: 16px;
+  margin-bottom: 20px;
 }
 
 .field div {
