@@ -1,6 +1,7 @@
 body {
   margin: 0;
   text-align: center;
+  color: #353535;
   font-family: 'Source Sans Pro', sans-serif;
   font-size: 14px;
   font-weight: 300;
@@ -64,7 +65,7 @@ p {
   top: 0;
   width: 100%;
   box-sizing: border-box;
-  padding: 2px 10px;
+  padding: 2px 20px;
   background-color: #fff;
 }
 
@@ -83,7 +84,7 @@ p {
   display: table;
   position: relative;
   float: left;
-  margin-left: 20px;
+  margin-right: 20px;
   height: 34px;
   width: 34px;
   border-radius: 50%;
@@ -129,7 +130,7 @@ p {
 
 #search #search-input {
   float: right;
-  width: 200px;
+  width: 50%;
   height: 30px;
   padding: 4px 4px 4px 10px;
   border-radius: 50px 0 0 50px;
@@ -166,25 +167,22 @@ p {
   padding: 20px;
 }
 
-.left {
+#left {
   width: 23%;
-}
-
-.right {
-  width: 23%;
-}
-
-.center {
-  width: 54%;
-  background-color: #f2eee8;
-}
-
-#profile {
   background-color: #81a9ca;
   color: #fff;
 }
 
-#profile .photo {
+#right {
+  width: 23%;
+}
+
+#center {
+  width: 54%;
+  background-color: #f2eee8;
+}
+
+#user-info .photo {
   margin: auto;
   width: 125px;
   height: 125px;
@@ -196,23 +194,54 @@ p {
   border-radius: 50%;
 }
 
-#profile #username {
+#user-info #username {
   margin-bottom: 15px;
 }
 
-#profile #about-me {
+#user-info #about-me {
   margin-bottom: 15px;
 }
 
-#profile #follow {
+#user-info #follow {
   width: 70%;
   border: 0;
   color: #fff;
   background-color: #6d94b6;
 }
 
+#stats {
+  display: table;
+  width: 100%;
+  background-color: #fff;
+  margin-bottom: 20px;
+}
+
+#stats .stat {
+  display: table-cell;
+  width: 33%;
+  padding: 10px 10px 6px;
+}
+
+#stats .stat:hover {
+  border-bottom: 4px solid #d0e9ff;
+}
+
+#stats #posts {
+  border-bottom: 4px solid #81a9ca;
+}
+
+#stats .label {
+  color: #b2b2b2;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+#stats .count {
+  font-weight: bold;
+}
+
 #new-update {
-  margin: auto;
   background-color: #fff;
   padding: 15px;
   text-align: right;

@@ -6,25 +6,31 @@ var users = [ { id: 0,
                 lastName: 'Wang',
                 profilePic: 'images/jwang.jpg',
                 aboutMe: 'Female. 20. Coffee lover. Argentine Tango Dancer. Future software developer;)',
-                following: [] },
+                following: [],
+                followers: [],
+                updatesCount: 5 },
               { id: 1,
                 username: 'biagi',
                 firstName: 'Rodolfo',
                 lastName: 'Biagi',
                 profilePic: 'images/biagi.jpg',
                 aboutMe: 'An Argentine Tango musician who started his musical career by playing background music for silent movies, and this was where he was first discovered by a tango band leader.',
-                following: [] },
+                following: [],
+                followers: [],
+                updatesCount: 3 },
               { id: 2,
                 username: 'varela',
                 firstName: 'Hector',
                 lastName: 'Varela',
                 profilePic: 'images/varela.jpg',
                 aboutMe: 'Héctor Varela was a musician criticized by the innovative players, but loved by the fans of dancing and popular tango.',
-                following: [] },
+                following: [],
+                followers: [],
+                updatesCount: 2 },
 ];
 
 var primaryUser = users[0];
-var currentlyViewing = primaryUser.username;
+var currentlyViewing = primaryUser;
 var postUserInput = false;
 var searchUserInput = false;
 
@@ -35,7 +41,7 @@ var updates = [ { userId: 0, timestamp: newMoment('5:00PM 11/22/16'), post: 'I\'
                 { userId: 1, timestamp: newMoment('12:00PM 11/22/16'), post: 'Todo es amor, la brisa y tú, jugando en el rumor, y el ruiseñor, cantando en una flor, buscando amor, amor.' },
                 { userId: 1, timestamp: newMoment('11:55AM 11/22/16'), post: 'La soledad, que me envuelve el corazón, va encendiendo en mi alma, el fuego de tu amor lejano. En las brumas de tu olvido, viaja mi ilusión, gritando tu nombre en vano.' },
                 { userId: 1, timestamp: newMoment('11:45AM 11/22/16'), post: 'Soñemos, que los dos estamos libres. Soñemos, en la gloria de este amor. Soñemos, que ya nada nos separa, y que somos cual dos almas, que nacieron para amar.' },
-                { userId: 0, timestamp: newMoment('11:30AM 11/22/16'), post: 'Off to my lunch break! Maybe I\'ll go acrross the street?' },
+                { userId: 0, timestamp: newMoment('11:30AM 11/22/16'), post: 'Off to my lunch break! Maybe I\'ll go across the street?' },
                 { userId: 0, timestamp: newMoment('9:00AM 11/22/16'), post: 'Starting my weekday by going to coding class!' },
                 { userId: 2, timestamp: newMoment('7:00AM 11/21/16'), post: 'Es la historia de un amor, como no hay otro igual. Que me hizo comprender, todo el bien todo el mal, que le dio luz a mi vida, apagandola después. ¡Ay, qué vida tan oscura, corazón, sin tu amor no viviré!' } ];
 
@@ -67,37 +73,67 @@ function createElement(tag, attributes, children) {
   if (children) {
     if (!(children instanceof Array))
       children = [children];
-    for (var i = 0; i < children.length; i++) {
-      newElement.appendChild(children[i]);
-    }
+    children.forEach(function(child) {
+      newElement.appendChild(child);
+    });
   }
   return newElement;
 }
 
-function displayProfile(user) {
-  var profileContainer = document.getElementById('profile');
-  profileContainer.appendChild(createElement('div', { class: 'photo' }, null));
-  var profilePic = document.querySelector('.photo');
+function userInfo(user) {
+  var userInfo = createElement('div', { id: 'user-info' }, null);
+  userInfo.appendChild(createElement('div', { class: 'photo' }, null));
+  var profilePic = userInfo.lastChild;
   profilePic.style.backgroundImage = 'url(' + user.profilePic + ')';
   var children = [createElement('h2', { id: 'name' }, node(user.firstName + ' ' + user.lastName)),
                   createElement('p', { id: 'username' }, node('@' + user.username)),
                   createElement('p', { id: 'about-me' }, node(user.aboutMe))];
-  profileContainer.appendChild(createElement('div', { id: 'description' }, children));
+  userInfo.appendChild(createElement('div', { id: 'description' }, children));
   if (user !== primaryUser) {
     var following = false;
-    for (var i = 0; i < primaryUser.following.length; i++)
-      if (primaryUser.following[i] === user.username) {
+    if (primaryUser.following.indexOf(user.id) > -1)
         following = true;
-      }
-    profileContainer.appendChild(createElement('button', { id: 'follow' }, node(following ? 'Following' : 'Follow')));
-    document.getElementById('follow').addEventListener('click', function() { follow(user.id) }, false);
+    userInfo.appendChild(createElement('button', { id: 'follow' }, node(following ? 'Following' : 'Follow')));
+    userInfo.lastChild.addEventListener('click', function() { follow(user.id) }, false);
   }
-  var updatesContainer = document.getElementById('updates');
-  for (i = 0; i < updates.length; i++) {
-    if (updates[i].userId === user.id)
-      updatesContainer.appendChild(createElement('div', { class: 'update' }, getUpdateElements(user, i)));
-  }
-  currentlyViewing = user.username;
+  return userInfo;
+}
+
+function userUpdates(user) {
+  var userUpdates = createElement('div', { id: 'updates', class: 'shadow' }, null);
+  updates.forEach(function (update, index) {
+    if (update.userId === user.id)
+      userUpdates.appendChild(createElement('div', { class: 'update' }, getUpdateElements(user, index)));
+  });
+  return userUpdates;
+}
+
+function stats(user) {
+  return createElement('div', { id: 'stats', class: 'shadow' },
+            [createElement('span', { id: 'posts', class: 'stat' },
+                [createElement('p', { class: 'label' }, node('posts')),
+                 createElement('p', { class: 'count' }, node(user.updatesCount))]),
+             createElement('span', { id: 'following', class: 'stat' },
+                [createElement('p', { class: 'label' }, node('following')),
+                createElement('p', { class: 'count' }, node(user.following.length))]),
+             createElement('span', { id: 'followers', class: 'stat' },
+                [createElement('p', { class: 'label' }, node('followers')),
+                createElement('p', { class: 'count' }, node(user.followers.length))])]);
+}
+
+function refreshStats() {
+  remove('stats');
+  var centerContainer = document.getElementById('center');
+  centerContainer.insertBefore(stats(currentlyViewing), centerContainer.firstChild);
+}
+
+function allUpdates() {
+  var allUpdates = createElement('div', { id: 'updates', class: 'shadow' }, null);
+  updates.forEach(function (update, index) {
+    if(primaryUser.following.indexOf(update.userId) > -1)
+      allUpdates.appendChild(createElement('div', { class: 'update' }, getUpdateElements(users[update.userId], index)));
+  });
+  return allUpdates;
 }
 
 function follow(id) {
@@ -105,24 +141,37 @@ function follow(id) {
   if (followButton.data === 'Following') {
     var index = primaryUser.following.indexOf(id);
     primaryUser.following.splice(index, 1);
+    index = users[id].followers.indexOf(primaryUser.id);
+    users[id].followers.splice(index, 1);
     followButton.data = 'Follow';
   } else {
     primaryUser.following.unshift(id);
+    users[id].followers.unshift(primaryUser.id);
     followButton.data = 'Following';
   }
+  refreshStats(currentlyViewing);
 }
 
-function empty(ids) {
+function remove(ids) {
   if (! (ids instanceof Array))
     ids = [ids]
-  for (var i = 0; i < ids.length; i++) {
-    var container = document.getElementById(ids[i]);
-    while (container.firstChild)
-      container.removeChild(container.firstChild);
-  }
+  ids.forEach(function (id) {
+    var element = document.getElementById(id);
+    if(element)
+      element.parentElement.removeChild(element);
+  });
 }
 
-function enableEventListeners() {
+function displayProfile(user) {
+  var leftContainer = document.getElementById('left');
+  leftContainer.appendChild(userInfo(user));
+  var centerContainer = document.getElementById('center');
+  centerContainer.insertBefore(stats(user), centerContainer.firstChild);
+  centerContainer.appendChild(userUpdates(user));
+  currentlyViewing = user;
+}
+
+function addEventListeners() {
   document.getElementById('home-button').addEventListener('click', goHome, false);
   document.getElementById('profile-button').addEventListener('click', function() { switchUser(primaryUser) }, false);
   document.getElementById('post-input').addEventListener('focus', modifyPostTextbox, false);
@@ -134,18 +183,13 @@ function enableEventListeners() {
 }
 
 function goHome() {
-  empty(['profile', 'updates']);
-  var updatesContainer = document.getElementById('updates');
-  for (var x = 0; x < updates.length; x++) {
-    for(var y = 0; y < primaryUser.following.length; y++) {
-      if (primaryUser.following[y] === updates[x].userId)
-        updatesContainer.appendChild(createElement('div', { class: 'update' }, getUpdateElements(users[updates[x].userId], x)));
-    }
-  }
+  remove(['user-info', 'stats', 'updates']);
+  var centerContainer = document.getElementById('center');
+  centerContainer.appendChild(allUpdates());
 }
 
 function switchUser(user) {
-  empty(['profile', 'updates']);
+  remove(['user-info', 'stats', 'updates']);
   displayProfile(user);
 }
 
@@ -168,7 +212,9 @@ function addUpdate() {
     var post = document.getElementById('post-input');
     if (post.value.trim()) {
       updates.unshift({ userId: primaryUser.id, timestamp: moment(), post: post.value });
-      if (currentlyViewing === primaryUser.username)
+      primaryUser.updatesCount++;
+      refreshStats(currentlyViewing);
+      if (currentlyViewing === primaryUser)
         updatesContainer.insertBefore(createElement('div', { class: 'update'}, getUpdateElements(primaryUser, 0)), updatesContainer.firstChild);
       post.value = 'Type a new update...';
       post.style.color = '#b2b2b2';
@@ -200,4 +246,4 @@ function checkSearchInput() {
 }
 
 displayProfile(primaryUser);
-enableEventListeners();
+addEventListeners();
