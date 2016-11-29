@@ -50,7 +50,7 @@ function newMoment(timestamp) {
 }
 
 function getUpdateElements(user, index) {
-  return [createElement('img', { class: 'photo', src: user.profilePic }, null),
+  return [createElement('div', { class: 'photo', style: 'background-image:url('+ user.profilePic + ')' }, null),
           createElement('h4', { class: 'name' }, user.firstName + ' ' + user.lastName),
           createElement('p', { class: 'username' }, '@' + user.username),
           createElement('p', { class: 'timestamp' }, updates[index].timestamp.format('h:mmA M/D/YY')),
