@@ -62,7 +62,7 @@ function createElement(tag, attributes, children) {
   for (var key in attributes) {
     newElement.setAttribute(key, attributes[key]);
   }
-  if (!children)
+  if (children === null)
     return newElement;
   if (!(children instanceof Element) && !(children instanceof Array)) {
     newElement.appendChild(document.createTextNode(children));
