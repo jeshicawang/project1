@@ -185,6 +185,14 @@ function checkUsername(value) {
 }
 
 function saveProfile() {
+  if (!document.getElementById('name-text').value.trim()) {
+    document.getElementById('error-msg').textContent = 'Your name cannot be blank.';
+    return;
+  }
+  if (!document.getElementById('username-text').value.trim()) {
+    document.getElementById('error-msg').textContent = 'Please enter a valid username.';
+    return;
+  }
   if (document.getElementById('cross').style.visibility === 'visible' || !document.getElementById('username-text').value)
     return;
   primaryUser.displayName = document.getElementById('name-text').value;
