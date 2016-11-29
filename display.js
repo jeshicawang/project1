@@ -49,20 +49,12 @@ function newMoment(timestamp) {
   return moment(timestamp, 'h:mmA M/D/YY');
 }
 
-function printMoment(timestamp) {
-  return timestamp.format('h:mmA M/D/YY');
-}
-
-function node(text) {
-  return document.createTextNode(text);
-}
-
 function getUpdateElements(user, index) {
   return [createElement('img', { class: 'photo', src: user.profilePic }, null),
-          createElement('h4', { class: 'name' }, node(user.firstName + ' ' + user.lastName)),
-          createElement('p', { class: 'username' }, node('@' + user.username)),
-          createElement('p', { class: 'timestamp' }, node(printMoment(updates[index].timestamp))),
-          createElement('p', { class: 'post' }, node(updates[index].post))];
+          createElement('h4', { class: 'name' }, user.firstName + ' ' + user.lastName),
+          createElement('p', { class: 'username' }, '@' + user.username),
+          createElement('p', { class: 'timestamp' }, updates[index].timestamp.format('h:mmA M/D/YY')),
+          createElement('p', { class: 'post' }, updates[index].post)];
 }
 
 function createElement(tag, attributes, children) {
@@ -70,55 +62,57 @@ function createElement(tag, attributes, children) {
   for (var key in attributes) {
     newElement.setAttribute(key, attributes[key]);
   }
-  if (children) {
-    if (!(children instanceof Array))
-      children = [children];
-    children.forEach(function(child) {
-      newElement.appendChild(child);
-    });
+  if (children === null)
+    return newElement;
+  if (!(children instanceof Element) && !(children instanceof Array)) {
+    newElement.appendChild(document.createTextNode(children));
+    return newElement;
   }
+  if (!(children instanceof Array))
+    children = [children];
+  children.forEach(function(child) {
+    newElement.appendChild(child);
+  });
   return newElement;
 }
 
 function userInfo(user) {
-  var userInfo = createElement('div', { id: 'user-info' }, null);
-  userInfo.appendChild(createElement('div', { class: 'photo' }, null));
-  var profilePic = userInfo.lastChild;
+  var userInfo = createElement('div', { id: 'user-info' },
+                    [createElement('div', { class: 'photo' }, null),
+                     createElement('div', { id: 'description' },
+                        [createElement('h2', { id: 'name' }, user.firstName + ' ' + user.lastName),
+                         createElement('p', { id: 'username' }, '@' + user.username),
+                         createElement('p', { id: 'about-me' }, user.aboutMe)])]);
+  var profilePic = userInfo.firstChild;
   profilePic.style.backgroundImage = 'url(' + user.profilePic + ')';
-  var children = [createElement('h2', { id: 'name' }, node(user.firstName + ' ' + user.lastName)),
-                  createElement('p', { id: 'username' }, node('@' + user.username)),
-                  createElement('p', { id: 'about-me' }, node(user.aboutMe))];
-  userInfo.appendChild(createElement('div', { id: 'description' }, children));
-  if (user !== primaryUser) {
-    var following = false;
-    if (primaryUser.following.indexOf(user.id) > -1)
-        following = true;
-    userInfo.appendChild(createElement('button', { id: 'follow' }, node(following ? 'Following' : 'Follow')));
-    userInfo.lastChild.addEventListener('click', function() { follow(user.id) }, false);
-  }
+  if (user === primaryUser)
+    return userInfo;
+  var following = (primaryUser.following.indexOf(user.id) > -1);
+  userInfo.appendChild(createElement('button', { id: 'follow' }, following ? 'Following' : 'Follow'));
+  userInfo.lastChild.addEventListener('click', function() { follow(user.id) }, false);
   return userInfo;
 }
 
 function userUpdates(user) {
-  var userUpdates = createElement('div', { id: 'updates', class: 'shadow' }, null);
+  var updatesToDisplay = []
   updates.forEach(function (update, index) {
     if (update.userId === user.id)
-      userUpdates.appendChild(createElement('div', { class: 'update' }, getUpdateElements(user, index)));
+      updatesToDisplay.push(createElement('div', { class: 'update' }, getUpdateElements(user, index)));
   });
-  return userUpdates;
+  return createElement('div', { id: 'updates', class: 'shadow' }, updatesToDisplay);
 }
 
 function stats(user) {
   return createElement('div', { id: 'stats', class: 'shadow' },
             [createElement('span', { id: 'posts', class: 'stat' },
-                [createElement('p', { class: 'label' }, node('posts')),
-                 createElement('p', { class: 'count' }, node(user.updatesCount))]),
+                [createElement('p', { class: 'label' }, 'posts'),
+                 createElement('p', { class: 'count' }, user.updatesCount)]),
              createElement('span', { id: 'following', class: 'stat' },
-                [createElement('p', { class: 'label' }, node('following')),
-                createElement('p', { class: 'count' }, node(user.following.length))]),
+                [createElement('p', { class: 'label' }, 'following'),
+                createElement('p', { class: 'count' }, user.following.length)]),
              createElement('span', { id: 'followers', class: 'stat' },
-                [createElement('p', { class: 'label' }, node('followers')),
-                createElement('p', { class: 'count' }, node(user.followers.length))])]);
+                [createElement('p', { class: 'label' }, 'followers'),
+                createElement('p', { class: 'count' }, user.followers.length)])]);
 }
 
 function refreshStats() {
@@ -128,12 +122,12 @@ function refreshStats() {
 }
 
 function allUpdates() {
-  var allUpdates = createElement('div', { id: 'updates', class: 'shadow' }, null);
+  var updatesToDisplay = [];
   updates.forEach(function (update, index) {
     if(primaryUser.following.indexOf(update.userId) > -1)
-      allUpdates.appendChild(createElement('div', { class: 'update' }, getUpdateElements(users[update.userId], index)));
+      updatesToDisplay.push(createElement('div', { class: 'update' }, getUpdateElements(users[update.userId], index)));
   });
-  return allUpdates;
+  return createElement('div', { id: 'updates', class: 'shadow' }, updatesToDisplay);
 }
 
 function follow(id) {
@@ -154,7 +148,7 @@ function follow(id) {
 
 function remove(ids) {
   if (! (ids instanceof Array))
-    ids = [ids]
+    ids = [ids];
   ids.forEach(function (id) {
     var element = document.getElementById(id);
     if(element)
@@ -169,17 +163,6 @@ function displayProfile(user) {
   centerContainer.insertBefore(stats(user), centerContainer.firstChild);
   centerContainer.appendChild(userUpdates(user));
   currentlyViewing = user;
-}
-
-function addEventListeners() {
-  document.getElementById('home-button').addEventListener('click', goHome, false);
-  document.getElementById('profile-button').addEventListener('click', function() { switchUser(primaryUser) }, false);
-  document.getElementById('post-input').addEventListener('focus', modifyPostTextbox, false);
-  document.getElementById('post-input').addEventListener('blur', modifyPostTextbox, false);
-  document.getElementById('post-button').addEventListener('click', addUpdate, false);
-  document.getElementById('search-input').addEventListener('focus', modifySearchTextbox, false);
-  document.getElementById('search-input').addEventListener('blur', modifySearchTextbox, false);
-  document.getElementById('search-button').addEventListener('click', checkSearchInput, false);
 }
 
 function goHome() {
@@ -238,12 +221,23 @@ function modifySearchTextbox() {
 
 function checkSearchInput() {
   var input = document.getElementById('search-input').value;
-  if (input.trim)
-    for (var i = 0; i < users.length; i++) {
-      if (users[i].username === input)
-        switchUser(users[i]);
+  if (!input.trim())
+    return;
+  users.forEach( function(user) {
+    if(user.username === input) {
+      switchUser(user);
+      return;
     }
+  });
 }
 
 displayProfile(primaryUser);
-addEventListeners();
+
+document.getElementById('home-button').addEventListener('click', goHome, false);
+document.getElementById('profile-button').addEventListener('click', function() { switchUser(primaryUser) }, false);
+document.getElementById('post-input').addEventListener('focus', modifyPostTextbox, false);
+document.getElementById('post-input').addEventListener('blur', modifyPostTextbox, false);
+document.getElementById('post-button').addEventListener('click', addUpdate, false);
+document.getElementById('search-input').addEventListener('focus', modifySearchTextbox, false);
+document.getElementById('search-input').addEventListener('blur', modifySearchTextbox, false);
+document.getElementById('search-button').addEventListener('click', checkSearchInput, false);
