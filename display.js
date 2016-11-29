@@ -135,6 +135,8 @@ function editProfile() {
   var userInfo = document.getElementById('user-info');
   userInfo.appendChild(editor(primaryUser));
   userInfo.appendChild(createElement('button', { id: 'save' }, 'Save'));
+  var username = document.getElementById('username-text');
+  username.addEventListener('keyup', function() { checkUsername(username.value) }, false);
   userInfo.lastChild.addEventListener('click', function() { saveProfile() }, false);
 }
 
@@ -145,10 +147,39 @@ function editor(user) {
                  createElement('textarea', { id: 'name-text' }, user.displayName)]),
              createElement('div', { id: 'username', class: 'field' },
                 [createElement('div', {  }, createElement('span', { class: 'lnr lnr-user' }, null)),
-                 createElement('textarea', { id: 'username-text' }, user.username)]),
+                 createElement('textarea', { id: 'username-text' }, user.username),
+                 createElement('div', { id: 'check' }, createElement('span', { class: 'lnr lnr-checkmark-circle' }, null)),
+                 createElement('div', { id: 'cross' }, createElement('span', { class: 'lnr lnr-cross-circle' }, null))]),
              createElement('div', { id: 'bio', class: 'field' },
                 [createElement('div', {  }, createElement('span', { class: 'lnr lnr-bubble' }, null)),
                  createElement('textarea', { id: 'bio-text' }, user.bio)])]);
+}
+
+function checkUsername(value) {
+  var taken = false;
+  var validCharacters = /^[a-z0-9_.]*$/;
+  if (value === primaryUser.username || !value.length) {
+    document.getElementById('cross').style.visibility = "hidden";
+    document.getElementById('check').style.visibility = "hidden";
+    return;
+  }
+  if (value.length < 4 || value.length > 24) {
+    document.getElementById('cross').style.visibility = "visible";
+    return
+  }
+  if (!validCharacters.test(value)) {
+    document.getElementById('cross').style.visibility = "visible";
+    return;
+  }
+  users.forEach(function (user) {
+    if (value === user.username) {
+      taken = true;
+      document.getElementById('cross').style.visibility = "visible";
+    }
+  });
+  if (taken) return;
+  document.getElementById('cross').style.visibility = "hidden";
+  document.getElementById('check').style.visibility = "visible";
 }
 
 function saveProfile() {

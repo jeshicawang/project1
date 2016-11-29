@@ -242,6 +242,19 @@ p {
   font-size: 20px;
 }
 
+#editor #check,
+#editor #cross {
+  visibility: hidden;
+}
+
+#editor .lnr-checkmark-circle {
+  color: green;
+}
+
+#editor .lnr-cross-circle {
+  color: red;
+}
+
 #bio .lnr {
   transform: translateY(-30px);
 }
@@ -272,6 +285,7 @@ p {
 }
 
 #username textarea {
+  padding-right: 32px;
   white-space: nowrap;
   overflow: hidden;
 }
