@@ -70,13 +70,13 @@ function createElement(tag, attributes, children) {
   for (var key in attributes) {
     newElement.setAttribute(key, attributes[key]);
   }
-  if (children) {
-    if (!(children instanceof Array))
-      children = [children];
-    children.forEach(function(child) {
-      newElement.appendChild(child);
-    });
-  }
+  if (!children)
+    return newElement;
+  if (!(children instanceof Array))
+    children = [children];
+  children.forEach(function(child) {
+    newElement.appendChild(child);
+  });
   return newElement;
 }
 
@@ -89,13 +89,11 @@ function userInfo(user) {
                          createElement('p', { id: 'about-me' }, node(user.aboutMe))])]);
   var profilePic = userInfo.firstChild;
   profilePic.style.backgroundImage = 'url(' + user.profilePic + ')';
-  if (user !== primaryUser) {
-    var following = false;
-    if (primaryUser.following.indexOf(user.id) > -1)
-        following = true;
-    userInfo.appendChild(createElement('button', { id: 'follow' }, node(following ? 'Following' : 'Follow')));
-    userInfo.lastChild.addEventListener('click', function() { follow(user.id) }, false);
-  }
+  if (user === primaryUser)
+    return userInfo;
+  var following = (primaryUser.following.indexOf(user.id) > -1);
+  userInfo.appendChild(createElement('button', { id: 'follow' }, node(following ? 'Following' : 'Follow')));
+  userInfo.lastChild.addEventListener('click', function() { follow(user.id) }, false);
   return userInfo;
 }
 
@@ -154,7 +152,7 @@ function follow(id) {
 
 function remove(ids) {
   if (! (ids instanceof Array))
-    ids = [ids]
+    ids = [ids];
   ids.forEach(function (id) {
     var element = document.getElementById(id);
     if(element)
@@ -238,11 +236,14 @@ function modifySearchTextbox() {
 
 function checkSearchInput() {
   var input = document.getElementById('search-input').value;
-  if (input.trim)
-    for (var i = 0; i < users.length; i++) {
-      if (users[i].username === input)
-        switchUser(users[i]);
+  if (!input.trim())
+    return;
+  users.forEach( function(user) {
+    if(user.username === input) {
+      switchUser(user);
+      return;
     }
+  });
 }
 
 displayProfile(primaryUser);
