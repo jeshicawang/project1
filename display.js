@@ -145,15 +145,15 @@ function editor(user) {
   return createElement('div', { id: 'editor', class: 'shadow' },
             [createElement('div', { id: 'name', class: 'field' },
                 [createElement('div', {  }, createElement('span', { class: 'lnr lnr-laptop' }, null)),
-                 createElement('textarea', { id: 'name-text' }, user.displayName)]),
+                 createElement('textarea', { id: 'name-text', placeholder: 'Name', maxlength: '24' }, user.displayName)]),
              createElement('div', { id: 'username', class: 'field' },
                 [createElement('div', {  }, createElement('span', { class: 'lnr lnr-user' }, null)),
-                 createElement('textarea', { id: 'username-text' }, user.username),
+                 createElement('textarea', { id: 'username-text', placeholder: 'Username', maxlength: '24' }, user.username),
                  createElement('div', { id: 'check' }, createElement('span', { class: 'lnr lnr-checkmark-circle' }, null)),
                  createElement('div', { id: 'cross' }, createElement('span', { class: 'lnr lnr-cross-circle' }, null))]),
              createElement('div', { id: 'bio', class: 'field' },
                 [createElement('div', {  }, createElement('span', { class: 'lnr lnr-bubble' }, null)),
-                 createElement('textarea', { id: 'bio-text' }, user.bio)])]);
+                 createElement('textarea', { id: 'bio-text', placeholder: 'Bio',  }, user.bio)])]);
 }
 
 function checkUsername(value) {
@@ -165,14 +165,14 @@ function checkUsername(value) {
     document.getElementById('check').style.visibility = 'hidden';
     return;
   }
-  if (value.length < 4 || value.length > 24 || !validCharacters.test(value)) {
-    document.getElementById('error-msg').textContent = 'Please enter a valid username.';
+  if (value.length < 4 || !validCharacters.test(value)) {
+    document.getElementById('error-msg').textContent = '*please enter a valid username*';
     document.getElementById('cross').style.visibility = 'visible';
     return
   }
   users.forEach(function (user) {
     if (value === user.username) {
-      document.getElementById('error-msg').textContent = 'This username is taken.';
+      document.getElementById('error-msg').textContent = '*this username is taken*';
       taken = true;
       document.getElementById('cross').style.visibility = 'visible';
       return;
@@ -186,11 +186,11 @@ function checkUsername(value) {
 
 function saveProfile() {
   if (!document.getElementById('name-text').value.trim()) {
-    document.getElementById('error-msg').textContent = 'Your name cannot be blank.';
+    document.getElementById('error-msg').textContent = '*your name cannot be blank*';
     return;
   }
   if (!document.getElementById('username-text').value.trim()) {
-    document.getElementById('error-msg').textContent = 'Please enter a valid username.';
+    document.getElementById('error-msg').textContent = '*please enter a valid username*';
     return;
   }
   if (document.getElementById('cross').style.visibility === 'visible' || !document.getElementById('username-text').value)
