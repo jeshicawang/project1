@@ -139,15 +139,18 @@ function editProfile() {
   userInfo.appendChild(editor(primaryUser));
   userInfo.appendChild(createElement('p', { id: "error-msg" }, ' '));
   userInfo.appendChild(createElement('button', { id: 'save' }, 'Save'));
+  userInfo.lastChild.addEventListener('click', saveProfile, false);
   var username = document.getElementById('username-text');
   username.addEventListener('keyup', function() { checkUsername(username.value) }, false);
-  userInfo.lastChild.addEventListener('click', saveProfile, false);
 }
 
 function changeProfilePic() {
-  var img = document.getElementById('image-upload').files[0];
-  primaryUser.profilePic = 'images/' + img.name;
-  document.getElementsByClassName('photo')[0].style.backgroundImage = 'url(\'images/' + img.name + '\')';
+  var img = 'images/' + document.getElementById('image-upload').files[0].name;
+  primaryUser.profilePic = img;
+  var photos = document.getElementsByClassName('photo');
+  for (var i = 0; i < photos.length; i++) {
+    photos[i].style.backgroundImage = 'url(\'' + img + '\')';
+  }
 }
 
 function editor(user) {
@@ -168,29 +171,32 @@ function editor(user) {
 function checkUsername(value) {
   var taken = false;
   var validCharacters = /^[a-z0-9_]*$/;
+  var message = document.getElementById('error-msg');
+  var cross = document.getElementById('cross');
+  var check = document.getElementById('check');
   if (value === primaryUser.username || !value.length) {
-    document.getElementById('error-msg').textContent = ' ';
-    document.getElementById('cross').style.visibility = 'hidden';
-    document.getElementById('check').style.visibility = 'hidden';
+    message.textContent = ' ';
+    cross.style.visibility = 'hidden';
+    check.style.visibility = 'hidden';
     return;
   }
   if (value.length < 4 || !validCharacters.test(value)) {
-    document.getElementById('error-msg').textContent = '*please enter a valid username*';
-    document.getElementById('cross').style.visibility = 'visible';
+    message.textContent = '*please enter a valid username*';
+    cross.style.visibility = 'visible';
     return
   }
   users.forEach(function (user) {
     if (value === user.username) {
-      document.getElementById('error-msg').textContent = '*this username is taken*';
+      message.textContent = '*this username is taken*';
       taken = true;
-      document.getElementById('cross').style.visibility = 'visible';
+      cross.style.visibility = 'visible';
       return;
     }
   });
   if (taken) return;
-  document.getElementById('error-msg').textContent = ' ';
-  document.getElementById('cross').style.visibility = 'hidden';
-  document.getElementById('check').style.visibility = 'visible';
+  message.textContent = ' ';
+  cross.style.visibility = 'hidden';
+  check.style.visibility = 'visible';
 }
 
 function saveProfile() {
