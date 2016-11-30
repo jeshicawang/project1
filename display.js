@@ -34,7 +34,7 @@ var users = [ { id: 0,
                 updatesCount: 0 },
 ];
 
-var primaryUser = users[0];
+var primaryUser = users[3];
 var currentlyViewing = primaryUser;
 
 var updates = [ { userId: 0, timestamp: newMoment('5:00PM 11/22/16'), post: 'I\'m going home for the day!' },
@@ -334,6 +334,8 @@ function addUpdate() {
   if (currentlyViewing === primaryUser) {
     refreshStats(currentlyViewing);
     updatesContainer.insertBefore(createElement('div', { class: 'update'}, getUpdateElements(primaryUser, 0)), updatesContainer.firstChild);
+    if (primaryUser.updatesCount === 1)
+      updatesContainer.removeChild(updatesContainer.lastChild);
   }
   document.getElementById('post-input').value = '';
 }
