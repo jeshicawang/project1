@@ -91,7 +91,7 @@ p {
   padding: 6px;
 }
 
-.lnr {
+#header .lnr {
   display: table-cell;
   font-size: 20px;
   font-weight: bold;
@@ -184,8 +184,8 @@ p {
 
 #user-info .photo {
   margin: auto;
-  width: 125px;
-  height: 125px;
+  width: 126px;
+  height: 126px;
   background-size: cover;
   background-position: center;
 }
@@ -202,11 +202,131 @@ p {
   margin-bottom: 15px;
 }
 
-#user-info #follow {
+#user-info #follow,
+#user-info #edit-profile,
+#user-info #save {
   width: 70%;
   border: 0;
   color: #fff;
   background-color: #6d94b6;
+}
+
+.field {
+  display: table-row;
+  height: 30px;
+}
+
+.field div {
+  display: table;
+  position: absolute;
+  float: left;
+  width: 30px;
+  height: inherit;
+}
+
+input {
+  width: .1px;
+  height: .1px;
+  opacity: 0;
+  overflow: hidden;
+  position: absolute;
+  z-index: -1;
+}
+
+label {
+  position: absolute;
+  display: inline-block;
+  transform: translate(-50%,-100%);
+  box-sizing: border-box;
+  width: 126px;
+  height: 126px;
+  background-color: rgba(0,0,0,.2);
+  border-radius: 50%;
+  padding-top: 43px;
+  padding-bottom: 43px;
+}
+
+label:hover {
+  background-color: rgba(0,0,0,.5);
+}
+
+label span {
+  margin: auto;
+  font-size: 40px;
+}
+
+#editor {
+  display: table;
+  box-sizing: border-box;
+  width: 100%;
+  height: 90px;
+  background-color: #fff;
+  padding: 5px;
+  margin-top: 30px;
+}
+
+#editor .lnr {
+  display: table-cell;
+  vertical-align: middle;
+  color: #353535;
+  font-size: 20px;
+}
+
+#editor #check,
+#editor #cross {
+  visibility: hidden;
+}
+
+#editor .lnr-checkmark-circle {
+  color: green;
+}
+
+#editor .lnr-cross-circle {
+  color: red;
+}
+
+#bio .lnr {
+  transform: translateY(-30px);
+}
+
+#bio.field {
+  height: 90px;
+}
+
+#user-info #error-msg {
+  height: 16px;
+  margin-bottom: 20px;
+}
+
+.field div {
+  background-color: #fff;
+}
+
+#editor textarea {
+  float: right;
+  padding-left: 32px;
+  width: 100%;
+  height: inherit;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  border-left: 0;
+  border-right: 0;
+}
+
+#name textarea {
+  border-top: 0;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+#username textarea {
+  padding-right: 32px;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+#bio textarea {
+  border-bottom: 0;
 }
 
 #stats {
@@ -281,6 +401,8 @@ p {
   left: 20px;
   width: 40px;
   height: 40px;
+  background-size: cover;
+  background-position: center;
 }
 
 .update .name {
@@ -315,6 +437,5 @@ p {
   width: 100%;
   margin-top: 5px;
   padding-left: 55px;
-  padding-right: 15px;
   font-weight: 300;
 }

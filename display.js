@@ -2,28 +2,25 @@
 
 var users = [ { id: 0,
                 username: 'jwang',
-                firstName: 'Jessica',
-                lastName: 'Wang',
+                displayName: 'Jessica Wang',
                 profilePic: 'images/jwang.jpg',
-                aboutMe: 'Female. 20. Coffee lover. Argentine Tango Dancer. Future software developer;)',
+                bio: 'Female. 20. Coffee lover. Argentine Tango Dancer. Future software developer;)',
                 following: [],
                 followers: [],
                 updatesCount: 5 },
               { id: 1,
                 username: 'biagi',
-                firstName: 'Rodolfo',
-                lastName: 'Biagi',
+                displayName: 'Rodolfo Biagi',
                 profilePic: 'images/biagi.jpg',
-                aboutMe: 'An Argentine Tango musician who started his musical career by playing background music for silent movies, and this was where he was first discovered by a tango band leader.',
+                bio: 'An Argentine Tango musician who started his musical career by playing background music for silent movies, and this was where he was first discovered by a tango band leader.',
                 following: [],
                 followers: [],
                 updatesCount: 3 },
               { id: 2,
                 username: 'varela',
-                firstName: 'Hector',
-                lastName: 'Varela',
+                displayName: 'Hector Varela',
                 profilePic: 'images/varela.jpg',
-                aboutMe: 'Héctor Varela was a musician criticized by the innovative players, but loved by the fans of dancing and popular tango.',
+                bio: 'Héctor Varela was a musician criticized by the innovative players, but loved by the fans of dancing and popular tango.',
                 following: [],
                 followers: [],
                 updatesCount: 2 },
@@ -50,8 +47,8 @@ function newMoment(timestamp) {
 }
 
 function getUpdateElements(user, index) {
-  return [createElement('img', { class: 'photo', src: user.profilePic }, null),
-          createElement('h4', { class: 'name' }, user.firstName + ' ' + user.lastName),
+  return [createElement('div', { class: 'photo', style: 'background-image:url('+ user.profilePic + ')' }, null),
+          createElement('h4', { class: 'name' }, user.displayName),
           createElement('p', { class: 'username' }, '@' + user.username),
           createElement('p', { class: 'timestamp' }, updates[index].timestamp.format('h:mmA M/D/YY')),
           createElement('p', { class: 'post' }, updates[index].post)];
@@ -80,13 +77,16 @@ function userInfo(user) {
   var userInfo = createElement('div', { id: 'user-info' },
                     [createElement('div', { class: 'photo' }, null),
                      createElement('div', { id: 'description' },
-                        [createElement('h2', { id: 'name' }, user.firstName + ' ' + user.lastName),
+                        [createElement('h2', { id: 'name' }, user.displayName),
                          createElement('p', { id: 'username' }, '@' + user.username),
-                         createElement('p', { id: 'about-me' }, user.aboutMe)])]);
+                         createElement('p', { id: 'about-me' }, user.bio)])]);
   var profilePic = userInfo.firstChild;
   profilePic.style.backgroundImage = 'url(' + user.profilePic + ')';
-  if (user === primaryUser)
+  if (user === primaryUser) {
+    userInfo.appendChild(createElement('button', { id: 'edit-profile' }, 'Edit Profile'));
+    userInfo.lastChild.addEventListener('click', function() { editProfile() }, false);
     return userInfo;
+  }
   var following = (primaryUser.following.indexOf(user.id) > -1);
   userInfo.appendChild(createElement('button', { id: 'follow' }, following ? 'Following' : 'Follow'));
   userInfo.lastChild.addEventListener('click', function() { follow(user.id) }, false);
@@ -128,6 +128,92 @@ function allUpdates() {
       updatesToDisplay.push(createElement('div', { class: 'update' }, getUpdateElements(users[update.userId], index)));
   });
   return createElement('div', { id: 'updates', class: 'shadow' }, updatesToDisplay);
+}
+
+function editProfile() {
+  remove(['description', 'edit-profile']);
+  var userInfo = document.getElementById('user-info');
+  userInfo.appendChild(createElement('input', { id: 'image-upload', type: 'file' }, null));
+  userInfo.lastChild.addEventListener('change', changeProfilePic, false);
+  userInfo.appendChild(createElement('label', { for: 'image-upload' }, createElement('span', { class: 'lnr lnr-camera' }, null)));
+  userInfo.appendChild(editor(primaryUser));
+  userInfo.appendChild(createElement('p', { id: "error-msg" }, ' '));
+  userInfo.appendChild(createElement('button', { id: 'save' }, 'Save'));
+  userInfo.lastChild.addEventListener('click', saveProfile, false);
+  var username = document.getElementById('username-text');
+  username.addEventListener('keyup', function() { checkUsername(username.value) }, false);
+}
+
+function changeProfilePic() {
+  var img = 'images/' + document.getElementById('image-upload').files[0].name;
+  primaryUser.profilePic = img;
+  var photos = document.getElementsByClassName('photo');
+  for (var i = 0; i < photos.length; i++) {
+    photos[i].style.backgroundImage = 'url(\'' + img + '\')';
+  }
+}
+
+function editor(user) {
+  return createElement('div', { id: 'editor', class: 'shadow' },
+            [createElement('div', { id: 'name', class: 'field' },
+                [createElement('div', {  }, createElement('span', { class: 'lnr lnr-laptop' }, null)),
+                 createElement('textarea', { id: 'name-text', placeholder: 'Name', maxlength: '24' }, user.displayName)]),
+             createElement('div', { id: 'username', class: 'field' },
+                [createElement('div', {  }, createElement('span', { class: 'lnr lnr-user' }, null)),
+                 createElement('textarea', { id: 'username-text', placeholder: 'Username', maxlength: '24' }, user.username),
+                 createElement('div', { id: 'check' }, createElement('span', { class: 'lnr lnr-checkmark-circle' }, null)),
+                 createElement('div', { id: 'cross' }, createElement('span', { class: 'lnr lnr-cross-circle' }, null))]),
+             createElement('div', { id: 'bio', class: 'field' },
+                [createElement('div', {  }, createElement('span', { class: 'lnr lnr-bubble' }, null)),
+                 createElement('textarea', { id: 'bio-text', placeholder: 'Bio',  }, user.bio)])]);
+}
+
+function checkUsername(value) {
+  var taken = false;
+  var validCharacters = /^[a-z0-9_]*$/;
+  var message = document.getElementById('error-msg');
+  var cross = document.getElementById('cross');
+  var check = document.getElementById('check');
+  if (value === primaryUser.username || !value.length) {
+    message.textContent = ' ';
+    cross.style.visibility = 'hidden';
+    check.style.visibility = 'hidden';
+    return;
+  }
+  if (value.length < 4 || !validCharacters.test(value)) {
+    message.textContent = '*please enter a valid username*';
+    cross.style.visibility = 'visible';
+    return
+  }
+  users.forEach(function (user) {
+    if (value === user.username) {
+      message.textContent = '*this username is taken*';
+      taken = true;
+      cross.style.visibility = 'visible';
+      return;
+    }
+  });
+  if (taken) return;
+  message.textContent = ' ';
+  cross.style.visibility = 'hidden';
+  check.style.visibility = 'visible';
+}
+
+function saveProfile() {
+  if (!document.getElementById('name-text').value.trim()) {
+    document.getElementById('error-msg').textContent = '*your name cannot be blank*';
+    return;
+  }
+  if (!document.getElementById('username-text').value.trim()) {
+    document.getElementById('error-msg').textContent = '*please enter a valid username*';
+    return;
+  }
+  if (document.getElementById('cross').style.visibility === 'visible' || !document.getElementById('username-text').value)
+    return;
+  primaryUser.displayName = document.getElementById('name-text').value;
+  primaryUser.username = document.getElementById('username-text').value;
+  primaryUser.bio = document.getElementById('bio-text').value;
+  switchUser(primaryUser);
 }
 
 function follow(id) {
