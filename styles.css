@@ -475,6 +475,7 @@ label span {
 
 .user .username {
   margin-top: 0;
+  width: auto;
 }
 
 .user .lnr {
@@ -499,4 +500,19 @@ label span {
 .user .lnr-plus-circle:hover {
   color: #81a9ca;
   font-weight: bold;
+}
+
+.name:hover,
+.username:hover {
+  color: #81a9ca;
+}
+
+button,
+label,
+.name,
+.username,
+.user .lnr-checkmark-circle,
+.user .lnr-plus-circle,
+#stats .stat {
+  cursor: pointer;
 }

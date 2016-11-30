@@ -53,11 +53,14 @@ function newMoment(timestamp) {
 }
 
 function getUpdateElements(user, index) {
-  return [createElement('div', { class: 'photo', style: 'background-image:url('+ user.profilePic + ')' }, null),
-          createElement('h4', { class: 'name' }, user.displayName),
-          createElement('p', { class: 'username' }, '@' + user.username),
-          createElement('p', { class: 'timestamp' }, updates[index].timestamp.format('h:mmA M/D/YY')),
-          createElement('p', { class: 'post' }, updates[index].post)];
+  var updateElements = [createElement('div', { class: 'photo', style: 'background-image:url('+ user.profilePic + ')' }, null),
+                        createElement('h4', { class: 'name' }, user.displayName),
+                        createElement('p', { class: 'username' }, '@' + user.username),
+                        createElement('p', { class: 'timestamp' }, updates[index].timestamp.format('h:mmA M/D/YY')),
+                        createElement('p', { class: 'post' }, updates[index].post)];
+  updateElements[1].addEventListener('click', function() { switchUser(user) } , false);
+  updateElements[2].addEventListener('click', function() { switchUser(user) } , false);
+  return updateElements;
 }
 
 function createElement(tag, attributes, children) {
@@ -297,14 +300,14 @@ function suggestions() {
   var suggestions = createElement('div', { id: 'suggestions' }, [createElement('h3', {  }, 'Who to follow')]);
   users.forEach( function(user) {
     if (user === primaryUser) { return; }
-    var button = createElement('span', { class: 'plus lnr lnr-plus-circle' }, null);
-    button.addEventListener('click', function() { follow(user.id) } , false);
     suggestions.appendChild(createElement('div', { class: 'user' },
                                 [createElement('div', { class: 'photo', style: 'background-image:url(\'' + user.profilePic + '\')' }, null),
                                  createElement('h4', { class: 'name' }, user.displayName),
                                  createElement('p', { class: 'username' }, '@' + user.username),
-                                 button]));
-
+                                 createElement('span', { class: 'plus lnr lnr-plus-circle' }, null)]));
+    suggestions.lastChild.getElementsByClassName('name')[0].addEventListener('click', function() { switchUser(user) } , false);
+    suggestions.lastChild.getElementsByClassName('username')[0].addEventListener('click', function() { switchUser(user) } , false);
+    suggestions.lastChild.getElementsByClassName('lnr')[0].addEventListener('click', function() { follow(user.id) } , false);
   });
   return suggestions;
 }
