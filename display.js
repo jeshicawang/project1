@@ -28,8 +28,6 @@ var users = [ { id: 0,
 
 var primaryUser = users[0];
 var currentlyViewing = primaryUser;
-var postUserInput = false;
-var searchUserInput = false;
 
 var updates = [ { userId: 0, timestamp: newMoment('5:00PM 11/22/16'), post: 'I\'m going home for the day!' },
                 { userId: 0, timestamp: newMoment('4:30PM 11/22/16'), post: 'Class just ended.' },
@@ -262,47 +260,18 @@ function switchUser(user) {
   displayProfile(user);
 }
 
-function modifyPostTextbox() {
-  var textbox = document.getElementById('post-input');
-  if (!postUserInput) {
-    textbox.value = '';
-    textbox.style.color = '#000';
-    postUserInput = true;
-  } else if (!textbox.value.trim()) {
-    textbox.value = 'Type a new update...';
-    textbox.style.color = '#b2b2b2';
-    postUserInput = false;
-  }
-}
-
 function addUpdate() {
-  if (postUserInput) {
-    var updatesContainer = document.getElementById('updates');
-    var post = document.getElementById('post-input');
-    if (post.value.trim()) {
-      updates.unshift({ userId: primaryUser.id, timestamp: moment(), post: post.value });
-      primaryUser.updatesCount++;
-      refreshStats(currentlyViewing);
-      if (currentlyViewing === primaryUser)
-        updatesContainer.insertBefore(createElement('div', { class: 'update'}, getUpdateElements(primaryUser, 0)), updatesContainer.firstChild);
-      post.value = 'Type a new update...';
-      post.style.color = '#b2b2b2';
-      postUserInput = false;
-    }
+  var updatesContainer = document.getElementById('updates');
+  var post = document.getElementById('post-input').value;
+  if (!post.trim())
+    return;
+  updates.unshift({ userId: primaryUser.id, timestamp: moment(), post: post });
+  primaryUser.updatesCount++;
+  if (currentlyViewing === primaryUser) {
+    refreshStats(currentlyViewing);
+    updatesContainer.insertBefore(createElement('div', { class: 'update'}, getUpdateElements(primaryUser, 0)), updatesContainer.firstChild);
   }
-}
-
-function modifySearchTextbox() {
-  var textbox = document.getElementById('search-input');
-  if (!searchUserInput) {
-    textbox.value = '';
-    textbox.style.color = '#000';
-    searchUserInput = true;
-  } else if (!textbox.value.trim()) {
-    textbox.value = 'Search';
-    textbox.style.color = '#b2b2b2';
-    searchUserInput = false;
-  }
+  document.getElementById('post-input').value = '';
 }
 
 function checkSearchInput() {
@@ -315,15 +284,12 @@ function checkSearchInput() {
       return;
     }
   });
+  document.getElementById('search-input').value = '';
 }
 
 displayProfile(primaryUser);
 
 document.getElementById('home-button').addEventListener('click', goHome, false);
 document.getElementById('profile-button').addEventListener('click', function() { switchUser(primaryUser) }, false);
-document.getElementById('post-input').addEventListener('focus', modifyPostTextbox, false);
-document.getElementById('post-input').addEventListener('blur', modifyPostTextbox, false);
 document.getElementById('post-button').addEventListener('click', addUpdate, false);
-document.getElementById('search-input').addEventListener('focus', modifySearchTextbox, false);
-document.getElementById('search-input').addEventListener('blur', modifySearchTextbox, false);
 document.getElementById('search-button').addEventListener('click', checkSearchInput, false);
