@@ -17,12 +17,15 @@ button {
   font-size: 14px;
 }
 
-button:hover,
-button:focus {
+button:hover {
   outline: none;
   color: #fff;
   background-color: #6d94b6;
   border-color: #6d94b6;
+}
+
+button:focus {
+  outline: none;
 }
 
 textarea {
