@@ -161,6 +161,7 @@ p {
 }
 
 #search #results {
+  visibility: hidden;
   position: absolute;
   top: 36px;
   right: 0;
