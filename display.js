@@ -68,8 +68,7 @@ function createElement(tag, attributes, children) {
   for (var key in attributes) {
     newElement.setAttribute(key, attributes[key]);
   }
-  if (children === null)
-    return newElement;
+  if (children === null) return newElement;
   if (!(children instanceof Element) && !(children instanceof Array)) {
     newElement.appendChild(document.createTextNode(children));
     return newElement;
@@ -226,8 +225,7 @@ function saveProfile() {
     document.getElementById('error-msg').textContent = '*please enter a valid username*';
     return;
   }
-  if (document.getElementById('cross').style.visibility === 'visible' || !document.getElementById('username-text').value)
-    return;
+  if (document.getElementById('cross').style.visibility === 'visible' || !document.getElementById('username-text').value) return;
   primaryUser.displayName = document.getElementById('name-text').value;
   primaryUser.username = document.getElementById('username-text').value;
   primaryUser.bio = document.getElementById('bio-text').value;
@@ -253,8 +251,7 @@ function follow(id) {
     goHome();
   else
     refreshStats(currentlyViewing);
-  if (currentlyViewing !== users[id])
-    return;
+  if (currentlyViewing !== users[id]) return;
   var followButton = document.getElementById('follow').firstChild;
   if (following) {
     followButton.data = 'Follow';
@@ -299,7 +296,7 @@ function displaySuggestions() {
 function suggestions() {
   var suggestions = createElement('div', { id: 'suggestions' }, [createElement('h3', {  }, 'Who to follow')]);
   users.forEach( function(user) {
-    if (user === primaryUser) { return; }
+    if (user === primaryUser) return;
     suggestions.appendChild(createElement('div', { class: 'user' },
                                 [createElement('div', { class: 'photo', style: 'background-image:url(\'' + user.profilePic + '\')' }, null),
                                  createElement('h4', { class: 'name' }, user.displayName),
@@ -327,23 +324,25 @@ function switchUser(user) {
 function addUpdate() {
   var updatesContainer = document.getElementById('updates');
   var post = document.getElementById('post-input').value;
-  if (!post.trim())
-    return;
+  document.getElementById('post-input').value = '';
+  if (!post.trim()) return;
   updates.unshift({ userId: primaryUser.id, timestamp: moment(), post: post });
   primaryUser.updatesCount++;
+  if (!currentlyViewing) {
+    updatesContainer.insertBefore(createElement('div', { class: 'update'}, getUpdateElements(primaryUser, 0)), updatesContainer.firstChild);
+    return;
+  }
   if (currentlyViewing === primaryUser) {
     refreshStats(currentlyViewing);
     updatesContainer.insertBefore(createElement('div', { class: 'update'}, getUpdateElements(primaryUser, 0)), updatesContainer.firstChild);
     if (primaryUser.updatesCount === 1)
       updatesContainer.removeChild(updatesContainer.lastChild);
   }
-  document.getElementById('post-input').value = '';
 }
 
 function checkSearchInput() {
   var input = document.getElementById('search-input').value;
-  if (!input.trim())
-    return;
+  if (!input.trim()) return;
   users.forEach( function(user) {
     if(user.username === input) {
       switchUser(user);
