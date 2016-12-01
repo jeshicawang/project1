@@ -54,6 +54,10 @@ h2 {
   font-size: 18px;
 }
 
+h3 {
+  text-transform: uppercase;
+}
+
 p {
   margin: 0;
 }
@@ -405,7 +409,8 @@ label span {
   background-position: center;
 }
 
-.update .name {
+.update .name,
+.user .name {
   display: inline-block;
   float: left;
   margin-top: 0;
@@ -431,11 +436,83 @@ label span {
   color: #d6d6d6;
 }
 
-.update .post {
+.update .post,
+.user .username {
   display: inline-block;
   box-sizing: border-box;
   width: 100%;
   margin-top: 5px;
   padding-left: 55px;
   font-weight: 300;
+}
+
+#suggestions h3 {
+  margin-top: 0;
+  margin-bottom: 10px;
+  font-weight: normal;
+}
+
+#suggestions .user {
+  position: relative;
+  text-align: left;
+  height: 40px;
+  margin-top: 20px;
+}
+
+.user .photo {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 40px;
+  height: 40px;
+  background-size: cover;
+  background-position: center;
+}
+
+.user .name {
+  margin-top: 2px;
+}
+
+.user .username {
+  margin-top: 0;
+  width: auto;
+}
+
+.user .lnr {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+  font-size: 20px;
+  color: #b2b2b2;
+}
+
+.user .lnr-checkmark-circle {
+  color: #81a9ca;
+  font-weight: bold;
+}
+
+.user .lnr-checkmark-circle:hover {
+  color: #b2b2b2;
+  font-weight: bold;
+}
+
+.user .lnr-plus-circle:hover {
+  color: #81a9ca;
+  font-weight: bold;
+}
+
+.name:hover,
+.username:hover {
+  color: #81a9ca;
+}
+
+button,
+label,
+.name,
+.username,
+.user .lnr-checkmark-circle,
+.user .lnr-plus-circle,
+#stats .stat {
+  cursor: pointer;
 }
