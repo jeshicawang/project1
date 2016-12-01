@@ -9,7 +9,7 @@ var users = [ { id: 0,
                 followers: [],
                 updatesCount: 5 },
               { id: 1,
-                username: 'biagi',
+                username: 'rbiagi',
                 displayName: 'Rodolfo Biagi',
                 profilePic: 'images/biagi.jpg',
                 bio: 'An Argentine Tango musician who started his musical career by playing background music for silent movies, and this was where he was first discovered by a tango band leader.',
@@ -17,7 +17,7 @@ var users = [ { id: 0,
                 followers: [],
                 updatesCount: 3 },
               { id: 2,
-                username: 'varela',
+                username: 'hvarela',
                 displayName: 'Hector Varela',
                 profilePic: 'images/varela.jpg',
                 bio: 'Varela was a musician criticized by the innovative players, but loved by the fans of dancing and popular tango.',
@@ -25,7 +25,7 @@ var users = [ { id: 0,
                 followers: [],
                 updatesCount: 2 },
               { id: 3,
-                username: 'donato',
+                username: 'edonato',
                 displayName: 'Edgardo Donato',
                 profilePic: 'images/donato.jpg',
                 bio: 'Donato was a tango composer and orchestra leader, born in Buenos Aires, Argentina, raised from a young age and musically trained in Montevideo, Uruguay.',
@@ -293,15 +293,19 @@ function displaySuggestions() {
   rightContainer.appendChild(suggestions());
 }
 
+function displayUser(user) {
+  return createElement('div', { class: 'user' },
+            [createElement('div', { class: 'photo', style: 'background-image:url(\'' + user.profilePic + '\')' }, null),
+             createElement('h4', { class: 'name' }, user.displayName),
+             createElement('p', { class: 'username' }, '@' + user.username),
+             createElement('span', { class: 'plus lnr lnr-plus-circle' }, null)])
+}
+
 function suggestions() {
   var suggestions = createElement('div', { id: 'suggestions' }, [createElement('h3', {  }, 'Who to follow')]);
   users.forEach( function(user) {
     if (user === primaryUser) return;
-    suggestions.appendChild(createElement('div', { class: 'user' },
-                                [createElement('div', { class: 'photo', style: 'background-image:url(\'' + user.profilePic + '\')' }, null),
-                                 createElement('h4', { class: 'name' }, user.displayName),
-                                 createElement('p', { class: 'username' }, '@' + user.username),
-                                 createElement('span', { class: 'plus lnr lnr-plus-circle' }, null)]));
+    suggestions.appendChild(displayUser(user, 'user'));
     suggestions.lastChild.getElementsByClassName('name')[0].addEventListener('click', function() { switchUser(user) } , false);
     suggestions.lastChild.getElementsByClassName('username')[0].addEventListener('click', function() { switchUser(user) } , false);
     suggestions.lastChild.getElementsByClassName('lnr')[0].addEventListener('click', function() { follow(user.id) } , false);
@@ -353,12 +357,37 @@ function checkSearchInput() {
 }
 
 function displayResults() {
-  var input = document.getElementById('search-input').value;
-  var results = document.getElementById('results');
-  if (input.trim())
-    results.style.visibility = 'visible';
-  else
-    results.style.visibility = 'hidden';
+  var input = document.getElementById('search-input').value.toLowerCase();
+  var resultsContainer = document.getElementById('results');
+  while (resultsContainer.firstChild)
+    resultsContainer.removeChild(resultsContainer.firstChild);
+  if (!input.trim()) {
+    resultsContainer.style.visibility = 'hidden';
+    return;
+  }
+  var results = getSearchResults(input)
+  results.forEach( function(result) {
+    resultsContainer.appendChild(result);
+  });
+  resultsContainer.style.visibility = 'visible';
+}
+
+function getSearchResults(key) {
+  var results = [];
+  var regExp = new RegExp("\\b" + key);
+  users.forEach( function(user) {
+    var name = (user.displayName + ' ' + user.username).toLowerCase();
+    if (regExp.test(name))
+      results.push(addResult(user));
+  });
+  return results;
+}
+
+function addResult(user) {
+  return createElement('div', { class: 'result' },
+            [createElement('div', { class: 'photo', style: 'background-image:url(\'' + user.profilePic + '\')' }, null),
+             createElement('h4', { class: 'name' }, user.displayName),
+             createElement('p', { class: 'username' }, '@' + user.username)])
 }
 
 displayProfile(primaryUser);
