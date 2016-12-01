@@ -477,8 +477,11 @@ label span {
 }
 
 .user .username {
+  position: absolute;
   margin-top: 0;
   width: auto;
+  left: 0;
+  bottom: 2px;
 }
 
 .user .lnr {
