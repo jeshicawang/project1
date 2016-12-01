@@ -483,6 +483,10 @@ label span {
   padding: 10px;
 }
 
+#search .result:hover {
+  background-color: #f1f1f1;
+}
+
 .user .photo,
 .result .photo {
   position: absolute;
@@ -505,12 +509,13 @@ label span {
   position: absolute;
   margin-top: 0;
   width: auto;
-  left: 0;
+  left: 55px;
   bottom: 2px;
+  padding-left: 0;
 }
 
 .result .username {
-  left: 10px;
+  left: 65px;
   bottom: 12px;
 }
 
@@ -538,15 +543,16 @@ label span {
   font-weight: bold;
 }
 
-.name:hover,
-.username:hover {
+#content .name:hover,
+#content .username:hover {
   color: #81a9ca;
 }
 
 button,
 label,
-.name,
-.username,
+.result,
+#content .name,
+#content .username,
 .user .lnr-checkmark-circle,
 .user .lnr-plus-circle,
 #stats .stat {

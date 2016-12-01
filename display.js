@@ -372,6 +372,11 @@ function displayResults() {
   resultsContainer.style.visibility = 'visible';
 }
 
+function hideResults(event) {
+  if (!(event.target === document.getElementById('results')) && !(event.target === document.getElementById('search-input')))
+    document.getElementById('results').style.visibility = 'hidden';
+}
+
 function getSearchResults(key) {
   var results = [];
   var regExp = new RegExp("\\b" + key);
@@ -384,10 +389,12 @@ function getSearchResults(key) {
 }
 
 function addResult(user) {
-  return createElement('div', { class: 'result' },
-            [createElement('div', { class: 'photo', style: 'background-image:url(\'' + user.profilePic + '\')' }, null),
-             createElement('h4', { class: 'name' }, user.displayName),
-             createElement('p', { class: 'username' }, '@' + user.username)])
+  var result = createElement('div', { class: 'result' },
+                  [createElement('div', { class: 'photo', style: 'background-image:url(\'' + user.profilePic + '\')' }, null),
+                   createElement('h4', { class: 'name' }, user.displayName),
+                   createElement('p', { class: 'username' }, '@' + user.username)]);
+  result.addEventListener('click', function() { switchUser(user) }, false);
+  return result;
 }
 
 displayProfile(primaryUser);
@@ -398,3 +405,5 @@ document.getElementById('profile-button').addEventListener('click', function() {
 document.getElementById('post-button').addEventListener('click', addUpdate, false);
 document.getElementById('search-button').addEventListener('click', checkSearchInput, false);
 document.getElementById('search-input').addEventListener('keyup', displayResults, false);
+document.getElementById('search-input').addEventListener('focus', displayResults, false);
+document.getElementById('body').addEventListener('click', function(event) { hideResults(event) }, false);
