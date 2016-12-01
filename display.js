@@ -9,7 +9,7 @@ var users = [ { id: 0,
                 followers: [],
                 updatesCount: 5 },
               { id: 1,
-                username: 'rbiagi',
+                username: 'duval',
                 displayName: 'Rodolfo Biagi',
                 profilePic: 'images/biagi.jpg',
                 bio: 'An Argentine Tango musician who started his musical career by playing background music for silent movies, and this was where he was first discovered by a tango band leader.',
@@ -17,7 +17,7 @@ var users = [ { id: 0,
                 followers: [],
                 updatesCount: 3 },
               { id: 2,
-                username: 'hvarela',
+                username: 'historia',
                 displayName: 'Hector Varela',
                 profilePic: 'images/varela.jpg',
                 bio: 'Varela was a musician criticized by the innovative players, but loved by the fans of dancing and popular tango.',
@@ -25,7 +25,7 @@ var users = [ { id: 0,
                 followers: [],
                 updatesCount: 2 },
               { id: 3,
-                username: 'edonato',
+                username: 'carnival',
                 displayName: 'Edgardo Donato',
                 profilePic: 'images/donato.jpg',
                 bio: 'Donato was a tango composer and orchestra leader, born in Buenos Aires, Argentina, raised from a young age and musically trained in Montevideo, Uruguay.',
@@ -361,11 +361,19 @@ function displayResults() {
   var resultsContainer = document.getElementById('results');
   while (resultsContainer.firstChild)
     resultsContainer.removeChild(resultsContainer.firstChild);
+  document.getElementById('search-input').style.borderBottomLeftRadius = '15px';
+  document.getElementById('search-button').style.borderBottomRightRadius = '15px';
   if (!input.trim()) {
     resultsContainer.style.visibility = 'hidden';
     return;
   }
   var results = getSearchResults(input)
+  if (!results.length) {
+    resultsContainer.style.visibility = 'hidden';
+    return;
+  }
+  document.getElementById('search-input').style.borderBottomLeftRadius = '0';
+  document.getElementById('search-button').style.borderBottomRightRadius = '0';
   results.forEach( function(result) {
     resultsContainer.appendChild(result);
   });
@@ -373,8 +381,11 @@ function displayResults() {
 }
 
 function hideResults(event) {
-  if (!(event.target === document.getElementById('results')) && !(event.target === document.getElementById('search-input')))
-    document.getElementById('results').style.visibility = 'hidden';
+  if (event.target === document.getElementById('results') || event.target === document.getElementById('search-input'))
+    return;
+  document.getElementById('results').style.visibility = 'hidden';
+  document.getElementById('search-input').style.borderBottomLeftRadius = '15px';
+  document.getElementById('search-button').style.borderBottomRightRadius = '15px';
 }
 
 function getSearchResults(key) {
