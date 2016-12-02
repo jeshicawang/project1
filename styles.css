@@ -17,7 +17,8 @@ button {
   font-size: 14px;
 }
 
-button:hover {
+button:hover,
+button:focus {
   outline: none;
   color: #fff;
   background-color: #6d94b6;
@@ -28,7 +29,8 @@ button:focus {
   outline: none;
 }
 
-textarea {
+textarea,
+input {
   resize: none;
   box-sizing: border-box;
   border: 1px solid #f1f1f1;
@@ -38,7 +40,8 @@ textarea {
   font-style: italic;
 }
 
-textarea:focus {
+textarea:focus,
+input:focus {
   outline: none;
 }
 
@@ -165,7 +168,7 @@ p {
   position: absolute;
   top: 36px;
   right: 0;
-  width: calc(50% + 40px);
+  width: calc(50% + 39px);
   background-color: #fff;
   border: 1px solid #f1f1f1;
   border-top: 0;
@@ -244,7 +247,7 @@ p {
   height: inherit;
 }
 
-input {
+#left input {
   width: .1px;
   height: .1px;
   opacity: 0;
@@ -483,7 +486,8 @@ label span {
   padding: 10px;
 }
 
-#search .result:hover {
+#search .result:hover,
+#search .rseult:focus {
   background-color: #f1f1f1;
 }
 

@@ -415,6 +415,7 @@ document.getElementById('home-button').addEventListener('click', goHome, false);
 document.getElementById('profile-button').addEventListener('click', function() { switchUser(primaryUser) }, false);
 document.getElementById('post-button').addEventListener('click', addUpdate, false);
 document.getElementById('search-button').addEventListener('click', checkSearchInput, false);
+document.getElementById('search-input').addEventListener('keypress', function(e) { if (e.keyCode === 13) checkSearchInput() }, false);
 document.getElementById('search-input').addEventListener('keyup', displayResults, false);
 document.getElementById('search-input').addEventListener('focus', displayResults, false);
-document.getElementById('body').addEventListener('click', function(event) { hideResults(event) }, false);
+document.getElementById('body').addEventListener('click', function(e) { hideResults(e) }, false);
