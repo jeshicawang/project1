@@ -431,7 +431,7 @@ function displayResults() {
 }
 
 function hideResults(event) {
-  if (event.target === document.getElementById('results') || event.target === document.getElementById('search-input'))
+  if (event && (event.target === document.getElementById('results') || event.target === document.getElementById('search-input')))
     return;
   document.getElementById('results').style.visibility = 'hidden';
   document.getElementById('search-input').style.borderBottomLeftRadius = '15px';
@@ -488,6 +488,9 @@ function keyboardNav(e) {
       lastFocused = results[focusResult];
       if (focusResult === -1) focusResult = results.length - 1;
       else focusResult--;
+      break;
+    case 27: //escape key
+      hideResults(null);
       break;
     default: //any other key
       displayResults();
