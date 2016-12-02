@@ -12,7 +12,7 @@ var users = [ { id: 0,
                 username: 'duval',
                 displayName: 'Rodolfo Biagi',
                 profilePic: 'images/biagi.jpg',
-                bio: 'An Argentine Tango musician who started his musical career by playing background music for silent movies, and this was where he was first discovered by a tango band leader.',
+                bio: 'An Argentine Tango musician who started his musical career by playing background music for silent movies.',
                 following: [],
                 followers: [],
                 updatesCount: 3 },
@@ -29,6 +29,38 @@ var users = [ { id: 0,
                 displayName: 'Edgardo Donato',
                 profilePic: 'images/donato.jpg',
                 bio: 'Donato was a tango composer and orchestra leader, born in Buenos Aires, Argentina, raised from a young age and musically trained in Montevideo, Uruguay.',
+                following: [],
+                followers: [],
+                updatesCount: 0 },
+              { id: 4,
+                username: 'mano.a.mano',
+                displayName: 'Hugo Diaz',
+                profilePic: 'images/diaz.jpg',
+                bio: 'Víctor Hugo Díaz was a tango, folklore and jazz harmonicist.',
+                following: [],
+                followers: [],
+                updatesCount: 0 },
+              { id: 5,
+                username: 'muchacho',
+                displayName: 'Angel D\'Agostino',
+                profilePic: 'images/dagostino.jpg',
+                bio: 'I am milonguero, I always was, in the best sense of the word.',
+                following: [],
+                followers: [],
+                updatesCount: 0 },
+              { id: 6,
+                username: 'pensalo.bien',
+                displayName: 'Juan D\'Arienzo',
+                profilePic: 'images/darienzo.jpg',
+                bio: 'Juan D\'Arienzo was an Argentine tango musician, also known as \"El Rey del Compás\".',
+                following: [],
+                followers: [],
+                updatesCount: 0 },
+              { id: 7,
+                username: 'torrente',
+                displayName: 'Lucio Demare',
+                profilePic: 'images/demare.jpg',
+                bio: 'Lucio Demare was an Argentine composer who worked on a number of film scores.',
                 following: [],
                 followers: [],
                 updatesCount: 0 },
@@ -388,6 +420,18 @@ function displayResults() {
   resultsContainer.style.visibility = 'visible';
 }
 
+function sortResults(results) {
+  var sorted =[];
+  results.forEach( function(result) {
+    if(primaryUser.following.indexOf(result.id) > -1) {
+      sorted.unshift(result);
+    } else {
+      sorted.push(result);
+    }
+  });
+  return sorted;
+}
+
 function hideResults(event) {
   if (event.target === document.getElementById('results') || event.target === document.getElementById('search-input'))
     return;
@@ -397,12 +441,26 @@ function hideResults(event) {
 }
 
 function getSearchResults(key) {
+  var primaryUserAdded = false;
   var results = [];
   var regExp = new RegExp("\\b" + key);
   users.forEach( function(user) {
     var name = (user.displayName + ' ' + user.username).toLowerCase();
-    if (regExp.test(name))
-      results.push(addResult(user));
+    if (!regExp.test(name)) return;
+    if (primaryUser === user) {
+      results.unshift(addResult(user));
+      primaryUserAdded = true;
+      return;
+    }
+    if (primaryUserAdded && primaryUser.following.indexOf(user.id) > -1) {
+      results.splice(1, 0, addResult(user))
+      return;
+    }
+    if (primaryUser.following.indexOf(user.id) > -1) {
+      results.unshift(addResult(user));
+      return;
+    }
+    results.push(addResult(user));
   });
   return results;
 }
