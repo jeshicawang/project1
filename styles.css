@@ -116,9 +116,13 @@ p {
   visibility: hidden;
   position: absolute;
   width: auto;
-  background-color: #353535;
+  background-color: #b2b2b2;
   color: #fff;
+  font-family: 'Source Sans Pro', sans-serif;
   font-size: 12px;
+  font-weight: lighter;
+  text-transform: uppercase;
+  letter-spacing: 1px;
   text-align: center;
   white-space: nowrap;
   padding: 3px 6px;
@@ -136,7 +140,7 @@ p {
   margin-left: -3px;
   border-width: 3px;
   border-style: solid;
-  border-color: transparent transparent #353535;
+  border-color: transparent transparent #b2b2b2;
 }
 
 .tooltip:hover .tooltip-text {
