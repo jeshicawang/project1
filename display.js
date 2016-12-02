@@ -346,7 +346,7 @@ function suggestions() {
   var suggestions = createElement('div', { id: 'suggestions' }, [createElement('h3', {  }, 'Who to follow')]);
   users.forEach( function(user) {
     if (user === primaryUser) return;
-    suggestions.appendChild(displayUser(user, 'user'));
+    suggestions.appendChild(displayUser(user));
     suggestions.lastChild.getElementsByClassName('name')[0].addEventListener('click', function() { switchUser(user) } , false);
     suggestions.lastChild.getElementsByClassName('username')[0].addEventListener('click', function() { switchUser(user) } , false);
     suggestions.lastChild.getElementsByClassName('lnr')[0].addEventListener('click', function() { follow(user.id) } , false);
