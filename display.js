@@ -420,18 +420,6 @@ function displayResults() {
   resultsContainer.style.visibility = 'visible';
 }
 
-function sortResults(results) {
-  var sorted =[];
-  results.forEach( function(result) {
-    if(primaryUser.following.indexOf(result.id) > -1) {
-      sorted.unshift(result);
-    } else {
-      sorted.push(result);
-    }
-  });
-  return sorted;
-}
-
 function hideResults(event) {
   if (event.target === document.getElementById('results') || event.target === document.getElementById('search-input'))
     return;
