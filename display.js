@@ -316,8 +316,17 @@ function displayProfile(user) {
   var leftContainer = document.getElementById('left');
   leftContainer.appendChild(userInfo(user));
   var centerContainer = document.getElementById('center');
-  centerContainer.insertBefore(stats(user), centerContainer.firstChild);
+  centerContainer.appendChild(stats(user));
+  if (user === primaryUser)
+    centerContainer.appendChild(updatePoster())
   centerContainer.appendChild(userUpdates(user));
+}
+
+function updatePoster() {
+  var postButton = createElement('button', { id: 'post-button' }, 'Post');
+  postButton.addEventListener('click', addUpdate, false);
+  return createElement('div', { id: 'new-update', class: 'shadow' },
+            [createElement('textarea', { id: 'post-input', placeholder: 'Type a new update...' }, null), postButton]);
 }
 
 function displaySuggestions() {
@@ -346,14 +355,15 @@ function suggestions() {
 }
 
 function goHome() {
-  remove(['user-info', 'stats', 'updates']);
+  remove(['user-info', 'stats', 'new-update', 'updates']);
   currentlyViewing = null;
   var centerContainer = document.getElementById('center');
+  centerContainer.appendChild(updatePoster());
   centerContainer.appendChild(allUpdates());
 }
 
 function switchUser(user) {
-  remove(['user-info', 'stats', 'updates']);
+  remove(['user-info', 'stats', 'new-update', 'updates']);
   displayProfile(user);
 }
 
@@ -494,7 +504,6 @@ displaySuggestions();
 
 document.getElementById('home-button').addEventListener('click', goHome, false);
 document.getElementById('profile-button').addEventListener('click', function() { switchUser(primaryUser) }, false);
-document.getElementById('post-button').addEventListener('click', addUpdate, false);
 document.getElementById('search-button').addEventListener('click', checkSearchInput, false);
 document.getElementById('search-input').addEventListener('keyup', function(e) { keyboardNav(e) }, false);
 document.getElementById('search-input').addEventListener('focus', displayResults, false);
