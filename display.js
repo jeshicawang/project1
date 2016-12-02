@@ -6,14 +6,14 @@ var users = [ { id: 0,
                 profilePic: 'images/jwang.jpg',
                 bio: 'Female. 20. Coffee lover. Argentine Tango Dancer. Future software developer;)',
                 following: [],
-                followers: [],
+                followers: [1, 2, 3, 4, 5, 6, 7],
                 updatesCount: 5 },
               { id: 1,
                 username: 'duval',
                 displayName: 'Rodolfo Biagi',
                 profilePic: 'images/biagi.jpg',
                 bio: 'An Argentine Tango musician who started his musical career by playing background music for silent movies.',
-                following: [],
+                following: [0],
                 followers: [],
                 updatesCount: 3 },
               { id: 2,
@@ -21,7 +21,7 @@ var users = [ { id: 0,
                 displayName: 'Hector Varela',
                 profilePic: 'images/varela.jpg',
                 bio: 'Varela was a musician criticized by the innovative players, but loved by the fans of dancing and popular tango.',
-                following: [],
+                following: [0],
                 followers: [],
                 updatesCount: 2 },
               { id: 3,
@@ -29,7 +29,7 @@ var users = [ { id: 0,
                 displayName: 'Edgardo Donato',
                 profilePic: 'images/donato.jpg',
                 bio: 'Donato was a tango composer and orchestra leader, born in Buenos Aires, Argentina, raised from a young age and musically trained in Montevideo, Uruguay.',
-                following: [],
+                following: [0],
                 followers: [],
                 updatesCount: 0 },
               { id: 4,
@@ -37,7 +37,7 @@ var users = [ { id: 0,
                 displayName: 'Hugo Diaz',
                 profilePic: 'images/diaz.jpg',
                 bio: 'Víctor Hugo Díaz was a tango, folklore and jazz harmonicist.',
-                following: [],
+                following: [0],
                 followers: [],
                 updatesCount: 0 },
               { id: 5,
@@ -45,7 +45,7 @@ var users = [ { id: 0,
                 displayName: 'Angel D\'Agostino',
                 profilePic: 'images/dagostino.jpg',
                 bio: 'I am milonguero, I always was, in the best sense of the word.',
-                following: [],
+                following: [0],
                 followers: [],
                 updatesCount: 0 },
               { id: 6,
@@ -53,7 +53,7 @@ var users = [ { id: 0,
                 displayName: 'Juan D\'Arienzo',
                 profilePic: 'images/darienzo.jpg',
                 bio: 'Juan D\'Arienzo was an Argentine tango musician, also known as \"El Rey del Compás\".',
-                following: [],
+                following: [0],
                 followers: [],
                 updatesCount: 0 },
               { id: 7,
@@ -61,13 +61,14 @@ var users = [ { id: 0,
                 displayName: 'Lucio Demare',
                 profilePic: 'images/demare.jpg',
                 bio: 'Lucio Demare was an Argentine composer who worked on a number of film scores.',
-                following: [],
+                following: [0],
                 followers: [],
                 updatesCount: 0 },
 ];
 
 var primaryUser = users[0];
 var currentlyViewing = primaryUser;
+var viewing = null;
 
 var updates = [ { userId: 0, timestamp: newMoment('5:00PM 11/22/16'), post: 'I\'m going home for the day!' },
                 { userId: 0, timestamp: newMoment('4:30PM 11/22/16'), post: 'Class just ended.' },
@@ -149,16 +150,75 @@ function userUpdates(user) {
 }
 
 function stats(user) {
-  return createElement('div', { id: 'stats', class: 'shadow' },
-            [createElement('span', { id: 'posts', class: 'stat' },
-                [createElement('p', { class: 'label' }, 'posts'),
-                 createElement('p', { class: 'count' }, user.updatesCount)]),
-             createElement('span', { id: 'following', class: 'stat' },
-                [createElement('p', { class: 'label' }, 'following'),
-                createElement('p', { class: 'count' }, user.following.length)]),
-             createElement('span', { id: 'followers', class: 'stat' },
-                [createElement('p', { class: 'label' }, 'followers'),
-                createElement('p', { class: 'count' }, user.followers.length)])]);
+  var stats = createElement('div', { id: 'stats', class: 'shadow' },
+                 [createElement('span', { id: 'posts', class: 'stat' },
+                     [createElement('p', { class: 'label' }, 'posts'),
+                      createElement('p', { class: 'count' }, user.updatesCount)]),
+                  createElement('span', { id: 'following', class: 'stat' },
+                     [createElement('p', { class: 'label' }, 'following'),
+                      createElement('p', { class: 'count' }, user.following.length)]),
+                  createElement('span', { id: 'followers', class: 'stat' },
+                     [createElement('p', { class: 'label' }, 'followers'),
+                      createElement('p', { class: 'count' }, user.followers.length)])]);
+  stats.addEventListener('click', function(e) { displayContent(e, user) }, false);
+  return stats;
+}
+
+function displayContent(event, user) {
+  remove(['new-update', 'updates', 'list'])
+  var centerContainer = document.getElementById('center');
+  if (viewing) document.getElementById(viewing).style.borderColor = null;
+  event.target.style.borderColor = '#81a9ca';
+  switch (event.target) {
+    case document.getElementById('posts'):
+    viewing = 'posts';
+      if (user === primaryUser)
+        centerContainer.appendChild(updatePoster())
+      centerContainer.appendChild(userUpdates(user));
+      break;
+    case document.getElementById('following'):
+      viewing = 'following';
+      centerContainer.appendChild(list(user.following));
+      break;
+    case document.getElementById('followers'):
+      viewing = 'followers';
+      centerContainer.appendChild(list(user.followers));
+      break;
+  }
+}
+
+function list(references) {
+  var list = createElement('table', { id: 'list', class: 'shadow' }, null);
+  if (!references.length) {
+    var message = createElement('p', { class: 'message' }, null);
+    if (currentlyViewing === primaryUser && viewing === 'following')
+      message.textContent = 'You are not following any users yet.'
+    else if (currentlyViewing === primaryUser)
+      message.textContent = 'You have no followers yet.'
+    else if (viewing === 'following')
+      message.textContent = '@' + currentlyViewing.username + ' is not following any users yet.'
+    else
+      message.textContent = '@' + currentlyViewing.username + ' does not have any followers yet.'
+    list.appendChild(message);
+  }
+  var oddRow = (references.length % 2 === 1);
+  var rows = Math.floor(references.length / 2) + (oddRow ? 1 : 0);
+  while (rows > 0) {
+    if (!oddRow || rows > 1)
+      list.appendChild(createElement('tr', {  }, [createElement('td', { class: 'user' }, null), createElement('td', { class: 'user' }, null)]));
+    else
+      list.appendChild(createElement('tr', {  }, createElement('td', { class: 'user' }, null)));
+    rows--;
+  }
+  var userElements = list.getElementsByClassName('user');
+  for (var i = 0; i < userElements.length; i++) {
+    var theUser = users[references[i]];
+    userElements.item(i).appendChild(createElement('div', { class: 'photo', style: 'background-image:url(' + theUser.profilePic + ')' }, null));
+    userElements.item(i).appendChild(createElement('h4', { class: 'name' }, theUser.displayName));
+    userElements.item(i).appendChild(createElement('p', { class: 'username' }, '@' + theUser.username));
+    userElements.item(i).appendChild(createElement('p', { class: 'stat' }, theUser.updatesCount + ' posts . ' + theUser.following.length + ' following . ' + theUser.followers.length + ' followers'));
+  }
+  return list;
 }
 
 function refreshStats() {
@@ -279,10 +339,12 @@ function follow(id) {
     index = users[id].followers.indexOf(primaryUser.id);
     users[id].followers.splice(index, 1);
   }
-  if(!currentlyViewing)
+  if (!currentlyViewing)
     goHome();
-  else
+  else {
     refreshStats(currentlyViewing);
+    document.getElementById(viewing).click();
+  }
   if (currentlyViewing !== users[id]) return;
   var followButton = document.getElementById('follow').firstChild;
   if (following) {
@@ -290,6 +352,7 @@ function follow(id) {
   } else {
     followButton.data = 'Following';
   }
+
 }
 
 function checkIfFollowing(id) {
@@ -317,9 +380,7 @@ function displayProfile(user) {
   leftContainer.appendChild(userInfo(user));
   var centerContainer = document.getElementById('center');
   centerContainer.appendChild(stats(user));
-  if (user === primaryUser)
-    centerContainer.appendChild(updatePoster())
-  centerContainer.appendChild(userUpdates(user));
+  document.getElementById('posts').click();
 }
 
 function updatePoster() {
@@ -355,7 +416,7 @@ function suggestions() {
 }
 
 function goHome() {
-  remove(['user-info', 'stats', 'new-update', 'updates']);
+  remove(['user-info', 'stats', 'new-update', 'updates', 'list']);
   currentlyViewing = null;
   var centerContainer = document.getElementById('center');
   centerContainer.appendChild(updatePoster());

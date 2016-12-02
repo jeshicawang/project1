@@ -374,14 +374,11 @@ label span {
   display: table-cell;
   width: 33%;
   padding: 10px 10px 6px;
+  border-bottom: 4px solid #fff;
 }
 
 #stats .stat:hover {
-  border-bottom: 4px solid #e5edf4;
-}
-
-#stats #posts {
-  border-bottom: 4px solid #81a9ca;
+  border-color: #e5edf4;
 }
 
 #stats .label {
@@ -389,10 +386,12 @@ label span {
   font-size: 12px;
   text-transform: uppercase;
   letter-spacing: 1px;
+  pointer-events: none;
 }
 
 #stats .count {
   font-weight: bold;
+  pointer-events: none;
 }
 
 #new-update {
@@ -417,7 +416,8 @@ label span {
   height: 32px;
 }
 
-#updates {
+#updates,
+#list {
   margin-top: 20px;
   background-color: #fff;
 }
@@ -449,7 +449,8 @@ label span {
   margin-left: 55px;
 }
 
-.update .username {
+.update .username,
+#list .user .username {
   display: inline-block;
   float: left;
   margin-left: 5px;
@@ -468,14 +469,44 @@ label span {
 }
 
 .update .post,
-.user .username,
+#list .user .stat,
+#suggestions .user .username,
 .result .username {
   display: inline-block;
   box-sizing: border-box;
   width: 100%;
   margin-top: 5px;
   padding-left: 55px;
+  text-align: left;
   font-weight: 300;
+}
+
+#list {
+  width: 100%;
+  margin-top: 0;
+  background-color: #fff;
+  border-collapse: collapse;
+}
+
+#list .message {
+  text-align: left;
+  padding: 20px;
+}
+
+#list .user {
+  position: relative;
+  vertical-align: top;
+  box-sizing: border-box;
+  height: 80px;
+  padding: 20px;
+}
+
+#list .user:hover {
+  background-color: #f1f1f1;
+}
+
+.user .stat {
+  color: #81a9ca;
 }
 
 #suggestions h3 {
@@ -498,7 +529,7 @@ label span {
 }
 
 #search .result:hover,
-#search .rseult:focus {
+#search .result:focus {
   background-color: #f2f6f9;
 }
 
@@ -512,14 +543,14 @@ label span {
   background-position: center;
 }
 
-.user .name,
+#suggestions .user .name,
 .result .name {
   position: relative;
   float: top;
   margin-top: 2px;
 }
 
-.user .username,
+#suggestions .user .username,
 .result .username {
   position: absolute;
   margin-top: 0;
@@ -558,13 +589,16 @@ label span {
   font-weight: bold;
 }
 
-#content .name:hover,
-#content .username:hover {
+#suggestions .name:hover,
+#suggestions .username:hover,
+#updates .name:hover,
+#updates .username:hover {
   color: #81a9ca;
 }
 
 button,
 label,
+#list .user,
 .result,
 #content .name,
 #content .username,
