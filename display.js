@@ -217,6 +217,7 @@ function list(references) {
     userElements.item(i).appendChild(createElement('h4', { class: 'name' }, theUser.displayName));
     userElements.item(i).appendChild(createElement('p', { class: 'username' }, '@' + theUser.username));
     userElements.item(i).appendChild(createElement('p', { class: 'stat' }, theUser.updatesCount + ' posts . ' + theUser.following.length + ' following . ' + theUser.followers.length + ' followers'));
+    userElements.item(i).addEventListener('click', function() { switchUser(theUser) }, false);
   }
   return list;
 }
