@@ -377,7 +377,7 @@ label span {
 }
 
 #stats .stat:hover {
-  border-bottom: 4px solid #d0e9ff;
+  border-bottom: 4px solid #e5edf4;
 }
 
 #stats #posts {
@@ -499,7 +499,7 @@ label span {
 
 #search .result:hover,
 #search .rseult:focus {
-  background-color: #f1f1f1;
+  background-color: #f2f6f9;
 }
 
 .user .photo,

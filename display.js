@@ -17,7 +17,7 @@ var users = [ { id: 0,
                 followers: [],
                 updatesCount: 3 },
               { id: 2,
-                username: 'historia',
+                username: 'tentadora',
                 displayName: 'Hector Varela',
                 profilePic: 'images/varela.jpg',
                 bio: 'Varela was a musician criticized by the innovative players, but loved by the fans of dancing and popular tango.',
@@ -25,7 +25,7 @@ var users = [ { id: 0,
                 followers: [],
                 updatesCount: 2 },
               { id: 3,
-                username: 'carnival',
+                username: 'gato',
                 displayName: 'Edgardo Donato',
                 profilePic: 'images/donato.jpg',
                 bio: 'Donato was a tango composer and orchestra leader, born in Buenos Aires, Argentina, raised from a young age and musically trained in Montevideo, Uruguay.',
@@ -34,7 +34,7 @@ var users = [ { id: 0,
                 updatesCount: 0 },
 ];
 
-var primaryUser = users[3];
+var primaryUser = users[0];
 var currentlyViewing = primaryUser;
 
 var updates = [ { userId: 0, timestamp: newMoment('5:00PM 11/22/16'), post: 'I\'m going home for the day!' },
@@ -356,7 +356,11 @@ function checkSearchInput() {
   document.getElementById('search-input').value = '';
 }
 
+var focusResult;
+var lastFocused = null;
+
 function displayResults() {
+  focusResult = -1;
   var input = document.getElementById('search-input').value.toLowerCase();
   var resultsContainer = document.getElementById('results');
   while (resultsContainer.firstChild)
@@ -374,7 +378,11 @@ function displayResults() {
   }
   document.getElementById('search-input').style.borderBottomLeftRadius = '0';
   document.getElementById('search-button').style.borderBottomRightRadius = '0';
-  results.forEach( function(result) {
+  results.forEach( function(result, index) {
+    if(index === results.length - 1) {
+      result.style.borderBottomLeftRadius = '15px'
+      result.style.borderBottomRightRadius = '15px'
+    }
     resultsContainer.appendChild(result);
   });
   resultsContainer.style.visibility = 'visible';
@@ -408,6 +416,33 @@ function addResult(user) {
   return result;
 }
 
+function keyboardNav(e) {
+  var results = document.getElementsByClassName('result');
+  switch (e.keyCode) {
+    case 13: //enter key
+      if (focusResult === -1) checkSearchInput();
+      else results[focusResult].click();
+      break;
+    case 40: //down arrow
+      lastFocused = results[focusResult];
+      if(focusResult === results.length - 1) focusResult = -1;
+      else focusResult++;
+      break;
+    case 38: //up arrow
+      lastFocused = results[focusResult];
+      if (focusResult === -1) focusResult = results.length - 1;
+      else focusResult--;
+      break;
+    default: //any other key
+      displayResults();
+  }
+  if (lastFocused)
+    lastFocused.style.backgroundColor = 'transparent';
+  if (results[focusResult]) {
+    results[focusResult].style.backgroundColor = '#f2f6f9';
+  }
+}
+
 displayProfile(primaryUser);
 displaySuggestions();
 
@@ -415,7 +450,6 @@ document.getElementById('home-button').addEventListener('click', goHome, false);
 document.getElementById('profile-button').addEventListener('click', function() { switchUser(primaryUser) }, false);
 document.getElementById('post-button').addEventListener('click', addUpdate, false);
 document.getElementById('search-button').addEventListener('click', checkSearchInput, false);
-document.getElementById('search-input').addEventListener('keypress', function(e) { if (e.keyCode === 13) checkSearchInput() }, false);
-document.getElementById('search-input').addEventListener('keyup', displayResults, false);
+document.getElementById('search-input').addEventListener('keyup', function(e) { keyboardNav(e) }, false);
 document.getElementById('search-input').addEventListener('focus', displayResults, false);
 document.getElementById('body').addEventListener('click', function(e) { hideResults(e) }, false);
