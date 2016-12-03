@@ -226,8 +226,7 @@ function list(references) {
 
 function getUserClicked(event) {
   var id = event.target.id;
-  console.log(id);
-  if (id) switchUser(users[id]);
+  if (id && id !== 'list') switchUser(users[id]);
 }
 
 function refreshStats() {
