@@ -61,7 +61,11 @@ h2 {
 }
 
 h3 {
+  text-align: left;
+  font-size: 14px;
   text-transform: uppercase;
+  letter-spacing: 1px;
+  border-bottom: 4px solid #f2f6f9;
 }
 
 p {
@@ -509,6 +513,12 @@ label span {
   background-color: #f1f1f1;
 }
 
+#list div,
+#list h4,
+#list p {
+  pointer-events: none;
+}
+
 .user .stat {
   color: #81a9ca;
 }
@@ -557,6 +567,7 @@ label span {
 #suggestions .user .username,
 .result .username {
   position: absolute;
+  color: #b2b2b2;
   margin-top: 0;
   width: auto;
   left: 55px;
@@ -567,6 +578,7 @@ label span {
 .result .username {
   left: 65px;
   bottom: 12px;
+  color: #353535;
 }
 
 .user .lnr {

@@ -213,13 +213,21 @@ function list(references) {
   var userElements = list.getElementsByClassName('user');
   for (var i = 0; i < userElements.length; i++) {
     var theUser = users[references[i]];
-    userElements.item(i).appendChild(createElement('div', { class: 'photo', style: 'background-image:url(' + theUser.profilePic + ')' }, null));
-    userElements.item(i).appendChild(createElement('h4', { class: 'name' }, theUser.displayName));
-    userElements.item(i).appendChild(createElement('p', { class: 'username' }, '@' + theUser.username));
-    userElements.item(i).appendChild(createElement('p', { class: 'stat' }, theUser.updatesCount + ' posts . ' + theUser.following.length + ' following . ' + theUser.followers.length + ' followers'));
-    userElements.item(i).addEventListener('click', function() { switchUser(theUser) }, false);
+    var element = userElements.item(i);
+    element.setAttribute('id', references[i]);
+    element.appendChild(createElement('div', { class: 'photo', style: 'background-image:url(' + theUser.profilePic + ')' }, null));
+    element.appendChild(createElement('h4', { class: 'name' }, theUser.displayName));
+    element.appendChild(createElement('p', { class: 'username' }, '@' + theUser.username));
+    element.appendChild(createElement('p', { class: 'stat' }, theUser.updatesCount + ' posts . ' + theUser.following.length + ' following . ' + theUser.followers.length + ' followers'));
   }
+  list.addEventListener('click', function(e) { getUserClicked(e) }, false);
   return list;
+}
+
+function getUserClicked(event) {
+  var id = event.target.id;
+  console.log(id);
+  if (id) switchUser(users[id]);
 }
 
 function refreshStats() {
