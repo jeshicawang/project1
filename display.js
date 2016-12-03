@@ -85,33 +85,84 @@ function newMoment(timestamp) {
   return moment(timestamp, 'h:mmA M/D/YY');
 }
 
-function getUpdateElements(user, index) {
-  var updateElements = [createElement('div', { class: 'photo', style: 'background-image:url('+ user.profilePic + ')' }, null),
-                        createElement('h4', { class: 'name' }, user.displayName),
-                        createElement('p', { class: 'username' }, '@' + user.username),
-                        createElement('p', { class: 'timestamp' }, updates[index].timestamp.format('h:mmA M/D/YY')),
-                        createElement('p', { class: 'post' }, updates[index].post)];
-  updateElements[1].addEventListener('click', function() { switchUser(user) } , false);
-  updateElements[2].addEventListener('click', function() { switchUser(user) } , false);
-  return updateElements;
-}
-
 function createElement(tag, attributes, children) {
   var newElement = document.createElement(tag);
   for (var key in attributes) {
     newElement.setAttribute(key, attributes[key]);
   }
-  if (children === null) return newElement;
+  if (!children && children !== 0) return newElement;
   if (!(children instanceof Element) && !(children instanceof Array)) {
     newElement.appendChild(document.createTextNode(children));
     return newElement;
   }
   if (!(children instanceof Array))
     children = [children];
-  children.forEach(function(child) {
-    newElement.appendChild(child);
-  });
+  children.forEach(function(child) { newElement.appendChild(child) });
   return newElement;
+}
+
+function displayProfile(user) {
+  if (!user) return;
+  remove(['user-info', 'stats', 'new-update', 'updates']);
+  currentlyViewing = user;
+  document.getElementById('left').appendChild(userInfo(user));
+  document.getElementById('center').appendChild(stats(user));
+  document.getElementById('posts').click();
+}
+
+function follow(id) {
+  var following = primaryUser.following.includes(id);
+  var suggestions = document.getElementsByClassName('plus');
+  var index = (id < primaryUser.id) ? id : (id - 1);
+  if (!following) {
+    suggestions[index].className = 'plus lnr lnr-checkmark-circle';
+    primaryUser.following.unshift(id);
+    users[id].followers.unshift(primaryUser.id);
+  } else {
+    suggestions[index].className = 'plus lnr lnr-plus-circle';
+    index = primaryUser.following.indexOf(id);
+    primaryUser.following.splice(index, 1);
+    index = users[id].followers.indexOf(primaryUser.id);
+    users[id].followers.splice(index, 1);
+  }
+  if (!currentlyViewing)
+    goHome();
+  else {
+    refreshStats(currentlyViewing);
+    document.getElementById(viewing).click();
+  }
+  if (currentlyViewing !== users[id]) return;
+  document.getElementById('follow').firstChild.data = following ? 'Follow' : 'Following';
+}
+
+function remove(ids) {
+  if (! (ids instanceof Array))
+    ids = [ids];
+  ids.forEach(function (id) {
+    var element = document.getElementById(id);
+    if (!element) return;
+    element.parentElement.removeChild(element);
+  });
+}
+
+function goHome() {
+  remove(['user-info', 'stats', 'new-update', 'updates', 'list']);
+  currentlyViewing = null;
+  var centerContainer = document.getElementById('center');
+  centerContainer.appendChild(updatePoster());
+  centerContainer.appendChild(allUpdates());
+}
+
+function allUpdates() {
+  var updatesToDisplay = [];
+  updates.forEach(function (update, index) {
+    if(primaryUser.following.includes(update.userId))
+      updatesToDisplay.push(createElement('div', { class: 'update' }, getUpdateElements(users[update.userId], index)));
+  });
+  if (updatesToDisplay.length)
+    return createElement('div', { id: 'updates', class: 'shadow' }, updatesToDisplay);
+  updatesToDisplay.push(createElement('div', { class: 'update' }, 'No updates to display. Follow other users to view their updates in your newsfeed.'));
+  return createElement('div', { id: 'updates', class: 'shadow' }, updatesToDisplay);
 }
 
 function userInfo(user) {
@@ -128,123 +179,9 @@ function userInfo(user) {
     userInfo.lastChild.addEventListener('click', function() { editProfile() }, false);
     return userInfo;
   }
-  var following = (primaryUser.following.indexOf(user.id) > -1);
-  userInfo.appendChild(createElement('button', { id: 'follow' }, following ? 'Following' : 'Follow'));
+  userInfo.appendChild(createElement('button', { id: 'follow' }, primaryUser.following.includes(user.id) ? 'Following' : 'Follow'));
   userInfo.lastChild.addEventListener('click', function() { follow(user.id) }, false);
   return userInfo;
-}
-
-function userUpdates(user) {
-  var updatesToDisplay = []
-  updates.forEach(function (update, index) {
-    if (update.userId === user.id)
-      updatesToDisplay.push(createElement('div', { class: 'update' }, getUpdateElements(user, index)));
-  });
-  if (updatesToDisplay.length)
-    return createElement('div', { id: 'updates', class: 'shadow' }, updatesToDisplay);
-  if (currentlyViewing === primaryUser)
-    updatesToDisplay.push(createElement('div', { class: 'update' }, 'No updates to display. Post a new update and it will show up on your profile.'));
-  else
-    updatesToDisplay.push(createElement('div', { class: 'update' }, '@' + currentlyViewing.username + ' has not posted any updates yet.'));
-  return createElement('div', { id: 'updates', class: 'shadow' }, updatesToDisplay);
-}
-
-function stats(user) {
-  var stats = createElement('div', { id: 'stats', class: 'shadow' },
-                 [createElement('span', { id: 'posts', class: 'stat' },
-                     [createElement('p', { class: 'label' }, 'posts'),
-                      createElement('p', { class: 'count' }, user.updatesCount)]),
-                  createElement('span', { id: 'following', class: 'stat' },
-                     [createElement('p', { class: 'label' }, 'following'),
-                      createElement('p', { class: 'count' }, user.following.length)]),
-                  createElement('span', { id: 'followers', class: 'stat' },
-                     [createElement('p', { class: 'label' }, 'followers'),
-                      createElement('p', { class: 'count' }, user.followers.length)])]);
-  stats.addEventListener('click', function(e) { displayContent(e, user) }, false);
-  return stats;
-}
-
-function displayContent(event, user) {
-  remove(['new-update', 'updates', 'list'])
-  var centerContainer = document.getElementById('center');
-  if (viewing) document.getElementById(viewing).style.borderColor = null;
-  event.target.style.borderColor = '#81a9ca';
-  switch (event.target) {
-    case document.getElementById('posts'):
-    viewing = 'posts';
-      if (user === primaryUser)
-        centerContainer.appendChild(updatePoster())
-      centerContainer.appendChild(userUpdates(user));
-      break;
-    case document.getElementById('following'):
-      viewing = 'following';
-      centerContainer.appendChild(list(user.following));
-      break;
-    case document.getElementById('followers'):
-      viewing = 'followers';
-      centerContainer.appendChild(list(user.followers));
-      break;
-  }
-}
-
-function list(references) {
-  var list = createElement('table', { id: 'list', class: 'shadow' }, null);
-  if (!references.length) {
-    var message = createElement('p', { class: 'message' }, null);
-    if (currentlyViewing === primaryUser && viewing === 'following')
-      message.textContent = 'You are not following any users yet.'
-    else if (currentlyViewing === primaryUser)
-      message.textContent = 'You have no followers yet.'
-    else if (viewing === 'following')
-      message.textContent = '@' + currentlyViewing.username + ' is not following any users yet.'
-    else
-      message.textContent = '@' + currentlyViewing.username + ' does not have any followers yet.'
-    list.appendChild(message);
-  }
-  var oddRow = (references.length % 2 === 1);
-  var rows = Math.floor(references.length / 2) + (oddRow ? 1 : 0);
-  while (rows > 0) {
-    if (!oddRow || rows > 1)
-      list.appendChild(createElement('tr', {  }, [createElement('td', { class: 'user' }, null), createElement('td', { class: 'user' }, null)]));
-    else
-      list.appendChild(createElement('tr', {  }, createElement('td', { class: 'user' }, null)));
-    rows--;
-  }
-  var userElements = list.getElementsByClassName('user');
-  for (var i = 0; i < userElements.length; i++) {
-    var theUser = users[references[i]];
-    var element = userElements.item(i);
-    element.setAttribute('id', references[i]);
-    element.appendChild(createElement('div', { class: 'photo', style: 'background-image:url(' + theUser.profilePic + ')' }, null));
-    element.appendChild(createElement('h4', { class: 'name' }, theUser.displayName));
-    element.appendChild(createElement('p', { class: 'username' }, '@' + theUser.username));
-    element.appendChild(createElement('p', { class: 'stat' }, theUser.updatesCount + ' posts . ' + theUser.following.length + ' following . ' + theUser.followers.length + ' followers'));
-  }
-  list.addEventListener('click', function(e) { getUserClicked(e) }, false);
-  return list;
-}
-
-function getUserClicked(event) {
-  var id = event.target.id;
-  if (id && id !== 'list') switchUser(users[id]);
-}
-
-function refreshStats() {
-  remove('stats');
-  var centerContainer = document.getElementById('center');
-  centerContainer.insertBefore(stats(currentlyViewing), centerContainer.firstChild);
-}
-
-function allUpdates() {
-  var updatesToDisplay = [];
-  updates.forEach(function (update, index) {
-    if(primaryUser.following.indexOf(update.userId) > -1)
-      updatesToDisplay.push(createElement('div', { class: 'update' }, getUpdateElements(users[update.userId], index)));
-  });
-  if (updatesToDisplay.length)
-    return createElement('div', { id: 'updates', class: 'shadow' }, updatesToDisplay);
-  updatesToDisplay.push(createElement('div', { class: 'update' }, 'No updates to display. Follow other users to view their updates in your newsfeed.'));
-  return createElement('div', { id: 'updates', class: 'shadow' }, updatesToDisplay);
 }
 
 function editProfile() {
@@ -286,7 +223,6 @@ function editor(user) {
 }
 
 function checkUsername(value) {
-  var taken = false;
   var validCharacters = /^[a-z0-9_]*$/;
   var message = document.getElementById('error-msg');
   var cross = document.getElementById('cross');
@@ -300,17 +236,13 @@ function checkUsername(value) {
   if (value.length < 4 || !validCharacters.test(value)) {
     message.textContent = '*please enter a valid username*';
     cross.style.visibility = 'visible';
-    return
+    return;
   }
-  users.forEach(function (user) {
-    if (value === user.username) {
-      message.textContent = '*this username is taken*';
-      taken = true;
-      cross.style.visibility = 'visible';
-      return;
-    }
-  });
-  if (taken) return;
+  if (users.some(function(user) { return user.username === value })) {
+    message.textContent = '*this username is taken*';
+    cross.style.visibility = 'visible';
+    return;
+  }
   message.textContent = ' ';
   cross.style.visibility = 'hidden';
   check.style.visibility = 'visible';
@@ -329,66 +261,51 @@ function saveProfile() {
   primaryUser.displayName = document.getElementById('name-text').value;
   primaryUser.username = document.getElementById('username-text').value;
   primaryUser.bio = document.getElementById('bio-text').value;
-  switchUser(primaryUser);
+  displayProfile(primaryUser);
 }
 
-function follow(id) {
-  var following = checkIfFollowing(id);
-  var suggestions = document.getElementsByClassName('plus');
-  var index = (id < primaryUser.id) ? id : (id - 1);
-  if (!following) {
-    suggestions[index].className = 'plus lnr lnr-checkmark-circle';
-    primaryUser.following.unshift(id);
-    users[id].followers.unshift(primaryUser.id);
-  } else {
-    suggestions[index].className = 'plus lnr lnr-plus-circle';
-    index = primaryUser.following.indexOf(id);
-    primaryUser.following.splice(index, 1);
-    index = users[id].followers.indexOf(primaryUser.id);
-    users[id].followers.splice(index, 1);
-  }
-  if (!currentlyViewing)
-    goHome();
-  else {
-    refreshStats(currentlyViewing);
-    document.getElementById(viewing).click();
-  }
-  if (currentlyViewing !== users[id]) return;
-  var followButton = document.getElementById('follow').firstChild;
-  if (following) {
-    followButton.data = 'Follow';
-  } else {
-    followButton.data = 'Following';
-  }
-
+function stats(user) {
+  var stats = createElement('div', { id: 'stats', class: 'shadow' },
+                 [createElement('span', { id: 'posts', class: 'stat' },
+                     [createElement('p', { class: 'label' }, 'posts'),
+                      createElement('p', { class: 'count' }, user.updatesCount)]),
+                  createElement('span', { id: 'following', class: 'stat' },
+                     [createElement('p', { class: 'label' }, 'following'),
+                      createElement('p', { class: 'count' }, user.following.length)]),
+                  createElement('span', { id: 'followers', class: 'stat' },
+                     [createElement('p', { class: 'label' }, 'followers'),
+                      createElement('p', { class: 'count' }, user.followers.length)])]);
+  stats.addEventListener('click', function(e) { displayCenterContent(e, user) }, false);
+  return stats;
 }
 
-function checkIfFollowing(id) {
-  var following = false;
-  primaryUser.following.forEach( function(followingId) {
-    if(followingId === id)
-      following = true;
-  });
-  return following;
-}
-
-function remove(ids) {
-  if (! (ids instanceof Array))
-    ids = [ids];
-  ids.forEach(function (id) {
-    var element = document.getElementById(id);
-    if(element)
-      element.parentElement.removeChild(element);
-  });
-}
-
-function displayProfile(user) {
-  currentlyViewing = user;
-  var leftContainer = document.getElementById('left');
-  leftContainer.appendChild(userInfo(user));
+function refreshStats() {
+  remove('stats');
   var centerContainer = document.getElementById('center');
-  centerContainer.appendChild(stats(user));
-  document.getElementById('posts').click();
+  centerContainer.insertBefore(stats(currentlyViewing), centerContainer.firstChild);
+}
+
+function displayCenterContent(event, user) {
+  remove(['new-update', 'updates', 'list'])
+  var centerContainer = document.getElementById('center');
+  if (viewing) document.getElementById(viewing).style.borderColor = null;
+  event.target.style.borderColor = '#81a9ca';
+  switch (event.target) {
+    case document.getElementById('posts'):
+      viewing = 'posts';
+      if (user === primaryUser)
+        centerContainer.appendChild(updatePoster())
+      centerContainer.appendChild(userUpdates(user));
+      break;
+    case document.getElementById('following'):
+      viewing = 'following';
+      centerContainer.appendChild(listOfUsers(user.following));
+      break;
+    case document.getElementById('followers'):
+      viewing = 'followers';
+      centerContainer.appendChild(listOfUsers(user.followers));
+      break;
+  }
 }
 
 function updatePoster() {
@@ -396,44 +313,6 @@ function updatePoster() {
   postButton.addEventListener('click', addUpdate, false);
   return createElement('div', { id: 'new-update', class: 'shadow' },
             [createElement('textarea', { id: 'post-input', placeholder: 'Type a new update...' }, null), postButton]);
-}
-
-function displaySuggestions() {
-  var rightContainer = document.getElementById('right');
-  rightContainer.appendChild(suggestions());
-}
-
-function displayUser(user) {
-  return createElement('div', { class: 'user' },
-            [createElement('div', { class: 'photo', style: 'background-image:url(\'' + user.profilePic + '\')' }, null),
-             createElement('h4', { class: 'name' }, user.displayName),
-             createElement('p', { class: 'username' }, '@' + user.username),
-             createElement('span', { class: 'plus lnr lnr-plus-circle' }, null)])
-}
-
-function suggestions() {
-  var suggestions = createElement('div', { id: 'suggestions' }, [createElement('h3', {  }, 'Who to follow')]);
-  users.forEach( function(user) {
-    if (user === primaryUser) return;
-    suggestions.appendChild(displayUser(user));
-    suggestions.lastChild.getElementsByClassName('name')[0].addEventListener('click', function() { switchUser(user) } , false);
-    suggestions.lastChild.getElementsByClassName('username')[0].addEventListener('click', function() { switchUser(user) } , false);
-    suggestions.lastChild.getElementsByClassName('lnr')[0].addEventListener('click', function() { follow(user.id) } , false);
-  });
-  return suggestions;
-}
-
-function goHome() {
-  remove(['user-info', 'stats', 'new-update', 'updates', 'list']);
-  currentlyViewing = null;
-  var centerContainer = document.getElementById('center');
-  centerContainer.appendChild(updatePoster());
-  centerContainer.appendChild(allUpdates());
-}
-
-function switchUser(user) {
-  remove(['user-info', 'stats', 'new-update', 'updates']);
-  displayProfile(user);
 }
 
 function addUpdate() {
@@ -447,64 +326,151 @@ function addUpdate() {
     updatesContainer.insertBefore(createElement('div', { class: 'update'}, getUpdateElements(primaryUser, 0)), updatesContainer.firstChild);
     return;
   }
-  if (currentlyViewing === primaryUser) {
-    refreshStats(currentlyViewing);
-    updatesContainer.insertBefore(createElement('div', { class: 'update'}, getUpdateElements(primaryUser, 0)), updatesContainer.firstChild);
-    if (primaryUser.updatesCount === 1)
-      updatesContainer.removeChild(updatesContainer.lastChild);
+  refreshStats(primaryUser);
+  updatesContainer.insertBefore(createElement('div', { class: 'update'}, getUpdateElements(primaryUser, 0)), updatesContainer.firstChild);
+  if (primaryUser.updatesCount === 1)
+    updatesContainer.removeChild(updatesContainer.lastChild);
+}
+
+function userUpdates(user) {
+  var updatesToDisplay = []
+  updates.forEach(function (update, index) {
+    if (update.userId === user.id)
+      updatesToDisplay.push(createElement('div', { class: 'update' }, getUpdateElements(user, index)));
+  });
+  if (updatesToDisplay.length)
+    return createElement('div', { id: 'updates', class: 'shadow' }, updatesToDisplay);
+  if (currentlyViewing === primaryUser)
+    updatesToDisplay.push(createElement('div', { class: 'update' }, 'No updates to display. Post a new update and it will show up on your profile.'));
+  else
+    updatesToDisplay.push(createElement('div', { class: 'update' }, '@' + currentlyViewing.username + ' has not posted any updates yet.'));
+  return createElement('div', { id: 'updates', class: 'shadow' }, updatesToDisplay);
+}
+
+function getUpdateElements(user, index) {
+  var updateElements = [createElement('div', { class: 'photo', style: 'background-image:url('+ user.profilePic + ')' }, null),
+                        createElement('h4', { class: 'name' }, user.displayName),
+                        createElement('p', { class: 'username' }, '@' + user.username),
+                        createElement('p', { class: 'timestamp' }, updates[index].timestamp.format('h:mmA M/D/YY')),
+                        createElement('p', { class: 'post' }, updates[index].post)];
+  updateElements[1].addEventListener('click', function() { displayProfile(user) } , false);
+  updateElements[2].addEventListener('click', function() { displayProfile(user) } , false);
+  return updateElements;
+}
+
+function listOfUsers(references) {
+  var list = createElement('table', { id: 'list', class: 'shadow' }, null);
+  if (!references.length) {
+    var message = createElement('p', { class: 'message' }, null);
+    if (currentlyViewing === primaryUser && viewing === 'following')
+      message.textContent = 'You are not following any users yet.'
+    else if (currentlyViewing === primaryUser)
+      message.textContent = 'You have no followers yet.'
+    else if (viewing === 'following')
+      message.textContent = '@' + currentlyViewing.username + ' is not following any users yet.'
+    else
+      message.textContent = '@' + currentlyViewing.username + ' does not have any followers yet.'
+    list.appendChild(message);
+    return list;
   }
+  var oddRow = (references.length % 2 === 1);
+  var rows = Math.floor(references.length / 2) + (oddRow ? 1 : 0);
+  while (rows > 0) {
+    if (!oddRow || rows > 1)
+      list.appendChild(createElement('tr', {  }, [createElement('td', { class: 'user' }, null), createElement('td', { class: 'user' }, null)]));
+    else
+      list.appendChild(createElement('tr', {  }, createElement('td', { class: 'user' }, null)));
+    rows--;
+  }
+  var userElements = list.getElementsByClassName('user');
+  for (var i = 0; i < userElements.length; i++) {
+    var theUser = users[references[i]];
+    userElements.item(i).setAttribute('id', references[i]);
+    userElements.item(i).appendChild(createElement('div', { class: 'photo', style: 'background-image:url(' + theUser.profilePic + ')' }, null));
+    userElements.item(i).appendChild(createElement('h4', { class: 'name' }, theUser.displayName));
+    userElements.item(i).appendChild(createElement('p', { class: 'username' }, '@' + theUser.username));
+    userElements.item(i).appendChild(createElement('p', { class: 'stat' }, theUser.updatesCount + ' posts . ' + theUser.following.length + ' following . ' + theUser.followers.length + ' followers'));
+  }
+  list.addEventListener('click', function(e) { displayProfile((e.target.id && e.target.id !== 'list') ? users[e.target.id] : null) }, false);
+  return list;
+}
+
+function displaySuggestions() {
+  document.getElementById('right').appendChild(suggestions());
+}
+
+function suggestions() {
+  var suggestions = createElement('div', { id: 'suggestions' }, [createElement('h3', {  }, 'Who to follow')]);
+  users.forEach( function(user) {
+    if (user === primaryUser) return;
+    suggestions.appendChild(createElement('div', { class: 'user' },
+                               [createElement('div', { class: 'photo', style: 'background-image:url(\'' + user.profilePic + '\')' }, null),
+                                createElement('h4', { class: 'name' }, user.displayName),
+                                createElement('p', { class: 'username' }, '@' + user.username),
+                                createElement('span', { class: 'plus lnr lnr-plus-circle' }, null)]));
+    suggestions.lastChild.getElementsByClassName('name')[0].addEventListener('click', function() { displayProfile(user) } , false);
+    suggestions.lastChild.getElementsByClassName('username')[0].addEventListener('click', function() { displayProfile(user) } , false);
+    suggestions.lastChild.getElementsByClassName('lnr')[0].addEventListener('click', function() { follow(user.id) } , false);
+  });
+  return suggestions;
 }
 
 function checkSearchInput() {
   var input = document.getElementById('search-input').value;
   if (!input.trim()) return;
-  users.forEach( function(user) {
-    if(user.username === input) {
-      switchUser(user);
-      return;
-    }
-  });
+  displayProfile(users.find( function(user) { return (user.username === input); }));
   document.getElementById('search-input').value = '';
 }
 
 var focusResult;
 var lastFocused = null;
 
+function keyboardNav(e) {
+  var results = document.getElementsByClassName('result');
+  switch (e.keyCode) {
+    case 13: //enter key
+      if (focusResult === -1) checkSearchInput();
+      else results[focusResult].click();
+      break;
+    case 40: //down arrow
+      lastFocused = results[focusResult];
+      focusResult = (focusResult === results.length - 1) ? -1 : (focusResult + 1);
+      break;
+    case 38: //up arrow
+      lastFocused = results[focusResult];
+      focusResult = (focusResult === -1) ? (results.length - 1) : (focusResult - 1);
+      break;
+    case 27: //escape key
+      hideResults(null);
+      break;
+    default: //any other key
+      displayResults();
+  }
+  if (lastFocused)
+    lastFocused.style.backgroundColor = 'transparent';
+  if (results[focusResult]) {
+    results[focusResult].style.backgroundColor = '#f2f6f9';
+  }
+}
+
 function displayResults() {
   focusResult = -1;
   var input = document.getElementById('search-input').value.toLowerCase();
   var resultsContainer = document.getElementById('results');
+  resultsContainer.style.visibility = 'hidden';
   while (resultsContainer.firstChild)
     resultsContainer.removeChild(resultsContainer.firstChild);
   document.getElementById('search-input').style.borderBottomLeftRadius = '15px';
   document.getElementById('search-button').style.borderBottomRightRadius = '15px';
-  if (!input.trim()) {
-    resultsContainer.style.visibility = 'hidden';
-    return;
-  }
-  var results = getSearchResults(input)
-  if (!results.length) {
-    resultsContainer.style.visibility = 'hidden';
-    return;
-  }
+  if (!input.trim()) return;
+  var results = getSearchResults(input);
+  if (!results.length) return;
   document.getElementById('search-input').style.borderBottomLeftRadius = '0';
   document.getElementById('search-button').style.borderBottomRightRadius = '0';
-  results.forEach( function(result, index) {
-    if(index === results.length - 1) {
-      result.style.borderBottomLeftRadius = '15px'
-      result.style.borderBottomRightRadius = '15px'
-    }
-    resultsContainer.appendChild(result);
-  });
+  results[results.length-1].style.borderBottomLeftRadius = '15px'
+  results[results.length-1].style.borderBottomRightRadius = '15px'
+  results.forEach( function(result) { resultsContainer.appendChild(result) });
   resultsContainer.style.visibility = 'visible';
-}
-
-function hideResults(event) {
-  if (event && (event.target === document.getElementById('results') || event.target === document.getElementById('search-input')))
-    return;
-  document.getElementById('results').style.visibility = 'hidden';
-  document.getElementById('search-input').style.borderBottomLeftRadius = '15px';
-  document.getElementById('search-button').style.borderBottomRightRadius = '15px';
 }
 
 function getSearchResults(key) {
@@ -537,45 +503,22 @@ function addResult(user) {
                   [createElement('div', { class: 'photo', style: 'background-image:url(\'' + user.profilePic + '\')' }, null),
                    createElement('h4', { class: 'name' }, user.displayName),
                    createElement('p', { class: 'username' }, '@' + user.username)]);
-  result.addEventListener('click', function() { switchUser(user) }, false);
+  result.addEventListener('click', function() { displayProfile(user) }, false);
   return result;
 }
 
-function keyboardNav(e) {
-  var results = document.getElementsByClassName('result');
-  switch (e.keyCode) {
-    case 13: //enter key
-      if (focusResult === -1) checkSearchInput();
-      else results[focusResult].click();
-      break;
-    case 40: //down arrow
-      lastFocused = results[focusResult];
-      if(focusResult === results.length - 1) focusResult = -1;
-      else focusResult++;
-      break;
-    case 38: //up arrow
-      lastFocused = results[focusResult];
-      if (focusResult === -1) focusResult = results.length - 1;
-      else focusResult--;
-      break;
-    case 27: //escape key
-      hideResults(null);
-      break;
-    default: //any other key
-      displayResults();
-  }
-  if (lastFocused)
-    lastFocused.style.backgroundColor = 'transparent';
-  if (results[focusResult]) {
-    results[focusResult].style.backgroundColor = '#f2f6f9';
-  }
+function hideResults(event) {
+  if (event && (event.target === document.getElementById('results') || event.target === document.getElementById('search-input'))) return;
+  document.getElementById('results').style.visibility = 'hidden';
+  document.getElementById('search-input').style.borderBottomLeftRadius = '15px';
+  document.getElementById('search-button').style.borderBottomRightRadius = '15px';
 }
 
 displayProfile(primaryUser);
 displaySuggestions();
 
 document.getElementById('home-button').addEventListener('click', goHome, false);
-document.getElementById('profile-button').addEventListener('click', function() { switchUser(primaryUser) }, false);
+document.getElementById('profile-button').addEventListener('click', function() { displayProfile(primaryUser) }, false);
 document.getElementById('search-button').addEventListener('click', checkSearchInput, false);
 document.getElementById('search-input').addEventListener('keyup', function(e) { keyboardNav(e) }, false);
 document.getElementById('search-input').addEventListener('focus', displayResults, false);

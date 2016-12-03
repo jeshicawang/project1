@@ -1,4 +1,5 @@
 body {
+  min-width: 1024px;
   margin: 0;
   text-align: center;
   color: #353535;
@@ -210,17 +211,17 @@ p {
 }
 
 #left {
-  width: 23%;
+  width: 22%;
   background-color: #81a9ca;
   color: #fff;
 }
 
 #right {
-  width: 23%;
+  width: 22%;
 }
 
 #center {
-  width: 54%;
+  width: 56%;
   background-color: #f2eee8;
 }
 
@@ -493,7 +494,7 @@ label span {
   width: 100%;
   margin-top: 0;
   background-color: #fff;
-  border-collapse: collapse;
+  border-spacing: 8px;
 }
 
 #list .message {
@@ -503,10 +504,11 @@ label span {
 
 #list .user {
   position: relative;
-  vertical-align: top;
+  vertical-align: middle;
   box-sizing: border-box;
-  height: 80px;
-  padding: 20px;
+  height: 60px;
+  padding: 5px;
+  border: 1px solid #f1f1f1;
 }
 
 #list .user:hover {
