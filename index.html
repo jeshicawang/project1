@@ -9,22 +9,24 @@
   </head>
   <body id="body">
     <div id="header" class="shadow">
-      <div id="navigation">
+      <div id="left-nav">
         <button id="home-button" class="navigation tooltip shadow">
           <span class="tooltip-text">Home</span>
           <span class="lnr lnr-home"></span>
         </button>
+        <div id="search">
+          <input id="search-input" class="shadow" type="text" placeholder="Search">
+          <button id="search-button" class="shadow"><span class="lnr lnr-magnifier"></span></button>
+          <div id="results" class="shadow"></div>
+        </div>
+      </div>
+      <h1>chatter</h1>
+      <div id="right-nav">
         <button id="profile-button" class="navigation tooltip shadow">
           <span class="tooltip-text">My Profile</span>
           <span class="lnr lnr-user"></span>
         </button>
       </div>
-      <h1>chatter</h1>
-      <div id="search"><div id="bar">
-        <input id="search-input" class="shadow" type="text" placeholder="Search">
-        <button id="search-button" class="shadow"><span class="lnr lnr-magnifier"></span></button>
-        <div id="results" class="shadow"></div>
-      </div></div>
     </div>
     <div id="content">
       <div id="left" class="container"></div>
