@@ -70,23 +70,23 @@ var primaryUser = users[0];
 var currentlyViewing = primaryUser;
 var viewing = null;
 
-var updates = { 9: { userId: 0, timestamp: newMoment('5:00PM 11/22/16'), post: 'I\'m going home for the day!' },
-                8: { userId: 0, timestamp: newMoment('4:30PM 11/22/16'), post: 'Class just ended.' },
-                7: { userId: 2, timestamp: newMoment('2:00PM 11/22/16'), post: 'No me hablas tesoro mio, No me hablas ni me has mirado, Fueron tres años mi vida, Tres años muy lejos de tu corazon. #fuerontresanos #tango' },
-                6: { userId: 0, timestamp: newMoment('12:15PM 11/22/16'), post: '...and lunch is over, so back to class.' },
-                5: { userId: 1, timestamp: newMoment('12:00PM 11/22/16'), post: 'Todo es amor, la brisa y tú, jugando en el rumor, y el ruiseñor, cantando en una flor, buscando amor, amor. #todoesamor #tango' },
-                4: { userId: 1, timestamp: newMoment('11:55AM 11/22/16'), post: 'La soledad, que me envuelve el corazón, va encendiendo en mi alma, el fuego de tu amor lejano. En las brumas de tu olvido, viaja mi ilusión, gritando tu nombre en vano. #caricias #tango' },
-                3: { userId: 1, timestamp: newMoment('11:45AM 11/22/16'), post: 'Soñemos, que los dos estamos libres. Soñemos, en la gloria de este amor. Soñemos, que ya nada nos separa, y que somos cual dos almas, que nacieron para amar. #sonemos #tango' },
-                2: { userId: 0, timestamp: newMoment('11:30AM 11/22/16'), post: 'Off to my lunch break! Maybe I\'ll go across the street?' },
+var updates = { 0: { userId: 2, timestamp: newMoment('7:00AM 11/21/16'), post: 'Es la historia de un amor, como no hay otro igual. Que me hizo comprender, todo el bien todo el mal, que le dio luz a mi vida, apagandola después. ¡Ay, qué vida tan oscura, corazón, sin tu amor no viviré! #historiadeunamor #tango' },
                 1: { userId: 0, timestamp: newMoment('9:00AM 11/22/16'), post: 'Starting my weekday by going to coding class!' },
-                0: { userId: 2, timestamp: newMoment('7:00AM 11/21/16'), post: 'Es la historia de un amor, como no hay otro igual. Que me hizo comprender, todo el bien todo el mal, que le dio luz a mi vida, apagandola después. ¡Ay, qué vida tan oscura, corazón, sin tu amor no viviré! #historiadeunamor #tango' } };
+                2: { userId: 0, timestamp: newMoment('11:30AM 11/22/16'), post: 'Off to my lunch break! Maybe I\'ll go across the street?' },
+                3: { userId: 1, timestamp: newMoment('11:45AM 11/22/16'), post: 'Soñemos, que los dos estamos libres. Soñemos, en la gloria de este amor. Soñemos, que ya nada nos separa, y que somos cual dos almas, que nacieron para amar. #sonemos #tango' },
+                4: { userId: 1, timestamp: newMoment('11:55AM 11/22/16'), post: 'La soledad, que me envuelve el corazón, va encendiendo en mi alma, el fuego de tu amor lejano. En las brumas de tu olvido, viaja mi ilusión, gritando tu nombre en vano. #caricias #tango' },
+                5: { userId: 1, timestamp: newMoment('12:00PM 11/22/16'), post: 'Todo es amor, la brisa y tú, jugando en el rumor, y el ruiseñor, cantando en una flor, buscando amor, amor. #todoesamor #tango' },
+                6: { userId: 0, timestamp: newMoment('12:15PM 11/22/16'), post: '...and lunch is over, so back to class.' },
+                7: { userId: 2, timestamp: newMoment('2:00PM 11/22/16'), post: 'No me hablas tesoro mio, No me hablas ni me has mirado, Fueron tres años mi vida, Tres años muy lejos de tu corazon. #fuerontresanos #tango' },
+                8: { userId: 0, timestamp: newMoment('4:30PM 11/22/16'), post: 'Class just ended.' },
+                9: { userId: 0, timestamp: newMoment('5:00PM 11/22/16'), post: 'I\'m going home for the day!' } }
 
-var hashtags = { historiadeunamor: [0],
-                 tango: [0, 3, 4, 5, 7],
+var hashtags = { caricias: [4],
+                 fuerontresanos: [7],
+                 historiadeunamor: [0],
                  sonemos: [3],
-                 caricias: [4],
-                 todoesamor: [5],
-                 fuerontresanos: [7] };
+                 tango: [0, 3, 4, 5, 7],
+                 todoesamor: [5] };
 
 function newMoment(timestamp) {
   return moment(timestamp, 'h:mmA M/D/YY');
@@ -116,7 +116,7 @@ function createElement(tag, attributes, children) {
 
 function displayProfile(user) {
   if (!user) return;
-  remove(['user-info', 'stats', 'new-update', 'updates']);
+  remove(['user-info', 'hashtag', 'stats', 'new-update', 'updates']);
   currentlyViewing = user;
   document.getElementById('left').appendChild(userInfo(user));
   document.getElementById('center').appendChild(stats(user));
@@ -170,7 +170,7 @@ function empty(ids) {
 }
 
 function goHome() {
-  remove(['user-info', 'stats', 'new-update', 'updates', 'list']);
+  remove(['user-info', 'hashtag', 'stats', 'new-update', 'updates', 'list']);
   currentlyViewing = null;
   var centerContainer = document.getElementById('center');
   centerContainer.appendChild(updatePoster());
@@ -310,7 +310,7 @@ function refreshStats() {
 }
 
 function displayCenterContent(event, user) {
-  remove(['new-update', 'updates', 'list'])
+  remove(['hashtag', 'new-update', 'updates', 'list'])
   var centerContainer = document.getElementById('center');
   if (viewing) document.getElementById(viewing).style.borderColor = null;
   event.target.style.borderColor = '#81a9ca';
@@ -344,20 +344,22 @@ function addUpdate() {
   var post = document.getElementById('post-input').value;
   document.getElementById('post-input').value = '';
   if (!post.trim()) return;
-  updates[Object.keys(updates).length] = { userId: primaryUser.id, timestamp: moment(), post: post };
+  var newUpdateId = Object.keys(updates).length;
+  updates[newUpdateId] = { userId: primaryUser.id, timestamp: moment(), post: post };
   primaryUser.updatesCount++;
-  addHashtags(post, Object.keys(updates).length-1);
+  addHashtags(post, newUpdateId);
   if (!currentlyViewing) {
-    updatesContainer.insertBefore(createElement('div', { class: 'update'}, getUpdateElements(primaryUser, 0)), updatesContainer.firstChild);
+    updatesContainer.insertBefore(createElement('div', { class: 'update'}, getUpdateElements(primaryUser, newUpdateId)), updatesContainer.firstChild);
     return;
   }
   refreshStats(primaryUser);
-  updatesContainer.insertBefore(createElement('div', { class: 'update'}, getUpdateElements(primaryUser, 0)), updatesContainer.firstChild);
+  updatesContainer.insertBefore(createElement('div', { class: 'update'}, getUpdateElements(primaryUser, newUpdateId)), updatesContainer.firstChild);
   if (primaryUser.updatesCount === 1)
     updatesContainer.removeChild(updatesContainer.lastChild);
 }
 
 function addHashtags(post, id) {
+  var newHashtags = false;
   post = post.toLowerCase();
   var validCharacters = /^[a-z0-9]*$/;
   while (post.indexOf('#') > -1) {
@@ -368,11 +370,16 @@ function addHashtags(post, id) {
     var hashtag = post.substring(0, pointer);
     if (!hashtag.length)
       continue;
+    newHashtags = true;
     if (hashtags[hashtag])
       hashtags[hashtag].push(id);
     else
       hashtags[hashtag] = [id]
     post = post.substring(pointer);
+  }
+  if (newHashtags) {
+    remove('trending');
+    document.getElementById('right').insertBefore(trending(), document.getElementById('suggestions'));
   }
 }
 
@@ -395,11 +402,36 @@ function getUpdateElements(user, index) {
   var updateElements = [createElement('div', { class: 'photo', style: 'background-image:url('+ user.profilePic + ')' }, null),
                         createElement('h4', { class: 'name' }, user.displayName),
                         createElement('p', { class: 'username' }, '@' + user.username),
-                        createElement('p', { class: 'timestamp' }, updates[index].timestamp.format('h:mmA M/D/YY')),
-                        createElement('p', { class: 'post' }, updates[index].post)];
+                        createElement('p', { class: 'timestamp' }, updates[index].timestamp.format('h:mmA M/D/YY'))];
+  updateElements.push(createElement('p', { class: 'post' }, translateHashtags(updates[index].post)));
   updateElements[1].addEventListener('click', function() { displayProfile(user) } , false);
   updateElements[2].addEventListener('click', function() { displayProfile(user) } , false);
   return updateElements;
+}
+
+function translateHashtags(post) {
+  var components = []
+  if (post.indexOf('#') === -1) {
+    components.push(post);
+    return components;
+  }
+  var validCharacters = /^[A-Za-z0-9]*$/;
+  while (post.indexOf('#') > -1) {
+    components.push(post.substring(0, post.indexOf('#')))
+    post = post.substring(post.indexOf('#') + 1);
+    var pointer = 0;
+    while (pointer < post.length && validCharacters.test(post.charAt(pointer)))
+      pointer++;
+    var hashtag = post.substring(0, pointer);
+    if (!hashtag.length) {
+      components.push('#');
+      continue;
+    }
+    components.push(createElement('a', { class: 'hashtag', href: '#' }, ['#', createElement('span', {  }, hashtag)]));
+    components[components.length-1].addEventListener('click', function(e) { viewHashtag(e.target.lastChild.textContent) }, false);
+    post = post.substring(pointer);
+  }
+  return components;
 }
 
 function listOfUsers(references) {
@@ -437,12 +469,6 @@ function listOfUsers(references) {
   }
   list.addEventListener('click', function(e) { displayProfile((e.target.id && e.target.id !== 'list') ? users[e.target.id] : null) }, false);
   return list;
-}
-
-function displayTrendingAndSuggestions() {
-  var rightContainer = document.getElementById('right');
-  rightContainer.appendChild(trending());
-  rightContainer.appendChild(suggestions());
 }
 
 function trending() {
@@ -585,7 +611,9 @@ function hideResults(event) {
 }
 
 displayProfile(primaryUser);
-displayTrendingAndSuggestions();
+var rightContainer = document.getElementById('right');
+rightContainer.appendChild(trending());
+rightContainer.appendChild(suggestions());
 
 document.getElementById('home-button').addEventListener('click', goHome, false);
 document.getElementById('profile-button').addEventListener('click', function() { displayProfile(primaryUser) }, false);
