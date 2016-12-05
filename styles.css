@@ -508,6 +508,34 @@ label span {
   font-weight: 300;
 }
 
+.update .like {
+  width: 23px;
+  height: 22px;
+  margin-top: 5px;
+  margin-left: 55px;
+}
+
+.update .like:hover,
+.update .like:focus {
+  background-color: #c3878a;
+  border-color: #fff;
+}
+
+.like .lnr {
+  position: relative;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.update .like-count {
+  position: absolute;
+  color: #b2b2b2;
+  margin-left: 5px;
+  font-size: 14px;
+  line-height: 22px;
+  transform: translateY(5px);
+}
+
 #list {
   width: 100%;
   margin-top: 0;
