@@ -55,10 +55,17 @@ h1 {
   color: #81a9ca;
 }
 
-h2 {
+#description h2 {
   margin-top: 15px;
   margin-bottom: 0;
   font-size: 18px;
+}
+
+#hashtag {
+  margin: 0;
+  padding: 10px;
+  background-color: #fff;
+  font-weight: lighter;
 }
 
 h3 {

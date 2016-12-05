@@ -70,16 +70,16 @@ var primaryUser = users[0];
 var currentlyViewing = primaryUser;
 var viewing = null;
 
-var updates = [ { id: 9, userId: 0, timestamp: newMoment('5:00PM 11/22/16'), post: 'I\'m going home for the day!' },
-                { id: 8, userId: 0, timestamp: newMoment('4:30PM 11/22/16'), post: 'Class just ended.' },
-                { id: 7, userId: 2, timestamp: newMoment('2:00PM 11/22/16'), post: 'No me hablas tesoro mio, No me hablas ni me has mirado, Fueron tres años mi vida, Tres años muy lejos de tu corazon. #fuerontresanos #tango' },
-                { id: 6, userId: 0, timestamp: newMoment('12:15PM 11/22/16'), post: '...and lunch is over, so back to class.' },
-                { id: 5, userId: 1, timestamp: newMoment('12:00PM 11/22/16'), post: 'Todo es amor, la brisa y tú, jugando en el rumor, y el ruiseñor, cantando en una flor, buscando amor, amor. #todoesamor #tango' },
-                { id: 4, userId: 1, timestamp: newMoment('11:55AM 11/22/16'), post: 'La soledad, que me envuelve el corazón, va encendiendo en mi alma, el fuego de tu amor lejano. En las brumas de tu olvido, viaja mi ilusión, gritando tu nombre en vano. #caricias #tango' },
-                { id: 3, userId: 1, timestamp: newMoment('11:45AM 11/22/16'), post: 'Soñemos, que los dos estamos libres. Soñemos, en la gloria de este amor. Soñemos, que ya nada nos separa, y que somos cual dos almas, que nacieron para amar. #sonemos #tango' },
-                { id: 2, userId: 0, timestamp: newMoment('11:30AM 11/22/16'), post: 'Off to my lunch break! Maybe I\'ll go across the street?' },
-                { id: 1, userId: 0, timestamp: newMoment('9:00AM 11/22/16'), post: 'Starting my weekday by going to coding class!' },
-                { id: 0, userId: 2, timestamp: newMoment('7:00AM 11/21/16'), post: 'Es la historia de un amor, como no hay otro igual. Que me hizo comprender, todo el bien todo el mal, que le dio luz a mi vida, apagandola después. ¡Ay, qué vida tan oscura, corazón, sin tu amor no viviré! #historiadeunamor #tango' } ];
+var updates = { 9: { userId: 0, timestamp: newMoment('5:00PM 11/22/16'), post: 'I\'m going home for the day!' },
+                8: { userId: 0, timestamp: newMoment('4:30PM 11/22/16'), post: 'Class just ended.' },
+                7: { userId: 2, timestamp: newMoment('2:00PM 11/22/16'), post: 'No me hablas tesoro mio, No me hablas ni me has mirado, Fueron tres años mi vida, Tres años muy lejos de tu corazon. #fuerontresanos #tango' },
+                6: { userId: 0, timestamp: newMoment('12:15PM 11/22/16'), post: '...and lunch is over, so back to class.' },
+                5: { userId: 1, timestamp: newMoment('12:00PM 11/22/16'), post: 'Todo es amor, la brisa y tú, jugando en el rumor, y el ruiseñor, cantando en una flor, buscando amor, amor. #todoesamor #tango' },
+                4: { userId: 1, timestamp: newMoment('11:55AM 11/22/16'), post: 'La soledad, que me envuelve el corazón, va encendiendo en mi alma, el fuego de tu amor lejano. En las brumas de tu olvido, viaja mi ilusión, gritando tu nombre en vano. #caricias #tango' },
+                3: { userId: 1, timestamp: newMoment('11:45AM 11/22/16'), post: 'Soñemos, que los dos estamos libres. Soñemos, en la gloria de este amor. Soñemos, que ya nada nos separa, y que somos cual dos almas, que nacieron para amar. #sonemos #tango' },
+                2: { userId: 0, timestamp: newMoment('11:30AM 11/22/16'), post: 'Off to my lunch break! Maybe I\'ll go across the street?' },
+                1: { userId: 0, timestamp: newMoment('9:00AM 11/22/16'), post: 'Starting my weekday by going to coding class!' },
+                0: { userId: 2, timestamp: newMoment('7:00AM 11/21/16'), post: 'Es la historia de un amor, como no hay otro igual. Que me hizo comprender, todo el bien todo el mal, que le dio luz a mi vida, apagandola después. ¡Ay, qué vida tan oscura, corazón, sin tu amor no viviré! #historiadeunamor #tango' } };
 
 var hashtags = { historiadeunamor: [0],
                  tango: [0, 3, 4, 5, 7],
@@ -158,6 +158,17 @@ function remove(ids) {
   });
 }
 
+function empty(ids) {
+  if (! (ids instanceof Array))
+    ids = [ids];
+  ids.forEach(function (id) {
+    var element = document.getElementById(id);
+    if (!element) return;
+    while(element.firstChild)
+      element.removeChild(element.firstChild);
+  });
+}
+
 function goHome() {
   remove(['user-info', 'stats', 'new-update', 'updates', 'list']);
   currentlyViewing = null;
@@ -168,10 +179,10 @@ function goHome() {
 
 function allUpdates() {
   var updatesToDisplay = [];
-  updates.forEach(function (update, index) {
-    if(primaryUser.following.includes(update.userId))
-      updatesToDisplay.push(createElement('div', { class: 'update' }, getUpdateElements(users[update.userId], index)));
-  });
+  for (var updateId in updates) {
+    if(primaryUser.following.includes(updates[updateId].userId))
+      updatesToDisplay.unshift(createElement('div', { class: 'update' }, getUpdateElements(users[updates[updateId].userId], updateId)));
+  }
   if (updatesToDisplay.length)
     return createElement('div', { id: 'updates', class: 'shadow' }, updatesToDisplay);
   updatesToDisplay.push(createElement('div', { class: 'update' }, 'No updates to display. Follow other users to view their updates in your newsfeed.'));
@@ -333,9 +344,9 @@ function addUpdate() {
   var post = document.getElementById('post-input').value;
   document.getElementById('post-input').value = '';
   if (!post.trim()) return;
-  updates.unshift({ id: updates.length, userId: primaryUser.id, timestamp: moment(), post: post });
+  updates[Object.keys(updates).length] = { userId: primaryUser.id, timestamp: moment(), post: post };
   primaryUser.updatesCount++;
-  addHashtags(post, updates.length-1);
+  addHashtags(post, Object.keys(updates).length-1);
   if (!currentlyViewing) {
     updatesContainer.insertBefore(createElement('div', { class: 'update'}, getUpdateElements(primaryUser, 0)), updatesContainer.firstChild);
     return;
@@ -367,10 +378,10 @@ function addHashtags(post, id) {
 
 function userUpdates(user) {
   var updatesToDisplay = []
-  updates.forEach(function (update, index) {
-    if (update.userId === user.id)
-      updatesToDisplay.push(createElement('div', { class: 'update' }, getUpdateElements(user, index)));
-  });
+  for (var updateId in updates) {
+    if (updates[updateId].userId === user.id)
+      updatesToDisplay.unshift(createElement('div', { class: 'update' }, getUpdateElements(user, updateId)));
+  }
   if (updatesToDisplay.length)
     return createElement('div', { id: 'updates', class: 'shadow' }, updatesToDisplay);
   if (currentlyViewing === primaryUser)
@@ -436,9 +447,26 @@ function displayTrendingAndSuggestions() {
 
 function trending() {
   var trending = createElement('div', { id: 'trending' }, createElement('h3', {  }, 'Trending'));
-  for (var hashtag in hashtags)
+  for (var hashtag in hashtags) {
     trending.appendChild(createElement('a', { class: 'hashtag', href: '#' }, ['#', createElement('span', {  }, hashtag)]));
+    trending.lastChild.addEventListener('click', function(e) { viewHashtag(e.target.lastChild.textContent) }, false);
+  }
   return trending;
+}
+
+function viewHashtag(hashtag) {
+  var centerContainer = document.getElementById('center');
+  empty(['center', 'left']);
+  centerContainer.appendChild(createElement('h2', { id: 'hashtag', class: 'shadow' }, '#' + hashtag));
+  centerContainer.appendChild(hashtagUpdates(hashtag));
+}
+
+function hashtagUpdates(hashtag) {
+  var updatesToDisplay = [];
+  hashtags[hashtag].forEach(function (updateId) {
+    updatesToDisplay.unshift(createElement('div', { class: 'update' }, getUpdateElements(users[updates[updateId].userId], updateId)));
+  });
+  return createElement('div', { id: 'updates', class: 'shadow' }, updatesToDisplay);
 }
 
 function suggestions() {
