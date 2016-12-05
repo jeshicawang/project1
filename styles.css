@@ -62,10 +62,11 @@ h1 {
 }
 
 #hashtag {
-  font-size: 18px;
   margin: 0;
   padding: 10px;
   background-color: #fff;
+  font-size: 18px;
+  color: #81a9ca;
   font-weight: lighter;
 }
 

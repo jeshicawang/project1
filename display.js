@@ -73,19 +73,32 @@ var viewing = null;
 var updates = { 0: { userId: 2, timestamp: newMoment('7:00AM 11/21/16'), post: 'Es la historia de un amor, como no hay otro igual. Que me hizo comprender, todo el bien todo el mal, que le dio luz a mi vida, apagandola después. ¡Ay, qué vida tan oscura, corazón, sin tu amor no viviré! #historiadeunamor #tango' },
                 1: { userId: 0, timestamp: newMoment('9:00AM 11/22/16'), post: 'Starting my weekday by going to coding class!' },
                 2: { userId: 0, timestamp: newMoment('11:30AM 11/22/16'), post: 'Off to my lunch break! Maybe I\'ll go across the street?' },
-                3: { userId: 1, timestamp: newMoment('11:45AM 11/22/16'), post: 'Soñemos, que los dos estamos libres. Soñemos, en la gloria de este amor. Soñemos, que ya nada nos separa, y que somos cual dos almas, que nacieron para amar. #sonemos #tango' },
-                4: { userId: 1, timestamp: newMoment('11:55AM 11/22/16'), post: 'La soledad, que me envuelve el corazón, va encendiendo en mi alma, el fuego de tu amor lejano. En las brumas de tu olvido, viaja mi ilusión, gritando tu nombre en vano. #caricias #tango' },
-                5: { userId: 1, timestamp: newMoment('12:00PM 11/22/16'), post: 'Todo es amor, la brisa y tú, jugando en el rumor, y el ruiseñor, cantando en una flor, buscando amor, amor. #todoesamor #tango' },
+                3: { userId: 1, timestamp: newMoment('11:45AM 11/22/16'), post: 'Soñemos, que los dos estamos libres. Soñemos, en la gloria de este amor. Soñemos, que ya nada nos separa, y que somos cual dos almas, que nacieron para amar. #sonemos #hugoduval #tango' },
+                4: { userId: 1, timestamp: newMoment('11:55AM 11/22/16'), post: 'La soledad, que me envuelve el corazón, va encendiendo en mi alma, el fuego de tu amor lejano. En las brumas de tu olvido, viaja mi ilusión, gritando tu nombre en vano. #caricias #hugoduval #tango' },
+                5: { userId: 1, timestamp: newMoment('12:00PM 11/22/16'), post: 'Todo es amor, la brisa y tú, jugando en el rumor, y el ruiseñor, cantando en una flor, buscando amor, amor. #todoesamor #hugoduval #tango' },
                 6: { userId: 0, timestamp: newMoment('12:15PM 11/22/16'), post: '...and lunch is over, so back to class.' },
                 7: { userId: 2, timestamp: newMoment('2:00PM 11/22/16'), post: 'No me hablas tesoro mio, No me hablas ni me has mirado, Fueron tres años mi vida, Tres años muy lejos de tu corazon. #fuerontresanos #tango' },
                 8: { userId: 0, timestamp: newMoment('4:30PM 11/22/16'), post: 'Class just ended.' },
-                9: { userId: 0, timestamp: newMoment('5:00PM 11/22/16'), post: 'I\'m going home for the day!' } }
+                9: { userId: 0, timestamp: newMoment('5:00PM 11/22/16'), post: 'I\'m going home for the day!' },
+                10: { userId: 3, timestamp: moment(), post: 'Sacále punta a esta milonga, que ya empezó. Seguí esos fueyes que rezongan, del corazón. Y las pebetas que han venido, del Club Fulgor. El tango requiebra la vida, Y en sus notas desparrama, su amor. #sacalepunta #milonga' },
+                11: { userId: 3, timestamp: moment(), post: '¡Carnaval de mi barrio!, donde todo es amor, cascabeles de risa, matizando el dolor, ¡carnaval de mi barrio!, pedacito de sol, con nostalgias de luna, y canción de farol. #carnavaldemibarrio #tango' },
+                12: { userId: 5, timestamp: moment(), post: 'Ahora no me conocés… ¡me borro tu ingratitud!… Aunque dejés mi alma trunca, no podrás olvidar nunca, lo de nuestra juventud… #ahoranomeconoces #angelvargas #tango' },
+                13: { userId: 5, timestamp: moment(), post:  'Mañanita arrabalera, Sin taitas por las veredas, Ni minas en el balcón, Tus faroles apagados. #adiosarrabal #angelvargas #tango'},
+                14: { userId: 1, timestamp: moment(), post: 'Ya sé que me has olvidado, ya sé que te fuiste lejos. Ya sé que con mis consejos, no te voy a enderezar. #campoafuera #milonga' } }
 
-var hashtags = { caricias: [4],
+var hashtags = { adiosarrabal: [13],
+                 ahoranomeconoces: [12],
+                 angelvargas: [12, 13],
+                 campoafuera: [14],
+                 caricias: [4],
+                 carnavaldemibarrio: [11],
                  fuerontresanos: [7],
                  historiadeunamor: [0],
+                 hugoduval: [3, 4, 5],
+                 milonga: [10, 14],
+                 sacalepunta: [10],
                  sonemos: [3],
-                 tango: [0, 3, 4, 5, 7],
+                 tango: [0, 3, 4, 5, 7, 11, 12, 13],
                  todoesamor: [5] };
 
 function newMoment(timestamp) {
@@ -471,10 +484,21 @@ function listOfUsers(references) {
   return list;
 }
 
-function trending() {
+function trending() { //top five hashtags: when there is a tie, newer hashtags take priority
   var trending = createElement('div', { id: 'trending' }, createElement('h3', {  }, 'Trending'));
+  var sorted = [];
   for (var hashtag in hashtags) {
-    trending.appendChild(createElement('a', { class: 'hashtag', href: '#' }, ['#', createElement('span', {  }, hashtag)]));
+    if (!sorted.length) {
+      sorted.push(hashtag);
+      continue;
+    }
+    var pointer = 0;
+    while(hashtags[sorted[pointer]].length > hashtags[hashtag].length)
+      pointer++;
+    sorted.splice(pointer, 0, hashtag);
+  }
+  for (var i = 0; i < 5; i++) {
+    trending.appendChild(createElement('a', { class: 'hashtag', href: '#' }, ['#', createElement('span', {  }, sorted[i])]));
     trending.lastChild.addEventListener('click', function(e) { viewHashtag(e.target.lastChild.textContent) }, false);
   }
   return trending;
