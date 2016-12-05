@@ -4,12 +4,12 @@ var users = [ { id: 0,
                 username: 'jwang',
                 displayName: 'Jessica Wang',
                 profilePic: 'images/jwang.jpg',
-                bio: 'Female. 20. Coffee lover. Argentine Tango Dancer. Future software developer;)',
+                bio: 'Coffee lover. Dancer. Future software developer;)',
                 following: [],
                 followers: [1, 2, 3, 4, 5, 6, 7],
                 updatesCount: 5 },
               { id: 1,
-                username: 'duval',
+                username: 'biagi',
                 displayName: 'Rodolfo Biagi',
                 profilePic: 'images/biagi.jpg',
                 bio: 'An Argentine Tango musician who started his musical career by playing background music for silent movies.',
@@ -17,7 +17,7 @@ var users = [ { id: 0,
                 followers: [],
                 updatesCount: 3 },
               { id: 2,
-                username: 'tentadora',
+                username: 'varela',
                 displayName: 'Hector Varela',
                 profilePic: 'images/varela.jpg',
                 bio: 'Varela was a musician criticized by the innovative players, but loved by the fans of dancing and popular tango.',
@@ -25,7 +25,7 @@ var users = [ { id: 0,
                 followers: [],
                 updatesCount: 2 },
               { id: 3,
-                username: 'gato',
+                username: 'donato',
                 displayName: 'Edgardo Donato',
                 profilePic: 'images/donato.jpg',
                 bio: 'Donato was a tango composer and orchestra leader, born in Buenos Aires, Argentina, raised from a young age and musically trained in Montevideo, Uruguay.',
@@ -33,7 +33,7 @@ var users = [ { id: 0,
                 followers: [],
                 updatesCount: 0 },
               { id: 4,
-                username: 'mano.a.mano',
+                username: 'diaz',
                 displayName: 'Hugo Diaz',
                 profilePic: 'images/diaz.jpg',
                 bio: 'Víctor Hugo Díaz was a tango, folklore and jazz harmonicist.',
@@ -41,7 +41,7 @@ var users = [ { id: 0,
                 followers: [],
                 updatesCount: 0 },
               { id: 5,
-                username: 'muchacho',
+                username: 'dagostino',
                 displayName: 'Angel D\'Agostino',
                 profilePic: 'images/dagostino.jpg',
                 bio: 'I am milonguero, I always was, in the best sense of the word.',
@@ -49,7 +49,7 @@ var users = [ { id: 0,
                 followers: [],
                 updatesCount: 0 },
               { id: 6,
-                username: 'pensalo.bien',
+                username: 'darienzo',
                 displayName: 'Juan D\'Arienzo',
                 profilePic: 'images/darienzo.jpg',
                 bio: 'Juan D\'Arienzo was an Argentine tango musician, also known as \"El Rey del Compás\".',
@@ -57,7 +57,7 @@ var users = [ { id: 0,
                 followers: [],
                 updatesCount: 0 },
               { id: 7,
-                username: 'torrente',
+                username: 'demare',
                 displayName: 'Lucio Demare',
                 profilePic: 'images/demare.jpg',
                 bio: 'Lucio Demare was an Argentine composer who worked on a number of film scores.',
@@ -70,16 +70,23 @@ var primaryUser = users[0];
 var currentlyViewing = primaryUser;
 var viewing = null;
 
-var updates = [ { userId: 0, timestamp: newMoment('5:00PM 11/22/16'), post: 'I\'m going home for the day!' },
-                { userId: 0, timestamp: newMoment('4:30PM 11/22/16'), post: 'Class just ended.' },
-                { userId: 2, timestamp: newMoment('2:00PM 11/22/16'), post: 'No me hablas tesoro mio, No me hablas ni me has mirado, Fueron tres años mi vida, Tres años muy lejos de tu corazon.' },
-                { userId: 0, timestamp: newMoment('12:15PM 11/22/16'), post: '...and lunch is over, so back to class.' },
-                { userId: 1, timestamp: newMoment('12:00PM 11/22/16'), post: 'Todo es amor, la brisa y tú, jugando en el rumor, y el ruiseñor, cantando en una flor, buscando amor, amor.' },
-                { userId: 1, timestamp: newMoment('11:55AM 11/22/16'), post: 'La soledad, que me envuelve el corazón, va encendiendo en mi alma, el fuego de tu amor lejano. En las brumas de tu olvido, viaja mi ilusión, gritando tu nombre en vano.' },
-                { userId: 1, timestamp: newMoment('11:45AM 11/22/16'), post: 'Soñemos, que los dos estamos libres. Soñemos, en la gloria de este amor. Soñemos, que ya nada nos separa, y que somos cual dos almas, que nacieron para amar.' },
-                { userId: 0, timestamp: newMoment('11:30AM 11/22/16'), post: 'Off to my lunch break! Maybe I\'ll go across the street?' },
-                { userId: 0, timestamp: newMoment('9:00AM 11/22/16'), post: 'Starting my weekday by going to coding class!' },
-                { userId: 2, timestamp: newMoment('7:00AM 11/21/16'), post: 'Es la historia de un amor, como no hay otro igual. Que me hizo comprender, todo el bien todo el mal, que le dio luz a mi vida, apagandola después. ¡Ay, qué vida tan oscura, corazón, sin tu amor no viviré!' } ];
+var updates = [ { id: 9, userId: 0, timestamp: newMoment('5:00PM 11/22/16'), post: 'I\'m going home for the day!' },
+                { id: 8, userId: 0, timestamp: newMoment('4:30PM 11/22/16'), post: 'Class just ended.' },
+                { id: 7, userId: 2, timestamp: newMoment('2:00PM 11/22/16'), post: 'No me hablas tesoro mio, No me hablas ni me has mirado, Fueron tres años mi vida, Tres años muy lejos de tu corazon. #fuerontresanos #tango' },
+                { id: 6, userId: 0, timestamp: newMoment('12:15PM 11/22/16'), post: '...and lunch is over, so back to class.' },
+                { id: 5, userId: 1, timestamp: newMoment('12:00PM 11/22/16'), post: 'Todo es amor, la brisa y tú, jugando en el rumor, y el ruiseñor, cantando en una flor, buscando amor, amor. #todoesamor #tango' },
+                { id: 4, userId: 1, timestamp: newMoment('11:55AM 11/22/16'), post: 'La soledad, que me envuelve el corazón, va encendiendo en mi alma, el fuego de tu amor lejano. En las brumas de tu olvido, viaja mi ilusión, gritando tu nombre en vano. #caricias #tango' },
+                { id: 3, userId: 1, timestamp: newMoment('11:45AM 11/22/16'), post: 'Soñemos, que los dos estamos libres. Soñemos, en la gloria de este amor. Soñemos, que ya nada nos separa, y que somos cual dos almas, que nacieron para amar. #sonemos #tango' },
+                { id: 2, userId: 0, timestamp: newMoment('11:30AM 11/22/16'), post: 'Off to my lunch break! Maybe I\'ll go across the street?' },
+                { id: 1, userId: 0, timestamp: newMoment('9:00AM 11/22/16'), post: 'Starting my weekday by going to coding class!' },
+                { id: 0, userId: 2, timestamp: newMoment('7:00AM 11/21/16'), post: 'Es la historia de un amor, como no hay otro igual. Que me hizo comprender, todo el bien todo el mal, que le dio luz a mi vida, apagandola después. ¡Ay, qué vida tan oscura, corazón, sin tu amor no viviré! #historiadeunamor #tango' } ];
+
+var hashtags = { historiadeunamor: [0],
+                 tango: [0, 3, 4, 5, 7],
+                 sonemos: [3],
+                 caricias: [4],
+                 todoesamor: [5],
+                 fuerontresanos: [7] };
 
 function newMoment(timestamp) {
   return moment(timestamp, 'h:mmA M/D/YY');
@@ -97,7 +104,13 @@ function createElement(tag, attributes, children) {
   }
   if (!(children instanceof Array))
     children = [children];
-  children.forEach(function(child) { newElement.appendChild(child) });
+  children.forEach( function(child) {
+    if (!(child instanceof Element)) {
+      newElement.appendChild(document.createTextNode(child));
+      return;
+    }
+      newElement.appendChild(child);
+  });
   return newElement;
 }
 
@@ -320,8 +333,9 @@ function addUpdate() {
   var post = document.getElementById('post-input').value;
   document.getElementById('post-input').value = '';
   if (!post.trim()) return;
-  updates.unshift({ userId: primaryUser.id, timestamp: moment(), post: post });
+  updates.unshift({ id: updates.length, userId: primaryUser.id, timestamp: moment(), post: post });
   primaryUser.updatesCount++;
+  addHashtags(post, updates.length-1);
   if (!currentlyViewing) {
     updatesContainer.insertBefore(createElement('div', { class: 'update'}, getUpdateElements(primaryUser, 0)), updatesContainer.firstChild);
     return;
@@ -330,6 +344,25 @@ function addUpdate() {
   updatesContainer.insertBefore(createElement('div', { class: 'update'}, getUpdateElements(primaryUser, 0)), updatesContainer.firstChild);
   if (primaryUser.updatesCount === 1)
     updatesContainer.removeChild(updatesContainer.lastChild);
+}
+
+function addHashtags(post, id) {
+  post = post.toLowerCase();
+  var validCharacters = /^[a-z0-9]*$/;
+  while (post.indexOf('#') > -1) {
+    post = post.substring(post.indexOf('#') + 1);
+    var pointer = 0;
+    while (pointer < post.length && validCharacters.test(post.charAt(pointer)))
+      pointer++;
+    var hashtag = post.substring(0, pointer);
+    if (!hashtag.length)
+      continue;
+    if (hashtags[hashtag])
+      hashtags[hashtag].push(id);
+    else
+      hashtags[hashtag] = [id]
+    post = post.substring(pointer);
+  }
 }
 
 function userUpdates(user) {
@@ -393,6 +426,18 @@ function listOfUsers(references) {
   }
   list.addEventListener('click', function(e) { displayProfile((e.target.id && e.target.id !== 'list') ? users[e.target.id] : null) }, false);
   return list;
+}
+
+function displayTrending() {
+  document.getElementById('right').appendChild(trending());
+}
+
+function trending() {
+  var trending = createElement('div', { id: 'trending' }, createElement('h3', {  }, 'Trending'));
+  for (var hashtag in hashtags) {
+    trending.appendChild(createElement('a', { class: 'hashtag', href: '#' }, ['#', createElement('span', {  }, hashtag)]));
+  }
+  return trending;
 }
 
 function displaySuggestions() {
@@ -515,6 +560,7 @@ function hideResults(event) {
 }
 
 displayProfile(primaryUser);
+displayTrending();
 displaySuggestions();
 
 document.getElementById('home-button').addEventListener('click', goHome, false);
