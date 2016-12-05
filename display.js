@@ -371,9 +371,9 @@ function addHashtags(post, id) {
     if (!hashtag.length)
       continue;
     newHashtags = true;
-    if (hashtags[hashtag])
+    if (hashtags[hashtag] && !hashtags[hashtag].includes(id))
       hashtags[hashtag].push(id);
-    else
+    else if (!hashtags[hashtag])
       hashtags[hashtag] = [id]
     post = post.substring(pointer);
   }
