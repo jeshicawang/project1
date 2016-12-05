@@ -428,20 +428,17 @@ function listOfUsers(references) {
   return list;
 }
 
-function displayTrending() {
-  document.getElementById('right').appendChild(trending());
+function displayTrendingAndSuggestions() {
+  var rightContainer = document.getElementById('right');
+  rightContainer.appendChild(trending());
+  rightContainer.appendChild(suggestions());
 }
 
 function trending() {
   var trending = createElement('div', { id: 'trending' }, createElement('h3', {  }, 'Trending'));
-  for (var hashtag in hashtags) {
+  for (var hashtag in hashtags)
     trending.appendChild(createElement('a', { class: 'hashtag', href: '#' }, ['#', createElement('span', {  }, hashtag)]));
-  }
   return trending;
-}
-
-function displaySuggestions() {
-  document.getElementById('right').appendChild(suggestions());
 }
 
 function suggestions() {
@@ -560,8 +557,7 @@ function hideResults(event) {
 }
 
 displayProfile(primaryUser);
-displayTrending();
-displaySuggestions();
+displayTrendingAndSuggestions();
 
 document.getElementById('home-button').addEventListener('click', goHome, false);
 document.getElementById('profile-button').addEventListener('click', function() { displayProfile(primaryUser) }, false);
