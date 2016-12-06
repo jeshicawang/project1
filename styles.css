@@ -403,6 +403,7 @@ label span {
   position: relative;
   line-height: 20px;
   margin-left: 25px;
+  color: #d9e5ef;
 }
 
 .interaction .lnr {
@@ -419,6 +420,12 @@ label span {
 .interaction .lnr-eye {
   transform: translate(-25px,3px);
   font-size: 18px;
+}
+
+.interaction .hashtag,
+.interaction .hashtag:visited,
+.interaction span:hover {
+  color: #fff;
 }
 
 #stats {
@@ -628,6 +635,10 @@ label span {
 
 .hashtag {
   text-decoration: none;
+}
+
+#center .hashtag,
+#right .hashtag {
   color: #81a9ca;
 }
 
@@ -636,7 +647,8 @@ label span {
   text-decoration: underline;
 }
 
-.hashtag:visited {
+#center .hashtag:visited,
+#right .hashtag:visited {
   color: #81a9ca;
 }
 

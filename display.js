@@ -151,13 +151,19 @@ function createElement(tag, attributes, children) {
   }
   if (!(children instanceof Array))
     children = [children];
-  children.forEach( function(child) {
-    if (!(child instanceof Element)) {
-      newElement.appendChild(document.createTextNode(child));
-      return;
-    }
-      newElement.appendChild(child);
-  });
+  var appendChildren = function(c) {
+    c.forEach( function(child) {
+      if (!(child instanceof Element) && !(child instanceof Array)) {
+        newElement.appendChild(document.createTextNode(child));
+        return;
+      }
+      if (child instanceof Array)
+        appendChildren(child);
+      else
+        newElement.appendChild(child);
+    });
+  }
+  appendChildren(children);
   return newElement;
 }
 
@@ -380,20 +386,20 @@ function displayInteractions(user, userInteractions) {
           if (interaction === 'you ')
             container.appendChild(createElement('p', { class: 'interaction' }, [createElement('span', { class: "lnr lnr-heart" }, null), interaction + 'liked your own post']));
           else
-            container.appendChild(createElement('p', { class: 'interaction' }, [createElement('span', { class: "lnr lnr-heart" }, null), interaction + 'liked your post']));
+            container.appendChild(createElement('p', { class: 'interaction' }, [createElement('span', { class: "lnr lnr-heart" }, null), addLinks(interaction + 'liked your post')]));
           break;
         }
         if (interaction === '@' + users[updates[item.post].userId].username + ' ') {
-          container.appendChild(createElement('p', { class: 'interaction' }, [createElement('span', { class: "lnr lnr-heart" }, null), interaction + 'liked his own post']));
+          container.appendChild(createElement('p', { class: 'interaction' }, [createElement('span', { class: "lnr lnr-heart" }, null), addLinks(interaction + 'liked his own post')]));
           break;
         }
-        container.appendChild(createElement('p', { class: 'interaction' }, [createElement('span', { class: "lnr lnr-heart" }, null), interaction + 'liked @' + users[updates[item.post].userId].username + '\'s post']));
+        container.appendChild(createElement('p', { class: 'interaction' }, [createElement('span', { class: "lnr lnr-heart" }, null), addLinks(interaction + 'liked @' + users[updates[item.post].userId].username + '\'s post')]));
         break;
       case 'follow':
         if (users[item.user].username === primaryUser.username)
-          container.appendChild(createElement('p', { class: 'interaction' }, [createElement('span', { class: "lnr lnr-eye" }, null), interaction + 'followed you']));
+          container.appendChild(createElement('p', { class: 'interaction' }, [createElement('span', { class: "lnr lnr-eye" }, null), addLinks(interaction + 'followed you')]));
         else
-          container.appendChild(createElement('p', { class: 'interaction' }, [createElement('span', { class: "lnr lnr-eye" }, null), interaction + 'followed @' + users[item.user].username]));
+          container.appendChild(createElement('p', { class: 'interaction' }, [createElement('span', { class: "lnr lnr-eye" }, null), addLinks(interaction + 'followed @' + users[item.user].username)]));
         break;
     }
     if (!user) interaction = '';
