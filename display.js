@@ -439,6 +439,8 @@ function userUpdates(user) {
 
 function getUpdateElements(user, index) {
   var liked = (primaryUser.likes.indexOf(index) > -1);
+  console.log(primaryUser.likes);
+  console.log(index);
   var updateElements = [createElement('div', { class: 'photo', style: 'background-image:url('+ user.profilePic + ')' }, null),
                         createElement('h4', { class: 'name' }, user.displayName),
                         createElement('p', { class: 'username' }, '@' + user.username),
@@ -481,6 +483,7 @@ function likePost(updateElement, postId) {
   var liked = (updateElement.className === 'liked');
   if (!liked) {
     primaryUser.likes.push(postId);
+    console.log(primaryUser.likes);
     updates[postId].likes.push(primaryUser.id);
     updateElement.className = 'liked';
   } else {
@@ -558,7 +561,7 @@ function viewHashtag(hashtag) {
 function hashtagUpdates(hashtag) {
   var updatesToDisplay = [];
   hashtags[hashtag].forEach(function (updateId) {
-    updatesToDisplay.unshift(createElement('div', { class: 'update' }, getUpdateElements(users[updates[updateId].userId], updateId)));
+    updatesToDisplay.unshift(createElement('div', { class: 'update' }, getUpdateElements(users[updates[updateId].userId], updateId.toString())));
   });
   return createElement('div', { id: 'updates', class: 'shadow' }, updatesToDisplay);
 }
