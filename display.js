@@ -549,11 +549,12 @@ function suggestions() {
   var suggestions = createElement('div', { id: 'suggestions' }, [createElement('h3', {  }, 'Who to follow')]);
   users.forEach( function(user) {
     if (user === primaryUser) return;
+    var icon = primaryUser.following.includes(user.id) ? 'lnr-checkmark-circle' : 'lnr-plus-circle';
     suggestions.appendChild(createElement('div', { class: 'user' },
                                [createElement('div', { class: 'photo', style: 'background-image:url(\'' + user.profilePic + '\')' }, null),
                                 createElement('h4', { class: 'name' }, user.displayName),
                                 createElement('p', { class: 'username' }, '@' + user.username),
-                                createElement('span', { class: 'plus lnr lnr-plus-circle' }, null)]));
+                                createElement('span', { class: 'plus lnr ' + icon }, null)]));
     suggestions.lastChild.getElementsByClassName('name')[0].addEventListener('click', function() { displayProfile(user) } , false);
     suggestions.lastChild.getElementsByClassName('username')[0].addEventListener('click', function() { displayProfile(user) } , false);
     suggestions.lastChild.getElementsByClassName('lnr')[0].addEventListener('click', function() { follow(user.id) } , false);
