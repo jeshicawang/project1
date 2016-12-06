@@ -474,7 +474,7 @@ function addUpdate() {
 function addHashtags(post, id) {
   var newHashtags = false;
   post = post.toLowerCase();
-  var validCharacters = /^[a-z0-9]*$/;
+  var validCharacters = /^[a-z0-9_]*$/;
   while (post.indexOf('#') > -1) {
     post = post.substring(post.indexOf('#') + 1);
     var pointer = 0;
@@ -517,7 +517,7 @@ function getUpdateElements(user, index) {
                         createElement('h4', { class: 'name' }, user.displayName),
                         createElement('p', { class: 'username' }, '@' + user.username),
                         createElement('p', { class: 'timestamp' }, updates[index].timestamp.format('h:mmA M/D/YY')),
-                        createElement('p', { class: 'post' }, translateHashtags(updates[index].post)),
+                        createElement('p', { class: 'post' }, addLinks(updates[index].post)),
                         createElement('button', { class: liked ? 'liked' : 'like' }, createElement('span', { class: 'lnr lnr-heart' }, null)),
                         createElement('span', { class: 'like-count' }, updates[index].likes.length)];
   updateElements[1].addEventListener('click', function() { displayProfile(user) } , false);
@@ -526,28 +526,33 @@ function getUpdateElements(user, index) {
   return updateElements;
 }
 
-function translateHashtags(post) {
+function addLinks(post) {
   var components = []
-  if (post.indexOf('#') === -1) {
+  if (post.search(/[#@]/) === -1) {
     components.push(post);
     return components;
   }
-  var validCharacters = /^[A-Za-z0-9]*$/;
-  while (post.indexOf('#') > -1) {
-    components.push(post.substring(0, post.indexOf('#')))
-    post = post.substring(post.indexOf('#') + 1);
+  var validCharacters = /^[A-Za-z0-9_]*$/;
+  while (post.search(/[#@]/) > -1) {
+    var char = post.charAt(post.search(/[#@]/));
+    components.push(post.substring(0, post.indexOf(char)))
+    post = post.substring(post.indexOf(char) + 1);
     var pointer = 0;
     while (pointer < post.length && validCharacters.test(post.charAt(pointer)))
       pointer++;
     var hashtag = post.substring(0, pointer);
     if (!hashtag.length) {
-      components.push('#');
+      components.push(char);
       continue;
     }
-    components.push(createElement('a', { class: 'hashtag', href: '#' }, ['#', createElement('span', {  }, hashtag)]));
-    components[components.length-1].addEventListener('click', function(e) { viewHashtag(e.target.lastChild.textContent) }, false);
+    components.push(createElement('a', { class: 'hashtag', href: '#' }, [char, createElement('span', {  }, hashtag)]));
+    if (char === '#')
+      components[components.length-1].addEventListener('click', function(e) { viewHashtag(e.target.lastChild.textContent) }, false);
+    else
+      components[components.length-1].addEventListener('click', function(e) { displayProfile(users[users.findIndex(function(user){ return e.target.lastChild.textContent === user.username })]) }, false);
     post = post.substring(pointer);
   }
+  if (post) components.push(post);
   return components;
 }
 
