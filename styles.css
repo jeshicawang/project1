@@ -18,8 +18,7 @@ button {
   font-size: 14px;
 }
 
-button:hover,
-button:focus {
+button:hover {
   outline: none;
   color: #fff;
   background-color: #6d94b6;
@@ -515,13 +514,24 @@ label span {
   margin-left: 55px;
 }
 
-.update .like:hover,
-.update .like:focus {
+.update .liked {
+  width: 23px;
+  height: 22px;
+  margin-top: 5px;
+  margin-left: 55px;
+  color: #fff;
   background-color: #c3878a;
   border-color: #fff;
 }
 
-.like .lnr {
+.update .like:hover {
+  background-color: #c3878a;
+  border-color: #fff;
+}
+
+.like .lnr,
+.liked .lnr {
+  pointer-events: none;
   position: relative;
   font-size: 14px;
   font-weight: bold;

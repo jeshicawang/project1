@@ -8,7 +8,7 @@ var users = [ { id: 0,
                 following: [3, 5],
                 followers: [1, 2, 3, 4, 5, 6, 7],
                 updatesCount: 5,
-                likes: [] },
+                likes: ['6', '8', '9'] },
               { id: 1,
                 username: 'biagi',
                 displayName: 'Rodolfo Biagi',
@@ -84,10 +84,10 @@ var updates = { 0: { userId: 2, timestamp: newMoment('7:00AM 11/21/16'), post: '
                 3: { userId: 1, timestamp: newMoment('11:45AM 11/22/16'), post: 'Soñemos, que los dos estamos libres. Soñemos, en la gloria de este amor. Soñemos, que ya nada nos separa, y que somos cual dos almas, que nacieron para amar. #sonemos #hugoduval #tango', likes: [] },
                 4: { userId: 1, timestamp: newMoment('11:55AM 11/22/16'), post: 'La soledad, que me envuelve el corazón, va encendiendo en mi alma, el fuego de tu amor lejano. En las brumas de tu olvido, viaja mi ilusión, gritando tu nombre en vano. #caricias #hugoduval #tango', likes: [] },
                 5: { userId: 1, timestamp: newMoment('12:00PM 11/22/16'), post: 'Todo es amor, la brisa y tú, jugando en el rumor, y el ruiseñor, cantando en una flor, buscando amor, amor. #todoesamor #hugoduval #tango', likes: [] },
-                6: { userId: 0, timestamp: newMoment('12:15PM 11/22/16'), post: '...and lunch is over, so back to class.', likes: [] },
+                6: { userId: 0, timestamp: newMoment('12:15PM 11/22/16'), post: '...and lunch is over, so back to class.', likes: [0] },
                 7: { userId: 2, timestamp: newMoment('2:00PM 11/22/16'), post: 'No me hablas tesoro mio, No me hablas ni me has mirado, Fueron tres años mi vida, Tres años muy lejos de tu corazon. #fuerontresanos #tango', likes: [] },
-                8: { userId: 0, timestamp: newMoment('4:30PM 11/22/16'), post: 'Class just ended.', likes: [] },
-                9: { userId: 0, timestamp: newMoment('5:00PM 11/22/16'), post: 'I\'m going home for the day!', likes: [] },
+                8: { userId: 0, timestamp: newMoment('4:30PM 11/22/16'), post: 'Class just ended.', likes: [0] },
+                9: { userId: 0, timestamp: newMoment('5:00PM 11/22/16'), post: 'I\'m going home for the day!', likes: [0] },
                 10: { userId: 3, timestamp: moment(), post: 'Sacále punta a esta milonga, que ya empezó. Seguí esos fueyes que rezongan, del corazón. Y las pebetas que han venido, del Club Fulgor. El tango requiebra la vida, Y en sus notas desparrama, su amor. #sacalepunta #milonga', likes: [] },
                 11: { userId: 3, timestamp: moment(), post: '¡Carnaval de mi barrio!, donde todo es amor, cascabeles de risa, matizando el dolor, ¡carnaval de mi barrio!, pedacito de sol, con nostalgias de luna, y canción de farol. #carnavaldemibarrio #tango', likes: [] },
                 12: { userId: 5, timestamp: moment(), post: 'Ahora no me conocés… ¡me borro tu ingratitud!… Aunque dejés mi alma trunca, no podrás olvidar nunca, lo de nuestra juventud… #ahoranomeconoces #angelvargas #tango', likes: [] },
@@ -420,15 +420,17 @@ function userUpdates(user) {
 }
 
 function getUpdateElements(user, index) {
+  var liked = (primaryUser.likes.indexOf(index) > -1);
   var updateElements = [createElement('div', { class: 'photo', style: 'background-image:url('+ user.profilePic + ')' }, null),
                         createElement('h4', { class: 'name' }, user.displayName),
                         createElement('p', { class: 'username' }, '@' + user.username),
                         createElement('p', { class: 'timestamp' }, updates[index].timestamp.format('h:mmA M/D/YY')),
                         createElement('p', { class: 'post' }, translateHashtags(updates[index].post)),
-                        createElement('button', { class: 'like' }, createElement('span', { class: 'lnr lnr-heart' }, null)),
+                        createElement('button', { class: liked ? 'liked' : 'like' }, createElement('span', { class: 'lnr lnr-heart' }, null)),
                         createElement('span', { class: 'like-count' }, updates[index].likes.length)];
   updateElements[1].addEventListener('click', function() { displayProfile(user) } , false);
   updateElements[2].addEventListener('click', function() { displayProfile(user) } , false);
+  updateElements[5].addEventListener('click', function(e) { likePost(e.target, index) } , false);
   return updateElements;
 }
 
@@ -455,6 +457,20 @@ function translateHashtags(post) {
     post = post.substring(pointer);
   }
   return components;
+}
+
+function likePost(updateElement, postId) {
+  var liked = (updateElement.className === 'liked');
+  if (!liked) {
+    primaryUser.likes.push(postId);
+    updates[postId].likes.push(primaryUser.id);
+    updateElement.className = 'liked';
+  } else {
+    primaryUser.likes.splice(primaryUser.likes.indexOf(postId), 1);
+    updates[postId].likes.splice(updates[postId].likes.indexOf(primaryUser.id), 1);
+    updateElement.className = 'like';
+  }
+  updateElement.parentElement.lastChild.textContent = updates[postId].likes.length;
 }
 
 function listOfUsers(references) {
