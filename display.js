@@ -5,18 +5,18 @@ var users = [ { id: 0,
                 displayName: 'Jessica Wang',
                 profilePic: 'images/jwang.jpg',
                 bio: 'Coffee lover. Dancer. Future software developer;)',
-                following: [3, 5],
+                following: [3, 5, 1],
                 followers: [1, 2, 3, 4, 5, 6, 7],
                 updatesCount: 5,
                 likes: ['6', '8', '9'],
-                interactions: [0, 1, 2, 15, 16] },
+                interactions: [0, 1, 2, 15, 16, 17] },
               { id: 1,
                 username: 'biagi',
                 displayName: 'Rodolfo Biagi',
                 profilePic: 'images/biagi.jpg',
                 bio: 'An Argentine Tango musician who started his musical career by playing background music for silent movies.',
                 following: [0],
-                followers: [],
+                followers: [0],
                 updatesCount: 3,
                 likes: [],
                 interactions: [8] },
@@ -133,7 +133,8 @@ var interactions = [ { userId: 0, activity: 'like', post: '6' },
                      { userId: 6, activity: 'follow', user: 0 },
                      { userId: 7, activity: 'follow', user: 0 },
                      { userId: 0, activity: 'follow', user: 3 },
-                     { userId: 0, activity: 'follow', user: 5 } ];
+                     { userId: 0, activity: 'follow', user: 5 },
+                     { userId: 0, activity: 'follow', user: 1 } ];
 
 function newMoment(timestamp) {
   return moment(timestamp, 'h:mmA M/D/YY');
@@ -241,10 +242,10 @@ function empty(ids) {
 function goHome() {
   remove(['user-info', 'interactions', 'hashtag', 'stats', 'new-update', 'updates', 'list']);
   currentlyViewing = null;
-  var centerContainer = document.getElementById('center');
-  centerContainer.appendChild(updatePoster());
-  centerContainer.appendChild(allUpdates());
+  document.getElementById('left').appendChild(userInfo(primaryUser));
   document.getElementById('left').appendChild(displayInteractions(currentlyViewing, interactions));
+  document.getElementById('center').appendChild(updatePoster());
+  document.getElementById('center').appendChild(allUpdates());
 }
 
 function allUpdates() {
@@ -264,10 +265,13 @@ function userInfo(user) {
                     [createElement('div', { class: 'photo' }, null),
                      createElement('div', { id: 'description' },
                         [createElement('h2', { id: 'name' }, user.displayName),
-                         createElement('p', { id: 'username' }, '@' + user.username),
+                         createElement('p', { id: 'username' }, addLinks('@' + user.username)),
                          createElement('p', { id: 'about-me' }, user.bio)])]);
   var profilePic = userInfo.firstChild;
   profilePic.style.backgroundImage = 'url(' + user.profilePic + ')';
+  if (!currentlyViewing) {
+    return userInfo;
+  }
   if (user === primaryUser) {
     userInfo.appendChild(createElement('button', { id: 'edit-profile' }, 'Edit Profile'));
     userInfo.lastChild.addEventListener('click', function() { editProfile() }, false);
@@ -781,7 +785,7 @@ function hideResults(event) {
   document.getElementById('search-button').style.borderBottomRightRadius = '15px';
 }
 
-displayProfile(primaryUser);
+goHome();
 document.getElementById('right').appendChild(trending());
 document.getElementById('right').appendChild(suggestions());
 

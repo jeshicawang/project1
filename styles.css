@@ -422,9 +422,9 @@ label span {
   font-size: 18px;
 }
 
-.interaction .hashtag,
-.interaction .hashtag:visited,
-.interaction span:hover {
+#left .hashtag,
+#left .hashtag:visited,
+#left span:hover {
   color: #fff;
 }
 
