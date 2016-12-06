@@ -80,6 +80,11 @@ h3 {
   border-bottom: 4px solid #f2f6f9;
 }
 
+#left h3 {
+  color: #fff;
+  border-color: #93b5d2;
+}
+
 p {
   margin: 0;
 }
@@ -387,6 +392,33 @@ label span {
 
 #bio textarea {
   border-bottom: 0;
+}
+
+#interactions {
+  margin-top: 60px;
+  text-align: left;
+}
+
+.interaction {
+  position: relative;
+  line-height: 20px;
+  margin-left: 25px;
+}
+
+.interaction .lnr {
+  position: absolute;
+  color: #a5c2d9;
+  font-weight: bold;
+}
+
+.interaction .lnr-heart {
+  transform: translate(-24px,4px);
+  font-size: 16px;
+}
+
+.interaction .lnr-eye {
+  transform: translate(-25px,3px);
+  font-size: 18px;
 }
 
 #stats {

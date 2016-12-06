@@ -8,7 +8,8 @@ var users = [ { id: 0,
                 following: [3, 5],
                 followers: [1, 2, 3, 4, 5, 6, 7],
                 updatesCount: 5,
-                likes: ['6', '8', '9'] },
+                likes: ['6', '8', '9'],
+                interactions: [0, 1, 2, 15, 16] },
               { id: 1,
                 username: 'biagi',
                 displayName: 'Rodolfo Biagi',
@@ -17,7 +18,8 @@ var users = [ { id: 0,
                 following: [0],
                 followers: [],
                 updatesCount: 3,
-                likes: [] },
+                likes: [],
+                interactions: [8] },
               { id: 2,
                 username: 'varela',
                 displayName: 'Hector Varela',
@@ -26,7 +28,8 @@ var users = [ { id: 0,
                 following: [0],
                 followers: [],
                 updatesCount: 2,
-                likes: [] },
+                likes: [],
+                interactions: [9] },
               { id: 3,
                 username: 'donato',
                 displayName: 'Edgardo Donato',
@@ -35,7 +38,8 @@ var users = [ { id: 0,
                 following: [0],
                 followers: [0],
                 updatesCount: 0,
-                likes: [] },
+                likes: [],
+                interactions: [10] },
               { id: 4,
                 username: 'diaz',
                 displayName: 'Hugo Diaz',
@@ -44,7 +48,8 @@ var users = [ { id: 0,
                 following: [0],
                 followers: [],
                 updatesCount: 0,
-                likes: ['1', '2', '6', '8', '9'] },
+                likes: ['1', '2', '6', '8', '9'],
+                interactions: [3, 4, 5, 6, 7, 11] },
               { id: 5,
                 username: 'dagostino',
                 displayName: 'Angel D\'Agostino',
@@ -53,7 +58,8 @@ var users = [ { id: 0,
                 following: [0],
                 followers: [0],
                 updatesCount: 0,
-                likes: [] },
+                likes: [],
+                interactions: [12] },
               { id: 6,
                 username: 'darienzo',
                 displayName: 'Juan D\'Arienzo',
@@ -62,7 +68,8 @@ var users = [ { id: 0,
                 following: [0],
                 followers: [],
                 updatesCount: 0,
-                likes: [] },
+                likes: [],
+                interactions: [13] },
               { id: 7,
                 username: 'demare',
                 displayName: 'Lucio Demare',
@@ -71,7 +78,8 @@ var users = [ { id: 0,
                 following: [0],
                 followers: [],
                 updatesCount: 0,
-                likes: [] },
+                likes: [],
+                interactions: [14] }
 ];
 
 var primaryUser = users[0];
@@ -109,14 +117,14 @@ var hashtags = { adiosarrabal: [13],
                  tango: [0, 3, 4, 5, 7, 11, 12, 13],
                  todoesamor: [5] };
 
-var interactions = [ { userId: 0, activity: 'like', post: 6 },
-                     { userId: 0, activity: 'like', post: 8 },
-                     { userId: 0, activity: 'like', post: 9 },
-                     { userId: 4, activity: 'like', post: 1 },
-                     { userId: 4, activity: 'like', post: 2 },
-                     { userId: 4, activity: 'like', post: 6 },
-                     { userId: 4, activity: 'like', post: 8 },
-                     { userId: 4, activity: 'like', post: 9 },
+var interactions = [ { userId: 0, activity: 'like', post: '6' },
+                     { userId: 0, activity: 'like', post: '8' },
+                     { userId: 0, activity: 'like', post: '9' },
+                     { userId: 4, activity: 'like', post: '1' },
+                     { userId: 4, activity: 'like', post: '2' },
+                     { userId: 4, activity: 'like', post: '6' },
+                     { userId: 4, activity: 'like', post: '8' },
+                     { userId: 4, activity: 'like', post: '9' },
                      { userId: 1, activity: 'follow', user: 0 },
                      { userId: 2, activity: 'follow', user: 0 },
                      { userId: 3, activity: 'follow', user: 0 },
@@ -155,9 +163,10 @@ function createElement(tag, attributes, children) {
 
 function displayProfile(user) {
   if (!user) return;
-  remove(['user-info', 'hashtag', 'stats', 'new-update', 'updates']);
+  remove(['user-info', 'interactions', 'hashtag', 'stats', 'new-update', 'updates']);
   currentlyViewing = user;
   document.getElementById('left').appendChild(userInfo(user));
+  document.getElementById('left').appendChild(displayInteractions(user, user.interactions));
   document.getElementById('center').appendChild(stats(user));
   document.getElementById('posts').click();
 }
@@ -170,18 +179,33 @@ function follow(id) {
     suggestions[index].className = 'plus lnr lnr-checkmark-circle';
     primaryUser.following.unshift(id);
     users[id].followers.unshift(primaryUser.id);
+    primaryUser.interactions.push(interactions.length);
+    interactions.push( { userId: primaryUser.id, activity: 'follow', user: id } );
   } else {
     suggestions[index].className = 'plus lnr lnr-plus-circle';
     index = primaryUser.following.indexOf(id);
     primaryUser.following.splice(index, 1);
     index = users[id].followers.indexOf(primaryUser.id);
     users[id].followers.splice(index, 1);
+    var indexToRemove = interactions.findIndex(function(interaction) {
+      if(!interaction)
+        return;
+      return interaction['activity'] === 'follow' && interaction['user'] === id && interaction['userId'] == primaryUser.id;
+    });
+    interactions.splice(indexToRemove, 1, null);
+    primaryUser.interactions.splice(primaryUser.interactions.indexOf(indexToRemove), 1);
   }
-  if (!currentlyViewing)
+  if (!currentlyViewing) {
     goHome();
-  else {
+    return;
+  } else {
     refreshStats(currentlyViewing);
     document.getElementById(viewing).click();
+  }
+  if (currentlyViewing === primaryUser) {
+    remove('interactions');
+    document.getElementById('left').appendChild(displayInteractions(primaryUser, primaryUser.interactions));
+    return;
   }
   if (currentlyViewing !== users[id]) return;
   document.getElementById('follow').firstChild.data = following ? 'Follow' : 'Following';
@@ -209,11 +233,12 @@ function empty(ids) {
 }
 
 function goHome() {
-  remove(['user-info', 'hashtag', 'stats', 'new-update', 'updates', 'list']);
+  remove(['user-info', 'interactions', 'hashtag', 'stats', 'new-update', 'updates', 'list']);
   currentlyViewing = null;
   var centerContainer = document.getElementById('center');
   centerContainer.appendChild(updatePoster());
   centerContainer.appendChild(allUpdates());
+  document.getElementById('left').appendChild(displayInteractions(currentlyViewing, interactions));
 }
 
 function allUpdates() {
@@ -325,6 +350,53 @@ function saveProfile() {
   primaryUser.username = document.getElementById('username-text').value;
   primaryUser.bio = document.getElementById('bio-text').value;
   displayProfile(primaryUser);
+}
+
+function displayInteractions(user, userInteractions) {
+  var interactionsArray = [];
+  var interaction = '';
+  if (user) {
+    if (user === primaryUser)
+      interaction += 'you ';
+    else
+      interaction += '@' + user.username + ' ';
+    userInteractions.forEach( function(index) {
+      interactionsArray.push(interactions[index]);
+    });
+  } else
+    interactionsArray = userInteractions.slice();
+  var container = createElement('div', { id: 'interactions' }, createElement('h3', {  }, 'Interactions'));
+  interactionsArray.reverse().forEach( function(item) {
+    if (!user)
+      if (users[item.userId] === primaryUser)
+        interaction += 'you ';
+      else
+        interaction += '@' + users[item.userId].username + ' ';
+    switch (item.activity) {
+      case 'like':
+        if (updates[item.post].userId === primaryUser.id) {
+          if (interaction === 'you ')
+            container.appendChild(createElement('p', { class: 'interaction' }, [createElement('span', { class: "lnr lnr-heart" }, null), interaction + 'liked your own post']));
+          else
+            container.appendChild(createElement('p', { class: 'interaction' }, [createElement('span', { class: "lnr lnr-heart" }, null), interaction + 'liked your post']));
+          break;
+        }
+        if (interaction === '@' + users[updates[item.post].userId].username + ' ') {
+          container.appendChild(createElement('p', { class: 'interaction' }, [createElement('span', { class: "lnr lnr-heart" }, null), interaction + 'liked his own post']));
+          break;
+        }
+        container.appendChild(createElement('p', { class: 'interaction' }, [createElement('span', { class: "lnr lnr-heart" }, null), interaction + 'liked @' + users[updates[item.post].userId].username + '\'s post']));
+        break;
+      case 'follow':
+        if (users[item.user].username === primaryUser.username)
+          container.appendChild(createElement('p', { class: 'interaction' }, [createElement('span', { class: "lnr lnr-eye" }, null), interaction + 'followed you']));
+        else
+          container.appendChild(createElement('p', { class: 'interaction' }, [createElement('span', { class: "lnr lnr-eye" }, null), interaction + 'followed @' + users[item.user].username]));
+        break;
+    }
+    if (!user) interaction = '';
+  });
+  return container;
 }
 
 function stats(user) {
@@ -483,10 +555,27 @@ function likePost(updateElement, postId) {
     primaryUser.likes.push(postId);
     updates[postId].likes.push(primaryUser.id);
     updateElement.className = 'liked';
+    primaryUser.interactions.push(interactions.length);
+    interactions.push({ userId: primaryUser.id, activity: 'like', post: postId });
   } else {
     primaryUser.likes.splice(primaryUser.likes.indexOf(postId), 1);
     updates[postId].likes.splice(updates[postId].likes.indexOf(primaryUser.id), 1);
     updateElement.className = 'like';
+    var indexToRemove = interactions.findIndex(function(interaction) {
+      if(!interaction)
+        return;
+      return interaction['activity'] === 'like' && interaction['post'] === postId && interaction['userId'] == primaryUser.id;
+    });
+    interactions.splice(indexToRemove, 1, null);
+    primaryUser.interactions.splice(primaryUser.interactions.indexOf(indexToRemove), 1);
+  }
+  if (!currentlyViewing) {
+    remove('interactions');
+    document.getElementById('left').appendChild(displayInteractions(currentlyViewing, interactions));
+  }
+  if (currentlyViewing === primaryUser) {
+    remove('interactions');
+    document.getElementById('left').appendChild(displayInteractions(primaryUser, primaryUser.interactions));
   }
   updateElement.parentElement.lastChild.textContent = updates[postId].likes.length;
 }
@@ -680,9 +769,8 @@ function hideResults(event) {
 }
 
 displayProfile(primaryUser);
-var rightContainer = document.getElementById('right');
-rightContainer.appendChild(trending());
-rightContainer.appendChild(suggestions());
+document.getElementById('right').appendChild(trending());
+document.getElementById('right').appendChild(suggestions());
 
 document.getElementById('home-button').addEventListener('click', goHome, false);
 document.getElementById('profile-button').addEventListener('click', function() { displayProfile(primaryUser) }, false);
