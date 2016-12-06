@@ -109,6 +109,24 @@ var hashtags = { adiosarrabal: [13],
                  tango: [0, 3, 4, 5, 7, 11, 12, 13],
                  todoesamor: [5] };
 
+var interactions = [ { userId: 0, activity: 'like', post: 6 },
+                     { userId: 0, activity: 'like', post: 8 },
+                     { userId: 0, activity: 'like', post: 9 },
+                     { userId: 4, activity: 'like', post: 1 },
+                     { userId: 4, activity: 'like', post: 2 },
+                     { userId: 4, activity: 'like', post: 6 },
+                     { userId: 4, activity: 'like', post: 8 },
+                     { userId: 4, activity: 'like', post: 9 },
+                     { userId: 1, activity: 'follow', user: 0 },
+                     { userId: 2, activity: 'follow', user: 0 },
+                     { userId: 3, activity: 'follow', user: 0 },
+                     { userId: 4, activity: 'follow', user: 0 },
+                     { userId: 5, activity: 'follow', user: 0 },
+                     { userId: 6, activity: 'follow', user: 0 },
+                     { userId: 7, activity: 'follow', user: 0 },
+                     { userId: 0, activity: 'follow', user: 3 },
+                     { userId: 0, activity: 'follow', user: 5 } ];
+
 function newMoment(timestamp) {
   return moment(timestamp, 'h:mmA M/D/YY');
 }
