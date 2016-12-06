@@ -367,6 +367,8 @@ function displayInteractions(user, userInteractions) {
     interactionsArray = userInteractions.slice();
   var container = createElement('div', { id: 'interactions' }, createElement('h3', {  }, 'Interactions'));
   interactionsArray.reverse().forEach( function(item) {
+    if(!item)
+      return;
     if (!user)
       if (users[item.userId] === primaryUser)
         interaction += 'you ';
