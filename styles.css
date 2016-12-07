@@ -401,7 +401,7 @@ label span {
 
 .interaction {
   position: relative;
-  line-height: 20px;
+  line-height: 22px;
   margin-left: 25px;
   color: #d9e5ef;
 }
@@ -422,10 +422,23 @@ label span {
   font-size: 18px;
 }
 
+#interactions .more {
+  display: block;
+  margin-top: 5px;
+  color: #a5c2d9;
+  text-align: center;
+  text-decoration: none;
+}
+
 #left .hashtag,
 #left .hashtag:visited,
-#left span:hover {
+#left span:hover,
+#interactions .more:hover {
   color: #fff;
+}
+
+#interactions .no-more:hover {
+  color: #a5c2d9;
 }
 
 #stats {

@@ -85,6 +85,7 @@ var users = [ { id: 0,
 var primaryUser = users[0];
 var currentlyViewing = primaryUser;
 var viewing = null;
+var interactionsDisplayed = 10;
 
 var updates = { 0: { userId: 2, timestamp: newMoment('7:00AM 11/21/16'), post: 'Es la historia de un amor, como no hay otro igual. Que me hizo comprender, todo el bien todo el mal, que le dio luz a mi vida, apagandola después. ¡Ay, qué vida tan oscura, corazón, sin tu amor no viviré! #historiadeunamor #tango', likes: [] },
                 1: { userId: 0, timestamp: newMoment('9:00AM 11/22/16'), post: 'Starting my weekday by going to coding class!', likes: [4] },
@@ -173,7 +174,7 @@ function displayProfile(user) {
   remove(['user-info', 'interactions', 'hashtag', 'stats', 'new-update', 'updates']);
   currentlyViewing = user;
   document.getElementById('left').appendChild(userInfo(user));
-  document.getElementById('left').appendChild(displayInteractions(user, user.interactions));
+  document.getElementById('left').appendChild(getInteractions(user, user.interactions, 0));
   document.getElementById('center').appendChild(stats(user));
   document.getElementById('posts').click();
 }
@@ -211,7 +212,7 @@ function follow(id) {
   }
   if (currentlyViewing === primaryUser) {
     remove('interactions');
-    document.getElementById('left').appendChild(displayInteractions(primaryUser, primaryUser.interactions));
+    document.getElementById('left').appendChild(getInteractions(primaryUser, primaryUser.interactions, 0));
     return;
   }
   if (currentlyViewing !== users[id]) return;
@@ -243,7 +244,7 @@ function goHome() {
   remove(['user-info', 'interactions', 'hashtag', 'stats', 'new-update', 'updates', 'list']);
   currentlyViewing = null;
   document.getElementById('left').appendChild(userInfo(primaryUser));
-  document.getElementById('left').appendChild(displayInteractions(currentlyViewing, interactions));
+  document.getElementById('left').appendChild(getInteractions(currentlyViewing, interactions, 0));
   document.getElementById('center').appendChild(updatePoster());
   document.getElementById('center').appendChild(allUpdates());
 }
@@ -362,7 +363,7 @@ function saveProfile() {
   displayProfile(primaryUser);
 }
 
-function displayInteractions(user, userInteractions) {
+function getInteractions(user, userInteractions, extra) {
   var interactionsArray = [];
   var interaction = '';
   if (user) {
@@ -376,9 +377,11 @@ function displayInteractions(user, userInteractions) {
   } else
     interactionsArray = userInteractions.slice();
   var container = createElement('div', { id: 'interactions' }, createElement('h3', {  }, 'Interactions'));
+  var itemsAdded = 0;
   interactionsArray.reverse().forEach( function(item) {
-    if(!item)
+    if(!item || itemsAdded >= (interactionsDisplayed + extra))
       return;
+    itemsAdded++;
     if (!user)
       if (users[item.userId] === primaryUser)
         interaction += 'you ';
@@ -408,7 +411,19 @@ function displayInteractions(user, userInteractions) {
     }
     if (!user) interaction = '';
   });
+  container.appendChild(createElement('a', { class: 'more', href: '#' }, (itemsAdded < interactionsArray.length) ? '• • • more • • •' : '• • •'));
+  if (container.lastChild.textContent === '• • •') {
+    container.lastChild.className = 'more no-more';
+    return container;
+  }
+  container.lastChild.addEventListener('click', displayMoreInteractions, false);
   return container;
+}
+
+function displayMoreInteractions() {
+  remove('interactions');
+  document.getElementById('left').appendChild(getInteractions(currentlyViewing, currentlyViewing ? currentlyViewing.interactions : interactions, 5));
+  interactionsDisplayed += 5;
 }
 
 function stats(user) {
@@ -588,11 +603,11 @@ function likePost(updateElement, postId) {
   }
   if (!currentlyViewing) {
     remove('interactions');
-    document.getElementById('left').appendChild(displayInteractions(currentlyViewing, interactions));
+    document.getElementById('left').appendChild(getInteractions(currentlyViewing, interactions, 0));
   }
   if (currentlyViewing === primaryUser) {
     remove('interactions');
-    document.getElementById('left').appendChild(displayInteractions(primaryUser, primaryUser.interactions));
+    document.getElementById('left').appendChild(getInteractions(primaryUser, primaryUser.interactions, 0));
   }
   updateElement.parentElement.lastChild.textContent = updates[postId].likes.length;
 }
