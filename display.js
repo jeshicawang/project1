@@ -670,10 +670,14 @@ function trending() { //top five hashtags: when there is a tie, newer hashtags t
 }
 
 function viewHashtag(hashtag) {
-  var centerContainer = document.getElementById('center');
+  var center = document.getElementById('center');
+  var left = document.getElementById('left');
   empty(['center', 'left']);
-  centerContainer.appendChild(createElement('h2', { id: 'hashtag', class: 'shadow' }, '#' + hashtag));
-  centerContainer.appendChild(hashtagUpdates(hashtag));
+  currentlyViewing = null;
+  center.appendChild(createElement('h2', { id: 'hashtag', class: 'shadow' }, '#' + hashtag));
+  center.appendChild(hashtagUpdates(hashtag));
+  left.appendChild(userInfo(primaryUser));
+  left.appendChild(getInteractions(currentlyViewing, interactions, 0));
 }
 
 function hashtagUpdates(hashtag) {
